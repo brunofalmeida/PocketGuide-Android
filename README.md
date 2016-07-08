@@ -1,1 +1,1 @@
-# CossetteNavigation-Android
+# Cossette Navigation - Android
