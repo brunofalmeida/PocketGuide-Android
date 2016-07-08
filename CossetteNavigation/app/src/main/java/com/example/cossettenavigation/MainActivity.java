@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.estimote.sdk.EstimoteSDK;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -18,10 +20,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-/*        //  App ID & App Token can be taken from App section of Estimote Cloud.
-        EstimoteSDK.initialize(applicationContext, appId, appToken);
+        //  App ID & App Token can be taken from App section of Estimote Cloud.
+        EstimoteSDK.initialize(this, getString(R.string.app_name), getString(R.string.app_name));
         // Optional, debug logging.
-        EstimoteSDK.enableDebugLogging(true);*/
+        EstimoteSDK.enableDebugLogging(true);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
