@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.estimote.sdk.EstimoteSDK;
+import com.estimote.sdk.SystemRequirementsChecker;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
         EstimoteSDK.initialize(this, getString(R.string.app_name), getString(R.string.app_name));
         // Optional, debug logging.
         EstimoteSDK.enableDebugLogging(true);
+
+        SystemRequirementsChecker.checkWithDefaultDialogs(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
