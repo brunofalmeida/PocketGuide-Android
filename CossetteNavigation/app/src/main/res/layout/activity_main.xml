@@ -4,6 +4,18 @@
     android:layout_height="match_parent"
     tools:context="com.example.cossettenavigation.MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:background="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="hello"/>
+    </android.support.v7.widget.Toolbar>
+
     <FrameLayout
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
@@ -138,5 +150,5 @@
             android:textSize="@dimen/direction_text_size" />
 
     </LinearLayout>
-    
+
 </FrameLayout>
