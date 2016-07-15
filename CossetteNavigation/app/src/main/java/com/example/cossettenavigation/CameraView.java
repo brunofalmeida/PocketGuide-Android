@@ -1,7 +1,7 @@
 package com.example.cossettenavigation;
 
 import android.content.Context;
-import android.hardware.camera2;
+import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
