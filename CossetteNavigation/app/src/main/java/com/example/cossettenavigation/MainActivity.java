@@ -55,27 +55,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final int UI_ANIMATION_DELAY = 300;
     private static int PERMISSION_REQUEST_CODE_CAMERA = 1;
 
-    /*
-        private View mContentView;
-    */
     private final Handler mHideHandler = new Handler();
 
-    /*
-        private View mControlsView;
-    */
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            // Delayed display of UI elements
-/*            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }*/
-/*
-            mControlsView.setVisibility(View.VISIBLE);
-*/
-        }
-    };
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -120,19 +101,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private CameraView mCameraView = null;
     private BeaconManager beaconManager;
     private List<Beacon> rangedBeacons = null;
-    /*
-    Define the hospital rooms here.
-    The Room id should match the Room's zero-based index in the list.
-     */
-    private Room[] rooms = {
-            new Room(0, 23105, 37595, "Emergency Room"),
-            new Room(1, 22948, 14701, "Surgery Room"),
-            new Room(2, 33491, 34365, "X-Ray Room"),
-            new Room(3, 9652, 37519, "Maternity Ward"),
-            new Room(4, 59932, 55122, "Intensive Care"),
-            new Room(5, 24028, 20615, "Recovery Centre"),
-            new Room(6, 64904, 53347, "Entertainment")
-    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,10 +119,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         EstimoteSDK.initialize(this, getString(R.string.app_name), getString(R.string.app_name));
         // Optional, debug logging.
         EstimoteSDK.enableDebugLogging(true);
-
-        onCreateBeacons();
-        onCreateRooms();
-
 
         mVisible = true;
 
@@ -175,10 +140,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
 
-/*        mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.fullscreen_content);*/
-
-
         // Set up the user interaction to manually show or hide the system UI.
         m_camera_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,9 +151,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-/*
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
-*/
 
 
         /* Check for camera permission */
@@ -286,30 +244,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             actionBar.hide();
         }
 
-/*
-        mControlsView.setVisibility(View.GONE);
-*/
-
         mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks(mShowPart2Runnable);
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 
     @SuppressLint("InlinedApi")
     private void show() {
         // Show the system bar
-        /*m_camera_view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        m_camera_view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        m_camera_view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);*/
 
         mVisible = true;
 
         // Schedule a runnable to display UI elements after a delay
         mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
     }
 
     /**
@@ -330,110 +278,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         mCameraView.activityOnConfigurationChanged();
     }
 
-    /*
-    Sets up the beacon manager and detection.
-     */
-    private void onCreateBeacons() {
-        beaconManager = new BeaconManager(getApplicationContext());
-
-        /*
-        Use the RangingListener for more precise and frequent detection of specific beacons.
-         */
-        beaconManager.setRangingListener(new BeaconManager.RangingListener() {
-            @Override
-            public void onBeaconsDiscovered(Region region, List<Beacon> list) {
-                Log.i(TAG, "onBeaconsDiscovered():\n" + region.toString() + "\n" + list.toString());
-
-                rangedBeacons = list;
-                updateView();
-            }
-        });
-
-        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
-            @Override
-            public void onServiceReady() {
-                Log.i(TAG, "onServiceReady()");
-
-                /*
-                Search for all beacons with the default UUID.
-                 */
-                beaconManager.startRanging(new Region("General Beacon",
-                        UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),
-                        null, null));
-            }
-        });
-    }
-
-
-    private enum Direction {
-        LEFT,
-        RIGHT,
-        UP,
-        DOWN
-    }
-
-    private class Room {
-        int id;
-        int major;
-        int minor;
-        String name;
-        HashMap<Integer, Direction> nearbyRooms = new HashMap<>();
-
-        Room(int id, int major, int minor, String name) {
-            this.id = id;
-            this.major = major;
-            this.minor = minor;
-            this.name = name;
-        }
-    }
-
-
-    /*
-    Define the hospital layout (directions to go between rooms).
-    Each connection is in a single direction, so connections should be made in pairs (opposite connections).
-     */
-    private void onCreateRooms() {
-        rooms[0].nearbyRooms.put(1, Direction.UP);
-        rooms[1].nearbyRooms.put(0, Direction.DOWN);
-
-        rooms[0].nearbyRooms.put(4, Direction.RIGHT);
-        rooms[4].nearbyRooms.put(0, Direction.LEFT);
-
-        rooms[1].nearbyRooms.put(5, Direction.RIGHT);
-        rooms[5].nearbyRooms.put(1, Direction.LEFT);
-
-        rooms[2].nearbyRooms.put(0, Direction.UP);
-        rooms[0].nearbyRooms.put(2, Direction.DOWN);
-
-        rooms[3].nearbyRooms.put(5, Direction.DOWN);
-        rooms[5].nearbyRooms.put(3, Direction.UP);
-
-        rooms[4].nearbyRooms.put(5, Direction.UP);
-        rooms[5].nearbyRooms.put(4, Direction.DOWN);
-
-        rooms[6].nearbyRooms.put(2, Direction.UP);
-        rooms[2].nearbyRooms.put(6, Direction.DOWN);
-    }
-
     public void updateView() {
-        /* Display beacon list for debugging */
 
-        String displayString = "";
-
-        displayString += "General Beacons\n";
-        for (Beacon beacon : rangedBeacons) {
-            displayString += beacon.getMajor() + " " + beacon.getMinor() + "\n";
-        }
-
-        if (displayString.endsWith("\n")) {
-            displayString = displayString.substring(0, displayString.lastIndexOf('\n'));
-        }
-
-        TextView debug_view = (TextView) findViewById(R.id.debug_view);
-        debug_view.setText(displayString);
-
-
-
+        //might use this later
 
         /* Enable arrows and display text for connected rooms */
         /*ImageView left_arrow = (ImageView) findViewById(R.id.left_arrow);
@@ -508,17 +355,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     break;
                 }
             }*/
-
-            /*if (!isNameSet) {
-                room_name.setText("Unknown Room");
-                isNameSet = true;
-            }
-        }
-
-        if (!isNameSet) {
-            room_name.setText("SickKids Hospital");
-            isNameSet = true;
-        }*/
     }
 
 }
