@@ -10,30 +10,6 @@
         android:layout_height="match_parent"
         android:keepScreenOn="true" />
 
-    <TextView
-        android:id="@+id/debug_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left|top"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="Arial"
-        android:text="Beacons"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:visibility="invisible" />
-
-    <TextView
-        android:id="@+id/room_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|top"
-        android:layout_marginTop="8dp"
-        android:fontFamily="Arial"
-        android:text="SickKids Hospital"
-        android:textColor="@android:color/white"
-        android:textSize="48sp" />
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -162,29 +138,5 @@
             android:textSize="@dimen/direction_text_size" />
 
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:fontFamily="Arial"
-        android:text="Developed for SickKids "
-        android:textColor="@android:color/white"
-        android:textSize="12sp" />
-
-
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
-    <!--    <TextView
-            android:id="@+id/fullscreen_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:keepScreenOn="true"
-            android:text="@string/dummy_content"
-            android:textColor="#33b5e5"
-            android:textSize="50sp"
-            android:textStyle="bold" />-->
-
+    
 </FrameLayout>
