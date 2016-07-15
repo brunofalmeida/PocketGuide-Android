@@ -3,7 +3,7 @@ package com.example.cossettenavigation;
 import android.os.Build;
 
 /**
- * Created by Jacob on 2016-07-15.
+ * from https://github.com/Shaked/androidportraitcamera
  */
 public class Device {
 
