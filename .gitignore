@@ -44,3 +44,6 @@ captures/
 
 # Android Studio settings
 .idea/
+
+# Mac file system metadata
+.DS_Store
