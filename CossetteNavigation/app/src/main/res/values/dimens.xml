@@ -3,4 +3,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="arrow_size">72dp</dimen>
+    <dimen name="arrow_margin">4dp</dimen>
+    <dimen name="chevron_size">120dp</dimen>
+    <dimen name="direction_text_size">24sp</dimen>
 </resources>
