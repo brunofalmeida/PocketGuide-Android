@@ -36,22 +36,34 @@ public class Map {
     private static class Beacon {
 
         private String name;
-        private Point location;
+        private Point position;
 
         private UUID uuid;
         private int major;
         private int minor;
 
-        public Beacon(String name, Point location, UUID uuid, int major, int minor) {
+        public Beacon(String name, Point position, UUID uuid, int major, int minor) {
             this.name = name;
-            this.location = location;
+            this.position = position;
             this.uuid = uuid;
             this.major = major;
             this.minor = minor;
         }
 
-        public Beacon(String name, double x, double y, UUID uuid, int major, int minor) {
-            this(name, new Point(x, y), uuid, major, minor);
+        public Beacon(String name, double xPosition, double yPosition, UUID uuid, int major, int minor) {
+            this(name, new Point(xPosition, yPosition), uuid, major, minor);
+        }
+
+        public Point getPosition() {
+            return position;
+        }
+
+        public double getXPosition() {
+            return getPosition().getX();
+        }
+
+        public double getYPosition() {
+            return getPosition().getY();
         }
 
     }
