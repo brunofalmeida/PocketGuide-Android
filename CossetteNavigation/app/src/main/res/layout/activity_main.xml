@@ -16,7 +16,7 @@
             android:text="hello"/>
     </android.support.v7.widget.Toolbar>
 
-    <!--<FrameLayout
+    <FrameLayout
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -63,7 +63,7 @@
                 android:layout_weight="0"
                 android:gravity="center">
 
-                <ImageView
+                <!--<ImageView
                     android:id="@+id/up_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -124,7 +124,7 @@
                     android:src="@drawable/ic_arrow_downward_white_48dp"
                     android:visibility="invisible" />-->
 
-            <!--</RelativeLayout>
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/right_text"
@@ -149,6 +149,6 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/direction_text_size" />
 
-    </LinearLayout>-->
+    </LinearLayout>
 
 </FrameLayout>
