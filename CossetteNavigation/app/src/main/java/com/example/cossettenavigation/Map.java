@@ -1,5 +1,6 @@
 package com.example.cossettenavigation;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -114,6 +115,32 @@ public class Map {
 
         public double getYPosition() {
             return getPosition().getY();
+        }
+
+    }
+
+
+    private static class Zone {
+
+        private String name;
+
+        // A Zone does not own its anchor beacons, since they can define multiple zones
+        private ArrayList<WeakReference<Beacon>> anchorBeacons = new ArrayList<>();
+
+        // A zone owns its support beacons, since they are only part of that zone
+        private ArrayList<Beacon> supportBeacons = new ArrayList<>();
+
+
+        public Zone(String name) {
+            this.name = name;
+        }
+
+        public void addAnchorBeacon(Beacon anchorBeacon) {
+            anchorBeacons.add(new WeakReference(anchorBeacon));
+        }
+
+        public void addSupportBeacon(Beacon supportBeacon) {
+            supportBeacons.add(supportBeacon);
         }
 
     }
