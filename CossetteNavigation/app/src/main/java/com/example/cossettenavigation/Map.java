@@ -82,7 +82,15 @@ public class Map {
                 "white5 - Kitchen",
                 b1, -5, 25,
                 "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 33753, 28870);
-
+        Beacon b3 = addAbsolutePositionAnchorBeacon(
+                                                    "white1 - Lower Elevator",
+                                                    15, 60,
+                                                    "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 6607, 59029);
+        Beacon b4= addAbsolutePositionAnchorBeacon(
+                                                   "white2 - End Lower Hallway",
+                                                   30, 80,
+                                                   "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 62315, 20156);
+        
         Zone z1 = addZone("Main Hallway");
         z1.addAnchorBeacon(b1);
         z1.addSupportBeacon(b2);
