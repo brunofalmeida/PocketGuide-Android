@@ -1,8 +1,9 @@
 package com.example.cossettenavigation;
 
+import android.util.Log;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -15,7 +16,9 @@ import java.util.UUID;
  */
 public class Map {
 
-    private static List<Beacon> anchorBeacons = new ArrayList<>();
+    private static final String TAG = "Map";
+
+    private static ArrayList<Beacon> anchorBeacons = new ArrayList<>();
 
     private static final String DEFAULT_WHITE_UUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
 
@@ -35,6 +38,10 @@ public class Map {
         return beacon;
     }
 
+    /**
+     * Adds a beacon to the set of anchor beacons using a position relative to another beacon.
+     * @return The anchor beacon that was added.
+     */
     private static Beacon addRelativePositionAnchorBeacon(String name,
                                                           Beacon referenceBeacon,
                                                           double xPositionOffset,
@@ -52,6 +59,20 @@ public class Map {
                 minor);
     }
 
+
+    private static ArrayList<Zone> zones = new ArrayList<>();
+
+    /**
+     * Adds a zone to the set of zones.
+     * @return The zone that was added.
+     */
+    private static Zone addZone(String name) {
+        Zone zone = new Zone(name);
+        zones.add(zone);
+        return zone;
+    }
+
+
     static {
         Beacon b1 = addAbsolutePositionAnchorBeacon(
                 "white17 - Entrance",
@@ -61,6 +82,17 @@ public class Map {
                 "white5 - Kitchen",
                 b1, -5, 25,
                 "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 33753, 28870);
+
+        Zone z1 = addZone("Main Hallway");
+        z1.addAnchorBeacon(b1);
+        z1.addSupportBeacon(b2);
+
+        for (Beacon anchorBeacon : anchorBeacons) {
+            Log.v(TAG, anchorBeacon.toString());
+        }
+        for (Zone zone : zones) {
+            Log.v(TAG, zone.toString());
+        }
     }
 
     private static class Point {

@@ -27,7 +27,12 @@ public class ApplicationManager extends Application {
 
     @Override
     public void onCreate() {
+        Log.v(TAG, "onCreate()");
+
         super.onCreate();
+
+        // Test Map class
+        Map map = new Map();
 
         beaconManager = new BeaconManager(getApplicationContext());
 
