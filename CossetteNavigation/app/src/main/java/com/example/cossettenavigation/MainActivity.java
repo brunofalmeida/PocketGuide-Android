@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             hide();
         }
     };
-    private Camera mCamera = null;
+    private static Camera mCamera = null;
     private FrameLayout m_camera_view = null;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -90,13 +90,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             // Note that some of these constants are new as of API 16 (Jelly Bean)
             // and API 19 (KitKat). It is safe to use them, as they are inlined
             // at compile-time and do nothing on earlier devices.
-            m_camera_view.setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LOW_PROFILE
+/*            m_camera_view.setSystemUiVisibility(0
+*//*                    View.SYSTEM_UI_FLAG_LOW_PROFILE
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION*//*);*/
         }
     };
     private CameraView mCameraView = null;
@@ -131,26 +131,26 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
         // a general rule, you should design your app to hide the status bar whenever you
         // hide the navigation bar.
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        int uiOptions = 0/*View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN*/;
         decorView.setSystemUiVisibility(uiOptions);
 
-        m_camera_view.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LOW_PROFILE
+/*        m_camera_view.setSystemUiVisibility(0
+                *//*View.SYSTEM_UI_FLAG_LOW_PROFILE
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATIO*//*);*/
 
 
         // Set up the user interaction to manually show or hide the system UI.
-        m_camera_view.setOnClickListener(new View.OnClickListener() {
+/*        m_camera_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toggle();
             }
-        });
+        });*/
 
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
@@ -244,9 +244,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private void hide() {
         // Hide UI first
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
+/*        if (actionBar != null) {
             actionBar.hide();
-        }
+        }*/
 
         mVisible = false;
 
@@ -280,85 +280,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onConfigurationChanged(newConfig);
 
         mCameraView.activityOnConfigurationChanged();
-    }
-
-    public void updateView() {
-
-        //might use this later
-
-        /* Enable arrows and display text for connected rooms */
-        /*ImageView left_arrow = (ImageView) findViewById(R.id.left_arrow);
-        ImageView right_arrow = (ImageView) findViewById(R.id.right_arrow);
-        ImageView up_arrow = (ImageView) findViewById(R.id.up_arrow);
-        ImageView down_arrow = (ImageView) findViewById(R.id.down_arrow);
-
-        TextView left_text = (TextView) findViewById(R.id.left_text);
-        TextView right_text = (TextView) findViewById(R.id.right_text);
-        TextView up_text = (TextView) findViewById(R.id.up_text);
-        TextView down_text = (TextView) findViewById(R.id.down_text);
-
-        left_arrow.setVisibility(View.INVISIBLE);
-        right_arrow.setVisibility(View.INVISIBLE);
-        up_arrow.setVisibility(View.INVISIBLE);
-        down_arrow.setVisibility(View.INVISIBLE);
-
-        left_text.setText("");
-        right_text.setText("");
-        up_text.setText("");
-        down_text.setText("");
-
-
-        TextView room_name = (TextView) findViewById(R.id.room_name);
-        boolean isNameSet = false;
-
-        /*
-        Get the first room in the list of discovered rooms.
-        (The `rangedBeacons` list is sorted by estimated proximity, or distance from the device).
-         */
-        /*if (rangedBeacons.size() > 0) {
-            Beacon beacon = rangedBeacons.get(0);
-
-            for (Room room : rooms) {
-                if (beacon.getMajor() == room.major && beacon.getMinor() == room.minor) {
-                    room_name.setText(room.name);
-                    isNameSet = true;
-
-                    for (int roomID : room.nearbyRooms.keySet()) {
-                        switch (room.nearbyRooms.get(roomID)) {
-                            case LEFT:
-                                left_arrow.setVisibility(View.VISIBLE);
-                                left_text.setText(rooms[roomID].name);
-                                break;
-                            case RIGHT:
-                                right_arrow.setVisibility(View.VISIBLE);
-                                right_text.setText(rooms[roomID].name);
-                                break;
-                            case UP:
-                                up_arrow.setVisibility(View.VISIBLE);
-                                up_text.setText(rooms[roomID].name);
-                                break;
-                            case DOWN:
-                                down_arrow.setVisibility(View.VISIBLE);
-                                down_text.setText(rooms[roomID].name);
-                                break;
-                        }
-                    }
-
-                    if (left_text.getWidth() > right_text.getWidth()) {
-                        right_text.setWidth(left_text.getWidth());
-                    } else if (right_text.getWidth() > left_text.getWidth()) {
-                        left_text.setWidth(right_text.getWidth());
-                    }
-
-                    if (up_text.getWidth() > down_text.getWidth()) {
-                        down_text.setWidth(up_text.getWidth());
-                    } else if (down_text.getWidth() > up_text.getWidth()) {
-                        up_text.setWidth(down_text.getWidth());
-                    }
-
-                    break;
-                }
-            }*/
     }
 
 }
