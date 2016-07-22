@@ -139,6 +139,9 @@ public class Map {
         private int minor;
 
 
+        /**
+         * Standard constructor.
+         */
         public Beacon(String name, Point position, UUID uuid, int major, int minor) {
             this.name = name;
             this.position = position;
@@ -147,8 +150,37 @@ public class Map {
             this.minor = minor;
         }
 
-        public Beacon(String name, double xPosition, double yPosition, String uuid, int major, int minor) {
+        /**
+         * Constructor using an absolute position.
+         */
+        public Beacon(String name,
+                      double xPosition,
+                      double yPosition,
+                      String uuid,
+                      int major,
+                      int minor) {
+
             this(name, new Point(xPosition, yPosition), UUID.fromString(uuid), major, minor);
+        }
+
+        /**
+         * Constructor using a position relative to another beacon.
+         */
+        public Beacon(String name,
+                      Beacon referenceBeacon,
+                      double xPositionOffset,
+                      double yPositionOffset,
+                      String uuid,
+                      int major,
+                      int minor) {
+
+            this(
+                    name,
+                    referenceBeacon.getXPosition() + xPositionOffset,
+                    referenceBeacon.getYPosition() + yPositionOffset,
+                    uuid,
+                    major,
+                    minor);
         }
 
         public Point getPosition() {
