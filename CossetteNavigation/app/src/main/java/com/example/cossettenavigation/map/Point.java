@@ -24,7 +24,9 @@ public class Point {
 
     @Override
     public String toString() {
-        return String.format("Point { x = %f, y = %f }", x, y);
+        return String.format(
+                "%s { x = %f, y = %f }",
+                getClass().getSimpleName(), x, y);
     }
 
 }

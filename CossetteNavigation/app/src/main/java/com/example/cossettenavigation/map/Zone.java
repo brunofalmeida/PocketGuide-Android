@@ -34,8 +34,8 @@ public class Zone {
     @Override
     public String toString() {
         return String.format(
-                "Zone { name = %s, anchorBeacons = %s, supportBeacons = %s }",
-                name, anchorBeacons, supportBeacons);
+                "%s { name = %s, anchorBeacons = %s, supportBeacons = %s }",
+                getClass().getSimpleName(), name, anchorBeacons, supportBeacons);
     }
 
 }

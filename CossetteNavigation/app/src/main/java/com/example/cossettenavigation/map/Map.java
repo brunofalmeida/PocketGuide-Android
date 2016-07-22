@@ -85,6 +85,8 @@ public class Map {
 
     // Define beacons and zones
     static {
+        Log.v(TAG, "static initializer");
+
         AnchorBeacon b1 = addAbsolutePositionAnchorBeacon(
                 "white17 - Entrance",
                 20, 0,
@@ -109,7 +111,7 @@ public class Map {
         z1.addSupportBeacon(b2);
 */
 
-        for (Beacon anchorBeacon : anchorBeacons) {
+        for (AnchorBeacon anchorBeacon : anchorBeacons) {
             Log.v(TAG, anchorBeacon.toString());
         }
         for (Zone zone : zones) {

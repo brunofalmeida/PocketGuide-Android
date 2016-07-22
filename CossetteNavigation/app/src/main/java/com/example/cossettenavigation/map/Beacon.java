@@ -74,8 +74,8 @@ public abstract class Beacon {
     @Override
     public String toString() {
         return String.format(
-                "Beacon { name = %s, position = %s, uuid = %s, major = %d, minor = %d }",
-                name, position, uuid, major, minor);
+                "%s { name = %s, position = %s, uuid = %s, major = %d, minor = %d }",
+                getClass().getSimpleName(), name, position, uuid, major, minor);
     }
 
 }
