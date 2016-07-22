@@ -132,6 +132,10 @@ public class Map {
             return y;
         }
 
+        @Override
+        public String toString() {
+            return String.format("Point { x = %f, y = %f }", x, y);
+        }
     }
 
 
@@ -201,6 +205,13 @@ public class Map {
             return getPosition().getY();
         }
 
+        @Override
+        public String toString() {
+            return String.format(
+                    "Beacon { name = %s, position = %s, uuid = %s, major = %d, minor = %d }",
+                    name, position, uuid, major, minor);
+        }
+
     }
 
 
@@ -225,6 +236,13 @@ public class Map {
 
         public void addSupportBeacon(Beacon supportBeacon) {
             supportBeacons.add(supportBeacon);
+        }
+
+        @Override
+        public String toString() {
+            return String.format(
+                    "Zone { name = %s, anchorBeacons = %s, supportBeacons = %s }",
+                    name, anchorBeacons, supportBeacons);
         }
 
     }
