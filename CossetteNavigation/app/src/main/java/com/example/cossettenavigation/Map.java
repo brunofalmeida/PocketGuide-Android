@@ -21,7 +21,7 @@ public class Map {
     private static final String DEFAULT_WHITE_UUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
 
 
-    private static ArrayList<Beacon> anchorBeacons = new ArrayList<>();
+    private static ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
 
     private static ArrayList<Zone> zones = new ArrayList<>();
 
@@ -32,44 +32,45 @@ public class Map {
      * Adds a beacon to the set of anchor beacons.
      * @return The anchor beacon that was added.
      */
-    private static Beacon addAnchorBeacon(Beacon beacon) {
-        anchorBeacons.add(beacon);
-        return beacon;
+    private static AnchorBeacon addAnchorBeacon(AnchorBeacon anchorBeacon) {
+        anchorBeacons.add(anchorBeacon);
+        return anchorBeacon;
     }
 
     /**
      * Adds a beacon to the set of anchor beacons using an absolute position.
      * @return The anchor beacon that was added.
      */
-    private static Beacon addAbsolutePositionAnchorBeacon(String name,
-                                                          double xPosition,
-                                                          double yPosition,
-                                                          String uuid,
-                                                          int major,
-                                                          int minor) {
+    private static AnchorBeacon addAbsolutePositionAnchorBeacon(String name,
+                                                                double xPosition,
+                                                                double yPosition,
+                                                                String uuid,
+                                                                int major,
+                                                                int minor) {
 
-        Beacon beacon = new Beacon(name, xPosition, yPosition, uuid, major, minor);
-        return addAnchorBeacon(beacon);
+        AnchorBeacon anchorBeacon = new AnchorBeacon(name, xPosition, yPosition, uuid, major, minor);
+        return addAnchorBeacon(anchorBeacon);
     }
 
     /**
      * Adds a beacon to the set of anchor beacons using a position relative to another beacon.
      * @return The anchor beacon that was added.
      */
-    private static Beacon addRelativePositionAnchorBeacon(String name,
-                                                          Beacon referenceBeacon,
-                                                          double xPositionOffset,
-                                                          double yPositionOffset,
-                                                          String uuid,
-                                                          int major,
-                                                          int minor) {
+    private static AnchorBeacon addRelativePositionAnchorBeacon(String name,
+                                                                Beacon referenceBeacon,
+                                                                double xPositionOffset,
+                                                                double yPositionOffset,
+                                                                String uuid,
+                                                                int major,
+                                                                int minor) {
 
-        Beacon beacon = new Beacon(
+        AnchorBeacon anchorBeacon = new AnchorBeacon(
                 name,
                 referenceBeacon, xPositionOffset, yPositionOffset,
                 uuid, major, minor);
-        return addAnchorBeacon(beacon);
+        return addAnchorBeacon(anchorBeacon);
     }
+
 
     /**
      * Adds a zone to the set of zones.
@@ -82,27 +83,31 @@ public class Map {
     }
 
 
+    // Define beacons and zones
     static {
-        Beacon b1 = addAbsolutePositionAnchorBeacon(
+        AnchorBeacon b1 = addAbsolutePositionAnchorBeacon(
                 "white17 - Entrance",
                 20, 0,
                 "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 46447, 25300);
-        Beacon b2 = addRelativePositionAnchorBeacon(
+ /*       AnchorBeacon b2 = addRelativePositionAnchorBeacon(
                 "white5 - Kitchen",
                 b1, -5, 25,
-                "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 33753, 28870);
-        Beacon b3 = addAbsolutePositionAnchorBeacon(
+                "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 33753, 28870);*/
+        AnchorBeacon b3 = addAbsolutePositionAnchorBeacon(
                 "white1 - Lower Elevator",
                 15, 60,
                 "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 6607, 59029);
-        Beacon b4 = addAbsolutePositionAnchorBeacon(
+        AnchorBeacon b4 = addAbsolutePositionAnchorBeacon(
                 "white2 - End Lower Hallway",
                 30, 80,
                 "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 62315, 20156);
-        
+
+
         Zone z1 = addZone("Main Hallway");
         z1.addAnchorBeacon(b1);
+/*
         z1.addSupportBeacon(b2);
+*/
 
         for (Beacon anchorBeacon : anchorBeacons) {
             Log.v(TAG, anchorBeacon.toString());
@@ -139,14 +144,14 @@ public class Map {
     }
 
 
-    private static class Beacon {
+    private static abstract class Beacon {
 
-        private String name;
-        private Point position;
+        protected String name;
+        protected Point position;
 
-        private UUID uuid;
-        private int major;
-        private int minor;
+        protected UUID uuid;
+        protected int major;
+        protected int minor;
 
 
         /**
@@ -215,27 +220,119 @@ public class Map {
     }
 
 
+    private static class AnchorBeacon extends Beacon {
+
+        private ArrayList<WeakReference<Zone>> zones = new ArrayList<>();
+
+        /**
+         * Standard constructor.
+         */
+        public AnchorBeacon(String name, Point position, UUID uuid, int major, int minor) {
+            super(name, position, uuid, major, minor);
+        }
+
+        /**
+         * Constructor using an absolute position.
+         */
+        public AnchorBeacon(String name,
+                            double xPosition,
+                            double yPosition,
+                            String uuid,
+                            int major,
+                            int minor) {
+
+            super(name, xPosition, yPosition, uuid, major, minor);
+        }
+
+        /**
+         * Constructor using a position relative to another beacon.
+         */
+        public AnchorBeacon(String name,
+                            Beacon referenceBeacon,
+                            double xPositionOffset,
+                            double yPositionOffset,
+                            String uuid,
+                            int major,
+                            int minor) {
+
+            super(name, referenceBeacon, xPositionOffset, yPositionOffset, uuid, major, minor);
+        }
+
+        public void addZone(Zone zone) {
+            zones.add(new WeakReference<Zone>(zone));
+        }
+
+    }
+
+
+    private static class SupportBeacon extends Beacon {
+
+        private WeakReference<Zone> zone = null;
+
+        /**
+         * Standard constructor.
+         */
+        public SupportBeacon(String name, Point position, UUID uuid, int major, int minor) {
+            super(name, position, uuid, major, minor);
+        }
+
+        /**
+         * Constructor using an absolute position.
+         */
+        public SupportBeacon(String name,
+                             double xPosition,
+                             double yPosition,
+                             String uuid,
+                             int major,
+                             int minor) {
+
+            super(name, xPosition, yPosition, uuid, major, minor);
+        }
+
+        /**
+         * Constructor using a position relative to another beacon.
+         */
+        public SupportBeacon(String name,
+                             Beacon referenceBeacon,
+                             double xPositionOffset,
+                             double yPositionOffset,
+                             String uuid,
+                             int major,
+                             int minor) {
+
+            super(name, referenceBeacon, xPositionOffset, yPositionOffset, uuid, major, minor);
+        }
+
+        public void setZone(Zone zone) {
+            this.zone = new WeakReference<Zone>(zone);
+        }
+
+    }
+
+
     private static class Zone {
 
         private String name;
 
         // A Zone does not own its anchor beacons, since they can define multiple zones
-        private ArrayList<WeakReference<Beacon>> anchorBeacons = new ArrayList<>();
+        private ArrayList<WeakReference<AnchorBeacon>> anchorBeacons = new ArrayList<>();
 
         // A zone owns its support beacons, since they are only part of that zone
-        private ArrayList<Beacon> supportBeacons = new ArrayList<>();
+        private ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
 
 
         public Zone(String name) {
             this.name = name;
         }
 
-        public void addAnchorBeacon(Beacon anchorBeacon) {
-            anchorBeacons.add(new WeakReference<Beacon>(anchorBeacon));
+        public void addAnchorBeacon(AnchorBeacon anchorBeacon) {
+            anchorBeacons.add(new WeakReference<AnchorBeacon>(anchorBeacon));
+            anchorBeacon.addZone(this);
         }
 
-        public void addSupportBeacon(Beacon supportBeacon) {
+        public void addSupportBeacon(SupportBeacon supportBeacon) {
             supportBeacons.add(supportBeacon);
+            supportBeacon.setZone(this);
         }
 
         @Override
