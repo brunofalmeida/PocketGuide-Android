@@ -6,6 +6,7 @@ import android.util.Log;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
+import com.example.cossettenavigation.map.Map;
 
 import java.util.List;
 
