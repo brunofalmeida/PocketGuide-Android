@@ -41,4 +41,11 @@ public class SupportBeacon extends Beacon {
         this.zone = new WeakReference<Zone>(zone);
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+                "%s { name = %s, position = %s, uuid = %s, major = %d, minor = %d, zone = %s }",
+                getClass().getSimpleName(), name, position, uuid, major, minor, zone);
+    }
+
 }

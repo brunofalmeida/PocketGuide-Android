@@ -38,6 +38,13 @@ public class AnchorBeacon extends Beacon {
         super(name, referenceBeacon, xPositionOffset, yPositionOffset, uuid, major, minor);
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+                "%s { name = %s, position = %s, uuid = %s, major = %d, minor = %d, zones = %s }",
+                getClass().getSimpleName(), name, position, uuid, major, minor, zones);
+    }
+
     public void addZone(Zone zone) {
         zones.add(new WeakReference<Zone>(zone));
     }
