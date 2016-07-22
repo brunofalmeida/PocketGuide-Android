@@ -23,6 +23,11 @@ public class Map {
 
     private static ArrayList<Beacon> anchorBeacons = new ArrayList<>();
 
+    private static ArrayList<Zone> zones = new ArrayList<>();
+
+
+
+
     /**
      * Adds a beacon to the set of anchor beacons using an absolute position.
      * @return The anchor beacon that was added.
@@ -59,9 +64,6 @@ public class Map {
                 major,
                 minor);
     }
-
-
-    private static ArrayList<Zone> zones = new ArrayList<>();
 
     /**
      * Adds a zone to the set of zones.
@@ -110,6 +112,7 @@ public class Map {
         private double x;
         private double y;
 
+
         public Point(double x, double y) {
             this.x = x;
             this.y = y;
@@ -134,6 +137,7 @@ public class Map {
         private UUID uuid;
         private int major;
         private int minor;
+
 
         public Beacon(String name, Point position, UUID uuid, int major, int minor) {
             this.name = name;
