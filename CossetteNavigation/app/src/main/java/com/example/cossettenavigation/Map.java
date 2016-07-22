@@ -29,6 +29,15 @@ public class Map {
 
 
     /**
+     * Adds a beacon to the set of anchor beacons.
+     * @return The anchor beacon that was added.
+     */
+    private static Beacon addAnchorBeacon(Beacon beacon) {
+        anchorBeacons.add(beacon);
+        return beacon;
+    }
+
+    /**
      * Adds a beacon to the set of anchor beacons using an absolute position.
      * @return The anchor beacon that was added.
      */
@@ -40,8 +49,7 @@ public class Map {
                                                           int minor) {
 
         Beacon beacon = new Beacon(name, xPosition, yPosition, uuid, major, minor);
-        anchorBeacons.add(beacon);
-        return beacon;
+        return addAnchorBeacon(beacon);
     }
 
     /**
@@ -56,13 +64,11 @@ public class Map {
                                                           int major,
                                                           int minor) {
 
-        return addAbsolutePositionAnchorBeacon(
+        Beacon beacon = new Beacon(
                 name,
-                referenceBeacon.getXPosition() + xPositionOffset,
-                referenceBeacon.getYPosition() + yPositionOffset,
-                uuid,
-                major,
-                minor);
+                referenceBeacon, xPositionOffset, yPositionOffset,
+                uuid, major, minor);
+        return addAnchorBeacon(beacon);
     }
 
     /**
