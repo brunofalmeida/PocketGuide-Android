@@ -18,9 +18,10 @@ public class Map {
 
     private static final String TAG = "Map";
 
-    private static ArrayList<Beacon> anchorBeacons = new ArrayList<>();
-
     private static final String DEFAULT_WHITE_UUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
+
+
+    private static ArrayList<Beacon> anchorBeacons = new ArrayList<>();
 
     /**
      * Adds a beacon to the set of anchor beacons using an absolute position.
@@ -83,13 +84,13 @@ public class Map {
                 b1, -5, 25,
                 "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 33753, 28870);
         Beacon b3 = addAbsolutePositionAnchorBeacon(
-                                                    "white1 - Lower Elevator",
-                                                    15, 60,
-                                                    "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 6607, 59029);
-        Beacon b4= addAbsolutePositionAnchorBeacon(
-                                                   "white2 - End Lower Hallway",
-                                                   30, 80,
-                                                   "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 62315, 20156);
+                "white1 - Lower Elevator",
+                15, 60,
+                "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 6607, 59029);
+        Beacon b4 = addAbsolutePositionAnchorBeacon(
+                "white2 - End Lower Hallway",
+                30, 80,
+                "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 62315, 20156);
         
         Zone z1 = addZone("Main Hallway");
         z1.addAnchorBeacon(b1);
@@ -102,6 +103,7 @@ public class Map {
             Log.v(TAG, zone.toString());
         }
     }
+
 
     private static class Point {
 
@@ -176,7 +178,7 @@ public class Map {
         }
 
         public void addAnchorBeacon(Beacon anchorBeacon) {
-            anchorBeacons.add(new WeakReference(anchorBeacon));
+            anchorBeacons.add(new WeakReference<Beacon>(anchorBeacon));
         }
 
         public void addSupportBeacon(Beacon supportBeacon) {
