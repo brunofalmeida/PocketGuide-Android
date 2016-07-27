@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         super.onCreate(savedInstanceState);
 
+        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
         setContentView(R.layout.activity_main);
 
@@ -231,8 +233,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         }
+
+        mVisible=false;
     }
 
     @SuppressLint("InlinedApi")
@@ -240,8 +244,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.show();
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         }
+
+        mVisible=true;
     }
 
     @Override
