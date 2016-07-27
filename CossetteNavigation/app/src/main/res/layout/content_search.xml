@@ -12,9 +12,10 @@
     tools:context="com.example.cossettenavigation.SearchActivity"
     tools:showIn="@layout/activity_search">
 
-    <android.support.v7.widget.SearchView
+    <!--<android.support.v7.widget.SearchView
         android:id="@+id/menu_search"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize" />
+        -->
 
 </RelativeLayout>

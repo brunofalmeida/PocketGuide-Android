@@ -2,6 +2,7 @@ package com.example.cossettenavigation;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.hardware.Camera;
@@ -244,6 +245,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onConfigurationChanged(newConfig);
 
         mCameraView.activityOnConfigurationChanged();
+    }
+
+    public void onFABClick(View view) {
+        Intent intent = new Intent(this,SearchActivity.class);
+        startActivity(intent);
     }
 
 }
