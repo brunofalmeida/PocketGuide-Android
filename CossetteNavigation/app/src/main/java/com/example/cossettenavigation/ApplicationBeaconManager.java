@@ -7,6 +7,7 @@ import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
 import com.estimote.sdk.Utils;
+import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Map;
 
 import java.util.List;
@@ -54,7 +55,6 @@ public class ApplicationBeaconManager extends Application {
                 setRangingListener();
 
                 startMonitoring();
-                startRanging();
             }
         });
     }
@@ -70,6 +70,8 @@ public class ApplicationBeaconManager extends Application {
                 for (Beacon beacon : list) {
                     Log.v(TAG, "Beacon: " + beacon);
                 }
+
+                startRanging(region);
             }
 
             @Override
@@ -100,38 +102,40 @@ public class ApplicationBeaconManager extends Application {
 
 
     private void startMonitoring() {
-        beaconManager.startMonitoring(ALL_BEACONS_REGION);
+//        beaconManager.startMonitoring(ALL_BEACONS_REGION);
 
-/*        // Start monitoring all anchor beacons in map
+        // Start monitoring all anchor beacons
         for (AnchorBeacon anchorBeacon : Map.getAnchorBeacons()) {
             beaconManager.startMonitoring(new Region(
                     anchorBeacon.getName(),
                     anchorBeacon.getUUID(),
                     anchorBeacon.getMajor(),
                     anchorBeacon.getMinor()));
-        }*/
+        }
     }
 
     private void stopMonitoring() {
-        beaconManager.stopMonitoring(ALL_BEACONS_REGION);
+//        beaconManager.stopMonitoring(ALL_BEACONS_REGION);
 
-/*        // Stop monitoring all anchor beacons in map
+        // Stop monitoring all anchor beacons
         for (AnchorBeacon anchorBeacon : Map.getAnchorBeacons()) {
             beaconManager.stopMonitoring(new Region(
                     anchorBeacon.getName(),
                     anchorBeacon.getUUID(),
                     anchorBeacon.getMajor(),
                     anchorBeacon.getMinor()));
-        }*/
+        }
     }
 
 
-    private void startRanging() {
-        beaconManager.startRanging(ALL_BEACONS_REGION);
+    private void startRanging(Region region) {
+//        beaconManager.startRanging(ALL_BEACONS_REGION);
+
+        beaconManager.startRanging(region);
     }
 
     private void stopRanging() {
-        beaconManager.stopRanging(ALL_BEACONS_REGION);
+//        beaconManager.stopRanging(ALL_BEACONS_REGION);
     }
 
 }
