@@ -39,12 +39,12 @@ public class Map {
      * Adds a beacon to the set of anchor beacons using an absolute position.
      * @return The anchor beacon that was added.
      */
-    private static AnchorBeacon addAbsolutePositionAnchorBeacon(String name,
-                                                                double xPosition,
-                                                                double yPosition,
-                                                                String uuid,
-                                                                int major,
-                                                                int minor) {
+    private static AnchorBeacon addAnchorBeacon(String name,
+                                                double xPosition,
+                                                double yPosition,
+                                                String uuid,
+                                                int major,
+                                                int minor) {
 
         AnchorBeacon anchorBeacon = new AnchorBeacon(name, xPosition, yPosition, uuid, major, minor);
         return addAnchorBeacon(anchorBeacon);
@@ -54,13 +54,13 @@ public class Map {
      * Adds a beacon to the set of anchor beacons using a position relative to another beacon.
      * @return The anchor beacon that was added.
      */
-    private static AnchorBeacon addRelativePositionAnchorBeacon(String name,
-                                                                Beacon referenceBeacon,
-                                                                double xPositionOffset,
-                                                                double yPositionOffset,
-                                                                String uuid,
-                                                                int major,
-                                                                int minor) {
+    private static AnchorBeacon addAnchorBeacon(String name,
+                                                Beacon referenceBeacon,
+                                                double xPositionOffset,
+                                                double yPositionOffset,
+                                                String uuid,
+                                                int major,
+                                                int minor) {
 
         AnchorBeacon anchorBeacon = new AnchorBeacon(
                 name,
@@ -89,16 +89,15 @@ public class Map {
     static {
         Log.v(TAG, "static initializer");
 
-        AnchorBeacon b1 = addAbsolutePositionAnchorBeacon(
+        AnchorBeacon b1 = addAnchorBeacon(
                 "white17 - Entrance",
                 20, 0,
                 "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 46447, 25300);
-
-        AnchorBeacon b2 = addAbsolutePositionAnchorBeacon(
+        AnchorBeacon b2 = addAnchorBeacon(
                 "white1 - Lower Elevator",
                 15, 60,
                 "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 6607, 59029);
-        AnchorBeacon b3 = addAbsolutePositionAnchorBeacon(
+        AnchorBeacon b3 = addAnchorBeacon(
                 "white2 - End Lower Hallway",
                 30, 80,
                 "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 62315, 20156);
