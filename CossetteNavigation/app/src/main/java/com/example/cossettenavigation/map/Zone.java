@@ -26,9 +26,21 @@ public class Zone {
         anchorBeacon.addZone(this);
     }
 
+    public void addAnchorBeacons(AnchorBeacon... anchorBeacons) {
+        for (AnchorBeacon anchorBeacon : anchorBeacons) {
+            addAnchorBeacon(anchorBeacon);
+        }
+    }
+
     public void addSupportBeacon(SupportBeacon supportBeacon) {
         supportBeacons.add(supportBeacon);
         supportBeacon.setZone(this);
+    }
+
+    public void addSupportBeacons(SupportBeacon... supportBeacons) {
+        for (SupportBeacon supportBeacon : supportBeacons) {
+            addSupportBeacon(supportBeacon);
+        }
     }
 
     @Override

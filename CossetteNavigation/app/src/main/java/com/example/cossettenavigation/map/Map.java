@@ -70,6 +70,8 @@ public class Map {
     }
 
 
+
+
     /**
      * Adds a zone to the set of zones.
      * @return The zone that was added.
@@ -91,25 +93,26 @@ public class Map {
                 "white17 - Entrance",
                 20, 0,
                 "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 46447, 25300);
- /*       AnchorBeacon b2 = addRelativePositionAnchorBeacon(
-                "white5 - Kitchen",
-                b1, -5, 25,
-                "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 33753, 28870);*/
-        AnchorBeacon b3 = addAbsolutePositionAnchorBeacon(
+
+        AnchorBeacon b2 = addAbsolutePositionAnchorBeacon(
                 "white1 - Lower Elevator",
                 15, 60,
                 "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 6607, 59029);
-        AnchorBeacon b4 = addAbsolutePositionAnchorBeacon(
+        AnchorBeacon b3 = addAbsolutePositionAnchorBeacon(
                 "white2 - End Lower Hallway",
                 30, 80,
                 "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 62315, 20156);
 
+        // TODO - make a support beacon
+        /*        AnchorBeacon b4 = addRelativePositionAnchorBeacon(
+                "white5 - Kitchen",
+                b1, -5, 25,
+                "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 33753, 28870);*/
+
 
         Zone z1 = addZone("Main Hallway");
-        z1.addAnchorBeacon(b1);
-/*
-        z1.addSupportBeacon(b2);
-*/
+        z1.addAnchorBeacons(b1, b2, b3);
+//        z1.addSupportBeacons(b2);
 
         for (AnchorBeacon anchorBeacon : anchorBeacons) {
             Log.v(TAG, anchorBeacon.toString());
