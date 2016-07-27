@@ -16,7 +16,7 @@ public class Map {
 
     private static final String TAG = "Map";
 
-    private static final String DEFAULT_WHITE_UUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
+    private static final String DEFAULT_UUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
 
 
     private static ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
@@ -85,35 +85,72 @@ public class Map {
     }
 
 
+    private static void addLooseBeacons() {
+        AnchorBeacon b1 = addAnchorBeacon(
+                "white1 - Lower Elevator",
+                15, 60,
+                DEFAULT_UUID, 6607, 59029);
+        AnchorBeacon b2 = addAnchorBeacon(
+                "white2 - End Lower Hallway",
+                30, 80,
+                DEFAULT_UUID, 62315, 20156);
+    }
+
+    private static void addFloor1() {
+        AnchorBeacon b1 = addAnchorBeacon(
+                "white17 - Entrance",
+                20, 0,
+                DEFAULT_UUID, 46447, 25300);
+        AnchorBeacon b2 = addAnchorBeacon(
+                "white1 - Lower Elevator",
+                15, 60,
+                DEFAULT_UUID, 6607, 59029);
+        AnchorBeacon b3 = addAnchorBeacon(
+                "white2 - End Lower Hallway",
+                30, 80,
+                DEFAULT_UUID, 62315, 20156);
+
+/*        // TODO - make a support beacon
+        AnchorBeacon b4 = addAnchorBeacon(
+                "white5 - Kitchen",
+                b1, -5, 25,
+                DEFAULT_UUID, 33753, 28870);*/
+
+        Zone z1 = addZone("Main Hallway");
+        z1.addAnchorBeacons(b1, b2, b3);
+//        z1.addSupportBeacons(b4);
+    }
+
+    private static void addFloor2() {
+        AnchorBeacon ice1 = addAnchorBeacon(
+                "ice1 - Floor 2",
+                20, 0,
+                DEFAULT_UUID, 9051, 52752);
+        AnchorBeacon ice2 = addAnchorBeacon(
+                "ice2 - Floor 2",
+                0, 25,
+                DEFAULT_UUID, 27598, 15040);
+        AnchorBeacon ice3 = addAnchorBeacon(
+                "ice3 - Floor 2",
+                10, 100,
+                DEFAULT_UUID, 62693, 23343);
+        AnchorBeacon ice4 = addAnchorBeacon(
+                "ice4 - Floor 2",
+                60, 0,
+                DEFAULT_UUID, 42484, 10171);
+
+        Zone z1 = addZone("Open Area - Floor 2");
+        z1.addAnchorBeacons(ice1, ice2, ice3, ice4);
+    }
+
+
 
 
     // Define beacons and zones
     static {
         Log.v(TAG, "static initializer");
 
-        AnchorBeacon b1 = addAnchorBeacon(
-                "white17 - Entrance",
-                20, 0,
-                "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 46447, 25300);
-        AnchorBeacon b2 = addAnchorBeacon(
-                "white1 - Lower Elevator",
-                15, 60,
-                "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 6607, 59029);
-        AnchorBeacon b3 = addAnchorBeacon(
-                "white2 - End Lower Hallway",
-                30, 80,
-                "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 62315, 20156);
-
-        // TODO - make a support beacon
-        /*        AnchorBeacon b4 = addRelativePositionAnchorBeacon(
-                "white5 - Kitchen",
-                b1, -5, 25,
-                "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 33753, 28870);*/
-
-
-        Zone z1 = addZone("Main Hallway");
-        z1.addAnchorBeacons(b1, b2, b3);
-//        z1.addSupportBeacons(b2);
+        addFloor2();
 
         for (AnchorBeacon anchorBeacon : anchorBeacons) {
             Log.v(TAG, anchorBeacon.toString());
