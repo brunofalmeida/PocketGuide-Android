@@ -6,6 +6,7 @@ import android.util.Log;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
+import com.estimote.sdk.Utils;
 import com.example.cossettenavigation.map.Map;
 
 import java.util.List;
@@ -87,8 +88,11 @@ public class ApplicationBeaconManager extends Application {
                 Log.v(TAG, "BeaconManager.RangingListener onBeaconsDiscovered()");
 
                 Log.v(TAG, "Region: " + region);
+
                 for (Beacon beacon : list) {
-                    Log.v(TAG, "Beacon: " + beacon);
+                    Log.v(TAG, String.format(
+                            "Beacon: accuracy = %f, proximity = %s, %s",
+                            Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));
                 }
             }
         });
@@ -97,10 +101,28 @@ public class ApplicationBeaconManager extends Application {
 
     private void startMonitoring() {
         beaconManager.startMonitoring(ALL_BEACONS_REGION);
+
+/*        // Start monitoring all anchor beacons in map
+        for (AnchorBeacon anchorBeacon : Map.getAnchorBeacons()) {
+            beaconManager.startMonitoring(new Region(
+                    anchorBeacon.getName(),
+                    anchorBeacon.getUUID(),
+                    anchorBeacon.getMajor(),
+                    anchorBeacon.getMinor()));
+        }*/
     }
 
     private void stopMonitoring() {
         beaconManager.stopMonitoring(ALL_BEACONS_REGION);
+
+/*        // Stop monitoring all anchor beacons in map
+        for (AnchorBeacon anchorBeacon : Map.getAnchorBeacons()) {
+            beaconManager.stopMonitoring(new Region(
+                    anchorBeacon.getName(),
+                    anchorBeacon.getUUID(),
+                    anchorBeacon.getMajor(),
+                    anchorBeacon.getMinor()));
+        }*/
     }
 
 

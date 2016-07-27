@@ -24,7 +24,9 @@ public class Map {
     private static ArrayList<Zone> zones = new ArrayList<>();
 
 
-
+    public static ArrayList<AnchorBeacon> getAnchorBeacons() {
+        return anchorBeacons;
+    }
 
     /**
      * Adds a beacon to the set of anchor beacons.

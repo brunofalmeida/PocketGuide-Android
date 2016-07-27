@@ -59,6 +59,10 @@ public abstract class Beacon {
                 minor);
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Point getPosition() {
         return position;
     }
@@ -69,6 +73,18 @@ public abstract class Beacon {
 
     public double getYPosition() {
         return getPosition().getY();
+    }
+
+    public UUID getUUID() {
+        return uuid;
+    }
+
+    public int getMajor() {
+        return major;
+    }
+
+    public int getMinor() {
+        return minor;
     }
 
     @Override
