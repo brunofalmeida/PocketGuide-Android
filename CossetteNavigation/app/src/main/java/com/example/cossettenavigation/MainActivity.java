@@ -6,21 +6,22 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.hardware.Camera;
+import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
+
 import com.estimote.sdk.Beacon;
-import com.estimote.sdk.EstimoteSDK;
-import com.estimote.sdk.SystemRequirementsChecker;
 import com.estimote.sdk.BeaconManager;
+import com.estimote.sdk.SystemRequirementsChecker;
+
 import java.util.List;
 
 /**
@@ -98,12 +99,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         setSupportActionBar(toolbar);
 
         m_camera_view = (FrameLayout) findViewById(R.id.camera_view);
-
-
-        //  App ID & App Token can be taken from App section of Estimote Cloud.
-        EstimoteSDK.initialize(this, getString(R.string.app_name), getString(R.string.app_name));
-        // Optional, debug logging.
-        EstimoteSDK.enableDebugLogging(true);
 
         mVisible = true;
 

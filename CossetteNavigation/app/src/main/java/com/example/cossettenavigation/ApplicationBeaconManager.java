@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
+import com.estimote.sdk.EstimoteSDK;
 import com.estimote.sdk.Region;
 import com.estimote.sdk.Utils;
 import com.example.cossettenavigation.map.AnchorBeacon;
@@ -42,6 +43,10 @@ public class ApplicationBeaconManager extends Application {
         // Test Map class
         Map map = new Map();
 
+        // App ID & App Token can be taken from App section of Estimote Cloud.
+        //EstimoteSDK.initialize(this, getString(R.string.app_name), getString(R.string.app_name));
+        // Optional, debug logging.
+        EstimoteSDK.enableDebugLogging(true);
 
         beaconManager = new BeaconManager(this);
 
