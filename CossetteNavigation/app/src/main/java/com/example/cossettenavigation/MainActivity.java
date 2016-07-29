@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         mCameraView.activityOnConfigurationChanged();
     }
 
-    public void onFABClick(View view) {
+    public void onSearchFABClick(View view) {
         Intent intent = new Intent(this,SearchActivity.class);
         startActivity(intent);
     }
