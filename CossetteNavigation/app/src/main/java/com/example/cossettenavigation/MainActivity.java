@@ -54,25 +54,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private boolean mVisible;
     private static Camera mCamera = null;
     private FrameLayout m_camera_view = null;
-    private final Runnable mHidePart2Runnable = new Runnable() {
-        @SuppressLint("InlinedApi")
-        @Override
-        public void run() {
-            //WHAT ARE ALL THESE CONSTANTS
-            // Delayed removal of status and navigation bar
-
-            // Note that some of these constants are new as of API 16 (Jelly Bean)
-            // and API 19 (KitKat). It is safe to use them, as they are inlined
-            // at compile-time and do nothing on earlier devices.
-            //m_camera_view.setSystemUiVisibility(0
-/*                    View.SYSTEM_UI_FLAG_LOW_PROFILE
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION*//*);*/
-        }
-    };
     private CameraView mCameraView = null;
 
 
@@ -94,34 +75,25 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         mVisible = true;
 
         View decorView = getWindow().getDecorView();
-        // Hide both the navigation bar and the status bar.
-        // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
-        // a general rule, you should design your app to hide the status bar whenever you
-        // hide the navigation bar.
-        int uiOptions = 0/*View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN*/;
-        decorView.setSystemUiVisibility(uiOptions);
 
-/*        m_camera_view.setSystemUiVisibility(0
-                *//*View.SYSTEM_UI_FLAG_LOW_PROFILE
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+        m_camera_view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATIO*//*);*/
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
 
-        // Set up the user interaction to manually show or hide the system UI.
+        // Set up the user interaction to manually show or hide the UI.
         m_camera_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toggle();
             }
         });
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
 
 
         /* Check for camera permission */
@@ -168,6 +140,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         try {
             Log.v(TAG, "number of cameras: " + Camera.getNumberOfCameras());
             mCamera = Camera.open();    // you can use open(int) to use different cameras
+            Camera.Parameters params = mCamera.getParameters();
+            if (params.getSupportedFocusModes().contains(
+                    Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+                params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+            }
+            mCamera.setParameters(params);
         } catch (Exception e) {
             Log.e(TAG, "Failed to get camera: " + e.getMessage());
         }
@@ -226,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         }
 
         mVisible=false;
@@ -237,7 +214,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.show();
-            //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         }
 
         mVisible=true;
