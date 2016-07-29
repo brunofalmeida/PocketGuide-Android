@@ -136,19 +136,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private void cameraPermissionGranted() {
         Log.v(TAG, "Camera permission granted");
-
-        try {
-            Log.v(TAG, "number of cameras: " + Camera.getNumberOfCameras());
-            mCamera = Camera.open();    // you can use open(int) to use different cameras
-        } catch (Exception e) {
-            Log.e(TAG, "Failed to get camera: " + e.getMessage());
-        }
-
-        if (mCamera != null) {
-            mCameraView = new CameraView(this); // create a SurfaceView to show camera data
-            FrameLayout camera_view = (FrameLayout) findViewById(R.id.camera_view);
-            camera_view.addView(mCameraView);   // add the SurfaceView to the layout
-        }
+        mCameraView = new CameraView(this); // create a SurfaceView to show camera data
+        FrameLayout camera_view = (FrameLayout) findViewById(R.id.camera_view);
+        camera_view.addView(mCameraView);   // add the SurfaceView to the layout
     }
 
     @Override
