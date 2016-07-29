@@ -28,8 +28,6 @@ import com.estimote.sdk.SystemRequirementsChecker;
  */
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
-    //why hello there
-
     private static final String TAG = "MainActivity";
 
     /**
@@ -74,17 +72,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         mVisible = true;
 
-        View decorView = getWindow().getDecorView();
 
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
-        m_camera_view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
 
         // Set up the user interaction to manually show or hide the UI.
@@ -190,6 +178,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             actionBar.hide();
         }
 
+        View decorView = getWindow().getDecorView();
+
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+        m_camera_view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+
         mVisible=false;
     }
 
@@ -199,6 +199,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (actionBar != null) {
             actionBar.show();
         }
+
+        View decorView = getWindow().getDecorView();
+
+        decorView.setSystemUiVisibility(0);
+
+        m_camera_view.setSystemUiVisibility(0);
 
         mVisible=true;
     }
