@@ -20,10 +20,10 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
 
-        <android.support.v7.widget.SearchView
+        <!--<android.support.v7.widget.SearchView
             android:id="@+id/menu_search"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
+            android:layout_height="?attr/actionBarSize" />-->
 
 
     </android.support.design.widget.AppBarLayout>
