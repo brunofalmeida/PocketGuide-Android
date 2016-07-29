@@ -207,9 +207,9 @@ public class ApplicationBeaconManager extends Application {
     }
 
     private void updateTrackedBeacon(Region region, Beacon beacon) {
-        Log.v(TAG, String.format(
+/*        Log.v(TAG, String.format(
                 "Beacon: accuracy = %f, proximity = %s, %s",
-                Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));
+                Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));*/
         trackedBeacons.put(region, new BeaconData(beacon));
     }
 
@@ -234,7 +234,7 @@ public class ApplicationBeaconManager extends Application {
 
         for (java.util.Map.Entry<Region, BeaconData> entry : trackedBeacons.entrySet()) {
             string += String.format(
-                    "%s : %f\n",
+                    "%s : %.3f\n",
                     entry.getKey().getIdentifier(), entry.getValue().getAccuracy());
         }
 
