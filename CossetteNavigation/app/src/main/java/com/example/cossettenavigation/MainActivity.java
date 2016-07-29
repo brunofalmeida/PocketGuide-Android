@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -21,11 +20,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
 
-import com.estimote.sdk.Beacon;
-import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.SystemRequirementsChecker;
-
-import java.util.List;
 
 /**
  * A full-screen activity that shows and hides the system UI (i.e.
@@ -54,14 +49,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final int UI_ANIMATION_DELAY = 300;
     private static int PERMISSION_REQUEST_CODE_CAMERA = 1;
 
-    private final Handler mHideHandler = new Handler();
     private boolean mVisible;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
     private static Camera mCamera = null;
     private FrameLayout m_camera_view = null;
     private final Runnable mHidePart2Runnable = new Runnable() {
@@ -84,8 +72,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     };
     private CameraView mCameraView = null;
-    private BeaconManager beaconManager;
-    private List<Beacon> rangedBeacons = null;
 
 
     @Override
