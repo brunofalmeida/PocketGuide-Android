@@ -11,14 +11,14 @@ import com.estimote.sdk.Utils;
 import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Map;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Global application state used to detect and manage beacons.
  *
- * Monitoring is coarse, sending enter and exit events.
- * Ranging is fine, providing power readings.
- * - A service to manage beacon ranging (occurs at 1 second intervals).
+ * Monitoring is coarse, sending enter and exit events (30 second intervals).
+ * Ranging is fine, providing power and approximate distance readings (1 second intervals).
  *
  * Created by Bruno on 2016-07-22.
  *
@@ -32,6 +32,43 @@ public class ApplicationBeaconManager extends Application {
     private final Region ALL_BEACONS_REGION = new Region("All Beacons", null, null, null);
 
     private BeaconManager beaconManager;
+
+    /**
+     * Set of beacons to be tracked over time (for location algorithms).
+     */
+    private HashMap<Region, BeaconData> trackedBeacons = new HashMap<>();
+
+
+    /**
+     * A collection of beacon data to be stored and updated over time.
+     */
+    private static class BeaconData {
+
+        double accuracy;
+        Utils.Proximity proximity;
+
+        public BeaconData(Beacon beacon) {
+            this.accuracy = Utils.computeAccuracy(beacon);
+            this.proximity = Utils.computeProximity(beacon);
+        }
+
+        public double getAccuracy() {
+            return accuracy;
+        }
+
+        public Utils.Proximity getProximity() {
+            return proximity;
+        }
+
+        public void setAccuracy(double accuracy) {
+            this.accuracy = accuracy;
+        }
+
+        public void setProximity(Utils.Proximity proximity) {
+            this.proximity = proximity;
+        }
+
+    }
 
 
     @Override
@@ -76,6 +113,12 @@ public class ApplicationBeaconManager extends Application {
                     Log.v(TAG, "Beacon: " + beacon);
                 }
 
+                if (list.size() == 1) {
+                    updateTrackedBeacon(region, list.get(0));
+                } else {
+                    Log.w(TAG, "Unexpected number of beacons in region: " + list.size());
+                }
+
                 startRanging(region);
             }
 
@@ -95,11 +138,14 @@ public class ApplicationBeaconManager extends Application {
                 Log.v(TAG, "BeaconManager.RangingListener onBeaconsDiscovered()");
 
                 Log.v(TAG, "Region: " + region);
-
                 for (Beacon beacon : list) {
-                    Log.v(TAG, String.format(
-                            "Beacon: accuracy = %f, proximity = %s, %s",
-                            Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));
+                    Log.v(TAG, "Beacon: " + beacon);
+                }
+
+                if (list.size() == 1) {
+                    updateTrackedBeacon(region, list.get(0));
+                } else {
+                    Log.w(TAG, "Unexpected number of beacons in region: " + list.size());
                 }
             }
         });
@@ -141,6 +187,13 @@ public class ApplicationBeaconManager extends Application {
 
     private void stopRanging() {
 //        beaconManager.stopRanging(ALL_BEACONS_REGION);
+    }
+
+    private void updateTrackedBeacon(Region region, Beacon beacon) {
+        Log.v(TAG, String.format(
+                "Beacon: accuracy = %f, proximity = %s, %s",
+                Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));
+        trackedBeacons.put(region, new BeaconData(beacon));
     }
 
 }
