@@ -13,6 +13,8 @@ import com.example.cossettenavigation.map.Map;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Global application state used to detect and manage beacons.
@@ -68,6 +70,12 @@ public class ApplicationBeaconManager extends Application {
             this.proximity = proximity;
         }
 
+        @Override
+        public String toString() {
+            return String.format(
+                    "BeaconData { accuracy = %f, proximity = %s }",
+                    getAccuracy(), getProximity());
+        }
     }
 
 
@@ -84,6 +92,15 @@ public class ApplicationBeaconManager extends Application {
         //EstimoteSDK.initialize(this, getString(R.string.app_name), getString(R.string.app_name));
         // Optional, debug logging.
         EstimoteSDK.enableDebugLogging(true);
+
+        // TODO
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Log.v(TAG, getTrackedBeaconsLog());
+                Log.v(TAG, getTrackedBeaconsDescription());
+            }
+        }, 100, 1000);
 
         beaconManager = new BeaconManager(this);
 
@@ -135,12 +152,12 @@ public class ApplicationBeaconManager extends Application {
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
-                Log.v(TAG, "BeaconManager.RangingListener onBeaconsDiscovered()");
+/*                Log.v(TAG, "BeaconManager.RangingListener onBeaconsDiscovered()");
 
                 Log.v(TAG, "Region: " + region);
                 for (Beacon beacon : list) {
                     Log.v(TAG, "Beacon: " + beacon);
-                }
+                }*/
 
                 if (list.size() == 1) {
                     updateTrackedBeacon(region, list.get(0));
@@ -194,6 +211,34 @@ public class ApplicationBeaconManager extends Application {
                 "Beacon: accuracy = %f, proximity = %s, %s",
                 Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));
         trackedBeacons.put(region, new BeaconData(beacon));
+    }
+
+    public String getTrackedBeaconsLog() {
+        Log.v(TAG, "getTrackedBeaconsLog()");
+
+        String string = "trackedBeacons:\n";
+
+        for (java.util.Map.Entry<Region, BeaconData> beacon : trackedBeacons.entrySet()) {
+            string += String.format(
+                    "%s : %s\n",
+                    beacon.getValue(), beacon.getKey());
+        }
+
+        return string;
+    }
+
+    public String getTrackedBeaconsDescription() {
+        Log.v(TAG, "getTrackedBeaconsDescription()");
+
+        String string = "";
+
+        for (java.util.Map.Entry<Region, BeaconData> entry : trackedBeacons.entrySet()) {
+            string += String.format(
+                    "%s : %f\n",
+                    entry.getKey().getIdentifier(), entry.getValue().getAccuracy());
+        }
+
+        return string;
     }
 
 }
