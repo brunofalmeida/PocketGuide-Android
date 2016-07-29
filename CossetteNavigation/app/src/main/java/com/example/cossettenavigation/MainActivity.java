@@ -2,12 +2,14 @@ package com.example.cossettenavigation;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static int PERMISSION_REQUEST_CODE_CAMERA = 1;
 
     private boolean mVisible;
+    private boolean cVisible;
     private FrameLayout m_camera_view = null;
     private CameraView mCameraView = null;
 
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         m_camera_view = (FrameLayout) findViewById(R.id.camera_view);
 
         mVisible = true;
-
+        cVisible=true;
 
 
 
@@ -125,6 +128,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 Intent intent = new Intent(this, DebugActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.camera_button:
+                cameraOnOff();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -146,12 +152,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onPostCreate(savedInstanceState);
     }
 
+    private void cameraOnOff{
+        if (cVisible) hideCamera();
+        else showCamera();
+    }
+    
+    private void hideCamera(){
+        //TODO ADD FUNC
+        mBuilder.setContentTitle()
+    }
+
+    private void showCamera(){
+        //TODO ADD FUNC
+    }
+
     private void toggle() {
-        if (mVisible) {
-            hide();
-        } else {
-            show();
-        }
+        if (mVisible) hide();
+        else show();
     }
 
     private void hide() {
