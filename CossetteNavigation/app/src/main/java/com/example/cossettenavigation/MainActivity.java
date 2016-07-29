@@ -29,6 +29,8 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
+    //why hello there
+
     private static final String TAG = "MainActivity";
 
     /**
