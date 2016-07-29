@@ -11,8 +11,8 @@
         android:name="android.hardware.camera.autofocus"
         android:required="true" />
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".ApplicationBeaconManager"
@@ -39,6 +39,15 @@
         <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.cossettenavigation.MainActivity" />
+        </activity>
+        <activity
+            android:name=".DebugActivity"
+            android:label="@string/title_activity_debug"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
