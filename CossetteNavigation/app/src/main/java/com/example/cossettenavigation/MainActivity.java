@@ -6,22 +6,21 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.hardware.Camera;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
-import com.estimote.sdk.Beacon;
-import com.estimote.sdk.EstimoteSDK;
+
 import com.estimote.sdk.SystemRequirementsChecker;
-import com.estimote.sdk.BeaconManager;
-import java.util.List;
 
 /**
  * A full-screen activity that shows and hides the system UI (i.e.
@@ -52,14 +51,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static final int UI_ANIMATION_DELAY = 300;
     private static int PERMISSION_REQUEST_CODE_CAMERA = 1;
 
-    private final Handler mHideHandler = new Handler();
     private boolean mVisible;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
     private static Camera mCamera = null;
     private FrameLayout m_camera_view = null;
     private final Runnable mHidePart2Runnable = new Runnable() {
@@ -82,8 +74,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     };
     private CameraView mCameraView = null;
-    private BeaconManager beaconManager;
-    private List<Beacon> rangedBeacons = null;
 
 
     @Override
@@ -100,12 +90,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         setSupportActionBar(toolbar);
 
         m_camera_view = (FrameLayout) findViewById(R.id.camera_view);
-
-
-        //  App ID & App Token can be taken from App section of Estimote Cloud.
-        EstimoteSDK.initialize(this, getString(R.string.app_name), getString(R.string.app_name));
-        // Optional, debug logging.
-        EstimoteSDK.enableDebugLogging(true);
 
         mVisible = true;
 
@@ -196,6 +180,25 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_debug:
+                Intent intent = new Intent(this, DebugActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -249,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         mCameraView.activityOnConfigurationChanged();
     }
 
-    public void onFABClick(View view) {
+    public void onSearchFABClick(View view) {
         Intent intent = new Intent(this,SearchActivity.class);
         startActivity(intent);
     }
