@@ -43,6 +43,12 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
         try {
             Log.v(TAG, "number of cameras: " + Camera.getNumberOfCameras());
             mCamera = Camera.open();    // you can use open(int) to use different cameras
+            Camera.Parameters params = mCamera.getParameters();
+            if (params.getSupportedFocusModes().contains(
+                    Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+                params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+            }
+            mCamera.setParameters(params);
         } catch (Exception e) {
             Log.e(TAG, "Failed to get camera: " + e.getMessage() + ", " + e.toString());
         }
