@@ -4,6 +4,12 @@
     tools:context="com.example.cossettenavigation.MainActivity">
 
     <item
+        android:icon="@drawable/ic_action_camera"
+        android:title="Camera Toggle"
+        app:showAsAction="always"/>
+
+
+    <item
         android:id="@+id/action_debug"
         android:icon="@android:drawable/ic_menu_info_details"
         android:orderInCategory="100"
