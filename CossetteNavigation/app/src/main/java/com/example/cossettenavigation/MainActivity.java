@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
@@ -65,10 +64,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         });
 
 
-        /* Check for camera permission */
-
-        // Permission is not already granted
-        // Must request permission
+        // Check for camera permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -76,8 +72,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.CAMERA},
                     PERMISSION_REQUEST_CODE_CAMERA);
-
-            // Permission is already granted
         } else {
             cameraPermissionGranted();
         }
@@ -94,9 +88,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                // permission granted
                 cameraPermissionGranted();
-
             } else {
                 cGranted=false;
             }
@@ -106,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private void cameraPermissionGranted() {
         Log.v(TAG, "Camera permission granted");
         cGranted=true;
+        cVisible=true;
         mCameraView = new CameraView(this); // create a SurfaceView to show camera data
         FrameLayout camera_view = (FrameLayout) findViewById(R.id.camera_view);
         camera_view.addView(mCameraView);   // add the SurfaceView to the layout
@@ -150,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void cameraOnOff() {
+
         if (cGranted) {
             if (cVisible) hideCamera();
             else showCamera();
@@ -157,11 +151,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
     
     private void hideCamera(){
-        //TODO ADD FUNC
+        mCameraView.setVisibility(View.INVISIBLE);
+        cVisible=false;
     }
 
     private void showCamera(){
-        //TODO ADD FUNC
+        mCameraView=new CameraView(this);
+        m_camera_view.addView(mCameraView);
+        cVisible=true;
     }
 
     private void toggle() {
