@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private boolean mVisible;
     private boolean cVisible;
+    private boolean cGranted;
     private FrameLayout m_camera_view = null;
     private CameraView mCameraView = null;
 
@@ -54,9 +55,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         m_camera_view = (FrameLayout) findViewById(R.id.camera_view);
 
         mVisible = true;
-        cVisible=true;
-
-
 
         // Set up the user interaction to manually show or hide the UI.
         m_camera_view.setOnClickListener(new View.OnClickListener() {
@@ -100,13 +98,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 cameraPermissionGranted();
 
             } else {
-                // permission denied
+                cGranted=false;
             }
         }
     }
 
     private void cameraPermissionGranted() {
         Log.v(TAG, "Camera permission granted");
+        cGranted=true;
         mCameraView = new CameraView(this); // create a SurfaceView to show camera data
         FrameLayout camera_view = (FrameLayout) findViewById(R.id.camera_view);
         camera_view.addView(mCameraView);   // add the SurfaceView to the layout
@@ -151,13 +150,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void cameraOnOff() {
-        if (cVisible) hideCamera();
-        else showCamera();
+        if (cGranted) {
+            if (cVisible) hideCamera();
+            else showCamera();
+        }
     }
     
     private void hideCamera(){
         //TODO ADD FUNC
-        //mBuilder.setContentTitle();
     }
 
     private void showCamera(){
