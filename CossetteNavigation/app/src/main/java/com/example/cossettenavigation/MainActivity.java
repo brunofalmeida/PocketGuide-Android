@@ -2,14 +2,12 @@ package com.example.cossettenavigation;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -152,14 +150,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onPostCreate(savedInstanceState);
     }
 
-    private void cameraOnOff{
+    private void cameraOnOff() {
         if (cVisible) hideCamera();
         else showCamera();
     }
     
     private void hideCamera(){
         //TODO ADD FUNC
-        mBuilder.setContentTitle()
+        //mBuilder.setContentTitle();
     }
 
     private void showCamera(){
