@@ -212,15 +212,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         mVisible=true;
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        Log.v(TAG, "onConfigurationChanged()");
-
-        super.onConfigurationChanged(newConfig);
-
-        mCameraView.activityOnConfigurationChanged();
-    }
-
     public void onSearchFABClick(View view) {
         Intent intent = new Intent(this,SearchActivity.class);
         startActivity(intent);
