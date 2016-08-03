@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
@@ -33,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private static int PERMISSION_REQUEST_CODE_CAMERA = 1;
 
     private boolean mVisible;
+    private boolean cVisible;
+    private boolean cGranted;
     private FrameLayout m_camera_view = null;
     private CameraView mCameraView = null;
 
@@ -54,9 +55,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         mVisible = true;
 
-
-
-
         // Set up the user interaction to manually show or hide the UI.
         m_camera_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,10 +64,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         });
 
 
-        /* Check for camera permission */
-
-        // Permission is not already granted
-        // Must request permission
+        // Check for camera permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -77,8 +72,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.CAMERA},
                     PERMISSION_REQUEST_CODE_CAMERA);
-
-            // Permission is already granted
         } else {
             cameraPermissionGranted();
         }
@@ -95,17 +88,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                // permission granted
                 cameraPermissionGranted();
-
             } else {
-                // permission denied
+                cGranted=false;
             }
         }
     }
 
     private void cameraPermissionGranted() {
         Log.v(TAG, "Camera permission granted");
+        cGranted=true;
+        cVisible=true;
         mCameraView = new CameraView(this); // create a SurfaceView to show camera data
         FrameLayout camera_view = (FrameLayout) findViewById(R.id.camera_view);
         camera_view.addView(mCameraView);   // add the SurfaceView to the layout
@@ -124,6 +117,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             case R.id.action_debug:
                 Intent intent = new Intent(this, DebugActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.camera_button:
+                cameraOnOff();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -146,12 +142,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onPostCreate(savedInstanceState);
     }
 
-    private void toggle() {
-        if (mVisible) {
-            hide();
-        } else {
-            show();
+    private void cameraOnOff() {
+
+        if (cGranted) {
+            if (cVisible) hideCamera();
+            else showCamera();
         }
+    }
+    
+    private void hideCamera(){
+        mCameraView.setVisibility(View.INVISIBLE);
+        cVisible=false;
+    }
+
+    private void showCamera(){
+        mCameraView=new CameraView(this);
+        m_camera_view.addView(mCameraView);
+        cVisible=true;
+    }
+
+    private void toggle() {
+        if (mVisible) hide();
+        else show();
     }
 
     private void hide() {
@@ -195,15 +207,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         m_camera_view.setSystemUiVisibility(0);
 
         mVisible=true;
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        Log.v(TAG, "onConfigurationChanged()");
-
-        super.onConfigurationChanged(newConfig);
-
-        mCameraView.activityOnConfigurationChanged();
     }
 
     public void onSearchFABClick(View view) {
