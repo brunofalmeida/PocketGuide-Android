@@ -23,6 +23,11 @@ public class Map {
 
     private static ArrayList<Zone> zones = new ArrayList<>();
 
+    private static double gridWidth = 1;
+    private static double gridHeight = 1;
+
+
+
 
     public static ArrayList<AnchorBeacon> getAnchorBeacons() {
         return anchorBeacons;
@@ -97,6 +102,9 @@ public class Map {
     }
 
     private static void addFloor1() {
+        gridWidth = 30;
+        gridHeight = 100;
+
         AnchorBeacon b1 = addAnchorBeacon(
                 "white17 - Entrance",
                 20, 0,
@@ -122,6 +130,9 @@ public class Map {
     }
 
     private static void addFloor2() {
+        gridWidth = 100;
+        gridHeight = 100;
+
         AnchorBeacon ice1 = addAnchorBeacon(
                 "ice1 - Floor 2",
                 20, 0,
