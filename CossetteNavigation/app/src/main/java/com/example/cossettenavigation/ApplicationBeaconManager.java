@@ -13,8 +13,6 @@ import com.example.cossettenavigation.map.Map;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Global application state used to detect and manage beacons.
@@ -93,14 +91,13 @@ public class ApplicationBeaconManager extends Application {
         // Optional, debug logging.
         EstimoteSDK.enableDebugLogging(true);
 
-        // TODO
-        new Timer().schedule(new TimerTask() {
+/*        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 Log.v(TAG, getTrackedBeaconsLog());
                 Log.v(TAG, getTrackedBeaconsDescription());
             }
-        }, 100, 1000);
+        }, 100, 1000);*/
 
         beaconManager = new BeaconManager(this);
 
