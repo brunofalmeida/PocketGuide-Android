@@ -11,6 +11,14 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    dexOptions {
+        incremental true
+        preDexLibraries true
+        maxProcessCount 2
+        javaMaxHeapSize "2g"
+    }
+
     buildTypes {
         release {
             minifyEnabled false
