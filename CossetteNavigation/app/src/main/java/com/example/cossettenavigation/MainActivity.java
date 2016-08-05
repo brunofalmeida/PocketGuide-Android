@@ -5,7 +5,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.media.Image;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +15,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +24,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.estimote.sdk.SystemRequirementsChecker;
 
@@ -77,6 +83,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         } else {
             cameraPermissionGranted();
         }
+
+        ImageView currentDirection = new ImageView(this);
+
+        currentDirection.setImageResource(R.drawable.uparrow);
+
+        int width=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
+        int height=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
+
+        FrameLayout.LayoutParams params=new FrameLayout.LayoutParams(width,height);
+        params.gravity=Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
+
+        currentDirection.setLayoutParams(params);
+
+        m_camera_view.setForegroundGravity(Gravity.CENTER);
+
+        m_camera_view.addView(currentDirection);
     }
 
     @Override
