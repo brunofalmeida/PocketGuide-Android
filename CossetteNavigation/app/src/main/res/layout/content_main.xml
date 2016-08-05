@@ -9,6 +9,9 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:gravity="center"
+        android:foregroundGravity="center"
         android:id="@+id/camera_view">
     </FrameLayout>
 
