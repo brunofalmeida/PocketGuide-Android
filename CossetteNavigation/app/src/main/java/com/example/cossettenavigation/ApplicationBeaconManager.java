@@ -10,6 +10,14 @@ import com.estimote.sdk.Region;
 import com.estimote.sdk.Utils;
 import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Map;
+import com.example.cossettenavigation.map.Point;
+import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver;
+import com.lemmingapex.trilateration.TrilaterationFunction;
+
+import org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer;
+import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.linear.RealVector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,7 +104,49 @@ public class ApplicationBeaconManager extends Application {
     }
 
 
+    /**
+     * Checks if a beacon manager Region and a map Beacon represent the same beacon.
+     * @return true if the UUID, major, and minor are equal, or false otherwise
+     */
+    private static boolean areEqual(Region region, com.example.cossettenavigation.map.Beacon beacon) {
+        if (region.getProximityUUID() == beacon.getUUID() &&
+                region.getMajor() == beacon.getMajor() &&
+                region.getMinor() == beacon.getMinor()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    /**
+     * ArrayList to Array conversion for trilateration algorithm.
+     * <br>
+     * ArrayList &lt double[] &gt -> double[][]
+     */
+    private static double[][] getDoubleDoubleArray(ArrayList<double[]> arrayList) {
+        double[][] array = new double[arrayList.size()][];
+
+        for (int i = 0; i < arrayList.size(); i++) {
+            array[i] = arrayList.get(i);
+        }
+
+        return array;
+    }
+
+    /**
+     * ArrayList to Array conversion for trilateration algorithm.
+     * <br>
+     * ArrayList &lt Double &gt -> double[]
+     */
+    private static double[] getDoubleArray(ArrayList<Double> arrayList) {
+        double[] array = new double[arrayList.size()];
+
+        for (int i = 0; i < arrayList.size(); i++) {
+            array[i] = arrayList.get(i);
+        }
+
+        return array;
+    }
 
     @Override
     public void onCreate() {
@@ -117,6 +167,7 @@ public class ApplicationBeaconManager extends Application {
             public void run() {
                 Log.v(TAG, getTrackedBeaconsLog());
                 //Log.v(TAG, getTrackedBeaconsDescription());
+                getEstimatedLocation();
             }
         }, 100, 1000);
 
@@ -275,7 +326,80 @@ public class ApplicationBeaconManager extends Application {
                     entry.getKey().getIdentifier(), entry.getValue().getEstimatedAccuracy());
         }
 
+        Point estimatedLocation = getEstimatedLocation();
+        if (estimatedLocation == null) {
+            string += "Location Unavailable";
+        } else {
+            string += String.format(
+                    "(%f, %f)",
+                    estimatedLocation.getX(), estimatedLocation.getY());
+        }
+
         return string;
+    }
+
+    /**
+     * @see <a href="https://github.com/lemmingapex/Trilateration">Trilateration example</a>
+     * @return Estimated location (on map grid), or null if not found
+     */
+    public Point getEstimatedLocation() {
+        // Get beacon positions and distances
+        // Convert positions to metres
+        // { { x, y }, { x, y }, ... }
+        ArrayList<double[]> positions = new ArrayList<>();
+        ArrayList<Double> distances = new ArrayList<>();
+
+        // Loop through tracked beacons
+        for (HashMap.Entry<Region, BeaconData> trackedBeacon : trackedBeacons.entrySet()) {
+
+            // Loop through beacons in map
+            for (AnchorBeacon mapAnchorBeacon : Map.getAnchorBeacons()) {
+
+                // If they both refer to the same beacon
+                if (areEqual(trackedBeacon.getKey(), mapAnchorBeacon)) {
+
+                    // Add position and distance (in metres)
+                    positions.add(new double[] {
+                            mapAnchorBeacon.getXPosition() * Map.metresPerGridUnit,
+                            mapAnchorBeacon.getYPosition() * Map.metresPerGridUnit });
+                    distances.add(trackedBeacon.getValue().getEstimatedAccuracy());
+                }
+            }
+        }
+
+
+        // Trilaterate position
+
+        // If there are 3 or more beacons (required for 2D triangulation)
+        if (positions.size() >= 3) {
+
+/*            double[][] positions = new double[][] { { 5.0, -6.0 }, { 13.0, -15.0 }, { 21.0, -3.0 }, { 12.4, -21.2 } };
+            double[] distances = new double[] { 8.06, 13.97, 23.32, 15.31 };*/
+
+            NonLinearLeastSquaresSolver solver = new NonLinearLeastSquaresSolver(
+                    new TrilaterationFunction(
+                            getDoubleDoubleArray(positions), getDoubleArray(distances)),
+                    new LevenbergMarquardtOptimizer());
+            LeastSquaresOptimizer.Optimum optimum = solver.solve();
+
+            // the answer
+            double[] centroid = optimum.getPoint().toArray();
+
+            // error and geometry information; may throw SingularMatrixException depending the threshold argument provided
+            RealVector standardDeviation = optimum.getSigma(0);
+            RealMatrix covarianceMatrix = optimum.getCovariances(0);
+
+
+
+            Point estimatedLocation = new Point(centroid[0] / Map.metresPerGridUnit, centroid[1] / Map.metresPerGridUnit);
+            //Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
+            return estimatedLocation;
+
+        } else {
+            Log.i(TAG, "getEstimatedLocation(): Not enough beacons to trilaterate location");
+
+            return null;
+        }
     }
 
 }

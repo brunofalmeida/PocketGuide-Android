@@ -25,6 +25,7 @@ public class Map {
 
     public static double gridWidth = 1;
     public static double gridHeight = 1;
+    public static double metresPerGridUnit = 1;
 
 
 
@@ -129,9 +130,13 @@ public class Map {
 //        z1.addSupportBeacons(b4);
     }
 
+    /**
+     * Roughly a 10m x 10m grid.
+     */
     private static void addFloor2() {
         gridWidth = 100;
         gridHeight = 100;
+        metresPerGridUnit = 0.1;
 
         AnchorBeacon ice1 = addAnchorBeacon(
                 "ice1 - F2",
