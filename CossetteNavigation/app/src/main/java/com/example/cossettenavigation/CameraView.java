@@ -135,4 +135,9 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
         setCamera();
     }
 
+    public void activityOnConfigurationChanged() {
+        Log.v(TAG, "activityOnConfigurationChanged()");
+        surfaceChanged(mHolder, 0, 0, 0);
+    }
+
 }
