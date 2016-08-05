@@ -96,7 +96,8 @@ public class FloorMapView extends View {
 
 
 
-        canvas.drawPoint(canvasWidth / 2, canvasHeight / 2, anchorBeaconPaint);
+        // Test drawPoint
+//        canvas.drawPoint(canvasWidth / 2, canvasHeight / 2, anchorBeaconPaint);
 
         for (AnchorBeacon anchorBeacon : Map.getAnchorBeacons()) {
             float x = (float)(anchorBeacon.getXPosition() * pixelsPerMapUnit) + xMargin;
