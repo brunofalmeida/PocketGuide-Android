@@ -127,13 +127,13 @@ public class ApplicationBeaconManager extends Application {
                     Log.v(TAG, "Beacon: " + beacon);
                 }
 
+                startRanging(region);
+
                 if (list.size() == 1) {
                     updateTrackedBeacon(region, list.get(0));
                 } else {
                     Log.w(TAG, "Unexpected number of beacons in region: " + list.size());
                 }
-
-                startRanging(region);
             }
 
             @Override
@@ -141,6 +141,8 @@ public class ApplicationBeaconManager extends Application {
                 Log.v(TAG, "BeaconManager.MonitoringListener onExitedRegion()");
 
                 Log.v(TAG, "Region: " + region);
+
+                stopRanging(region);
 
                 removeTrackedBeacon(region);
             }
@@ -201,8 +203,10 @@ public class ApplicationBeaconManager extends Application {
         beaconManager.startRanging(region);
     }
 
-    private void stopRanging() {
+    private void stopRanging(Region region) {
 //        beaconManager.stopRanging(ALL_BEACONS_REGION);
+
+        beaconManager.stopRanging(region);
     }
 
     private void updateTrackedBeacon(Region region, Beacon beacon) {
