@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.util.Log;
 import android.view.View;
 
+import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Map;
 
 /**
@@ -17,6 +18,7 @@ public class FloorMapView extends View {
     private static final String TAG = "FloorMapView";
 
     private Paint rectanglePaint;
+    private Paint anchorBeaconPaint;
 
 
     public FloorMapView(Context context) {
@@ -25,7 +27,12 @@ public class FloorMapView extends View {
         rectanglePaint = new Paint();
         rectanglePaint.setColor(Color.WHITE);
         rectanglePaint.setStyle(Paint.Style.STROKE);
-        rectanglePaint.setStrokeWidth(50);
+        rectanglePaint.setStrokeWidth(25);
+
+        anchorBeaconPaint = new Paint();
+        anchorBeaconPaint.setColor(Color.WHITE);
+        anchorBeaconPaint.setStyle(Paint.Style.FILL);
+        anchorBeaconPaint.setStrokeWidth(100);
     }
 
     @Override
@@ -40,7 +47,7 @@ public class FloorMapView extends View {
 
         int canvasWidth = canvas.getWidth();
         int canvasHeight = canvas.getHeight();
-        int rectangleMargin = 10;
+        int rectangleMargin = 50;
 
         int availableCanvasWidth = canvasWidth - (2 * rectangleMargin);
         int availableCanvasHeight = canvasHeight - (2 * rectangleMargin);
@@ -53,23 +60,27 @@ public class FloorMapView extends View {
 
         int rectangleWidth;
         int rectangleHeight;
+        double pixelsPerMapUnit;
 
         // Map is wider than available canvas
         if (mapWidthToHeight > availableCanvasWidthToHeight) {
             rectangleWidth = availableCanvasWidth;
             rectangleHeight = (int)(rectangleWidth / mapWidthToHeight);
+            pixelsPerMapUnit = rectangleWidth / mapWidth;
         }
 
         // Map is taller than available canvas
         else if (mapWidthToHeight < availableCanvasWidthToHeight) {
             rectangleHeight = availableCanvasHeight;
             rectangleWidth = (int)(rectangleHeight * mapWidthToHeight);
+            pixelsPerMapUnit = rectangleHeight / mapHeight;
         }
 
         // Map and canvas have same dimension ratio
         else {
             rectangleWidth = availableCanvasWidth;
             rectangleHeight = availableCanvasHeight;
+            pixelsPerMapUnit = rectangleWidth / mapWidth;
         }
 
         int xMargin = (canvasWidth - rectangleWidth) / 2;
@@ -81,6 +92,22 @@ public class FloorMapView extends View {
                 canvasWidth - xMargin,
                 canvasHeight - yMargin,
                 rectanglePaint);
+
+
+
+
+        canvas.drawPoint(canvasWidth / 2, canvasHeight / 2, anchorBeaconPaint);
+
+        for (AnchorBeacon anchorBeacon : Map.getAnchorBeacons()) {
+            float x = (float)(anchorBeacon.getXPosition() * pixelsPerMapUnit) + xMargin;
+            float y = (float)(anchorBeacon.getYPosition() * pixelsPerMapUnit) + yMargin;
+
+            Log.v(TAG, String.format(
+                    "onDraw(): x = %f, y = %f, canvasWidth = %d, canvasHeight = %d",
+                    x, y, canvasWidth, canvasHeight));
+
+            canvas.drawPoint(x, y, anchorBeaconPaint);
+        }
     }
 
 }

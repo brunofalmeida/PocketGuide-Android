@@ -90,6 +90,7 @@ public class Map {
     }
 
 
+    // TODO - change (0,0) to top left
     private static void addLooseBeacons() {
         AnchorBeacon b1 = addAnchorBeacon(
                 "white1 - Lower Elevator",
@@ -101,6 +102,7 @@ public class Map {
                 DEFAULT_UUID, 62315, 20156);
     }
 
+    // TODO - change (0,0) to top left
     private static void addFloor1() {
         gridWidth = 30;
         gridHeight = 100;
