@@ -231,7 +231,7 @@ public class ApplicationBeaconManager extends Application {
 
         for (java.util.Map.Entry<Region, BeaconData> entry : trackedBeacons.entrySet()) {
             string += String.format(
-                    "%s : %.3f\n",
+                    "%s : %.3f m\n",
                     entry.getKey().getIdentifier(), entry.getValue().getAccuracy());
         }
 
