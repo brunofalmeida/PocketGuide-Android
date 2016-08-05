@@ -17,6 +17,7 @@
         android:id="@+id/beacon_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
         android:textSize="18sp" />
 
     <LinearLayout
