@@ -56,7 +56,20 @@ public class DebugActivity extends AppCompatActivity {
         LinearLayout.LayoutParams floorMapViewLayoutParams = new LinearLayout.LayoutParams(0, 0);
         floorMapViewLayoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
         floorMapViewLayoutParams.weight = 1;
-        mapLayout.addView(new FloorMapView(this), floorMapViewLayoutParams);
+        final FloorMapView floorMapView = new FloorMapView(this);
+        mapLayout.addView(floorMapView, floorMapViewLayoutParams);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        floorMapView.invalidate();
+                    }
+                });
+            }
+        }, 1 , 1000);
 
         // Multiple floor map views - test
 /*        for (int i = 0; i < 2; i++) {
