@@ -13,8 +13,6 @@ import com.example.cossettenavigation.map.Map;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Global application state used to detect and manage beacons.
@@ -93,14 +91,13 @@ public class ApplicationBeaconManager extends Application {
         // Optional, debug logging.
         EstimoteSDK.enableDebugLogging(true);
 
-        // TODO
-        new Timer().schedule(new TimerTask() {
+/*        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 Log.v(TAG, getTrackedBeaconsLog());
                 Log.v(TAG, getTrackedBeaconsDescription());
             }
-        }, 100, 1000);
+        }, 100, 1000);*/
 
         beaconManager = new BeaconManager(this);
 
@@ -130,13 +127,13 @@ public class ApplicationBeaconManager extends Application {
                     Log.v(TAG, "Beacon: " + beacon);
                 }
 
+                startRanging(region);
+
                 if (list.size() == 1) {
                     updateTrackedBeacon(region, list.get(0));
                 } else {
                     Log.w(TAG, "Unexpected number of beacons in region: " + list.size());
                 }
-
-                startRanging(region);
             }
 
             @Override
@@ -144,6 +141,10 @@ public class ApplicationBeaconManager extends Application {
                 Log.v(TAG, "BeaconManager.MonitoringListener onExitedRegion()");
 
                 Log.v(TAG, "Region: " + region);
+
+                stopRanging(region);
+
+                removeTrackedBeacon(region);
             }
         });
     }
@@ -202,8 +203,10 @@ public class ApplicationBeaconManager extends Application {
         beaconManager.startRanging(region);
     }
 
-    private void stopRanging() {
+    private void stopRanging(Region region) {
 //        beaconManager.stopRanging(ALL_BEACONS_REGION);
+
+        beaconManager.stopRanging(region);
     }
 
     private void updateTrackedBeacon(Region region, Beacon beacon) {
@@ -213,8 +216,12 @@ public class ApplicationBeaconManager extends Application {
         trackedBeacons.put(region, new BeaconData(beacon));
     }
 
+    private void removeTrackedBeacon(Region region) {
+        trackedBeacons.remove(region);
+    }
+
     public String getTrackedBeaconsLog() {
-        Log.v(TAG, "getTrackedBeaconsLog()");
+        //Log.v(TAG, "getTrackedBeaconsLog()");
 
         String string = "trackedBeacons:\n";
 
@@ -228,13 +235,13 @@ public class ApplicationBeaconManager extends Application {
     }
 
     public String getTrackedBeaconsDescription() {
-        Log.v(TAG, "getTrackedBeaconsDescription()");
+        //Log.v(TAG, "getTrackedBeaconsDescription()");
 
         String string = "";
 
         for (java.util.Map.Entry<Region, BeaconData> entry : trackedBeacons.entrySet()) {
             string += String.format(
-                    "%s : %.3f\n",
+                    "%s : %.3f m\n",
                     entry.getKey().getIdentifier(), entry.getValue().getAccuracy());
         }
 

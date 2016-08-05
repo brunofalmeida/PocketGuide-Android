@@ -23,6 +23,11 @@ public class Map {
 
     private static ArrayList<Zone> zones = new ArrayList<>();
 
+    public static double gridWidth = 1;
+    public static double gridHeight = 1;
+
+
+
 
     public static ArrayList<AnchorBeacon> getAnchorBeacons() {
         return anchorBeacons;
@@ -87,27 +92,30 @@ public class Map {
 
     private static void addLooseBeacons() {
         AnchorBeacon b1 = addAnchorBeacon(
-                "white1 - Lower Elevator",
-                15, 60,
+                "white1 - F1",
+                15, 40,
                 DEFAULT_UUID, 6607, 59029);
         AnchorBeacon b2 = addAnchorBeacon(
-                "white2 - End Lower Hallway",
-                30, 80,
+                "white2 - F1",
+                30, 20,
                 DEFAULT_UUID, 62315, 20156);
     }
 
     private static void addFloor1() {
+        gridWidth = 30;
+        gridHeight = 100;
+
         AnchorBeacon b1 = addAnchorBeacon(
-                "white17 - Entrance",
-                20, 0,
+                "white17 - F1",
+                20, 100,
                 DEFAULT_UUID, 46447, 25300);
         AnchorBeacon b2 = addAnchorBeacon(
-                "white1 - Lower Elevator",
-                15, 60,
+                "white1 - F1",
+                15, 40,
                 DEFAULT_UUID, 6607, 59029);
         AnchorBeacon b3 = addAnchorBeacon(
-                "white2 - End Lower Hallway",
-                30, 80,
+                "white2 - F1",
+                30, 20,
                 DEFAULT_UUID, 62315, 20156);
 
 /*        // TODO - make a support beacon
@@ -116,27 +124,30 @@ public class Map {
                 b1, -5, 25,
                 DEFAULT_UUID, 33753, 28870);*/
 
-        Zone z1 = addZone("Main Hallway");
+        Zone z1 = addZone("Main Lower Hallway");
         z1.addAnchorBeacons(b1, b2, b3);
 //        z1.addSupportBeacons(b4);
     }
 
     private static void addFloor2() {
+        gridWidth = 100;
+        gridHeight = 100;
+
         AnchorBeacon ice1 = addAnchorBeacon(
-                "ice1 - Floor 2",
-                20, 0,
+                "ice1 - F2",
+                20, 100,
                 DEFAULT_UUID, 9051, 52752);
         AnchorBeacon ice2 = addAnchorBeacon(
-                "ice2 - Floor 2",
-                0, 25,
+                "ice2 - F2",
+                0, 75,
                 DEFAULT_UUID, 27598, 15040);
         AnchorBeacon ice3 = addAnchorBeacon(
-                "ice3 - Floor 2",
-                10, 100,
+                "ice3 - F2",
+                10, 0,
                 DEFAULT_UUID, 62693, 23343);
         AnchorBeacon ice4 = addAnchorBeacon(
-                "ice4 - Floor 2",
-                60, 0,
+                "ice4 - F2",
+                50, 100,
                 DEFAULT_UUID, 42484, 10171);
 
         Zone z1 = addZone("Open Area - Floor 2");
