@@ -3,15 +3,10 @@ package com.example.cossettenavigation;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -51,9 +46,9 @@ public class SearchActivity extends AppCompatActivity {
             if (location[i].toLowerCase().contains(query.toLowerCase()))
                 searchResults.add(location[i]);
 
-        ListView listView_Search=(ListView)findViewById(R.id.listView_search);
+/*        ListView listView_Search=(ListView)findViewById(R.id.listView_search);
         ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.locations));
-        listView_Search.setAdapter(adapter);
+        listView_Search.setAdapter(adapter);*/
     }
 
     @Override
