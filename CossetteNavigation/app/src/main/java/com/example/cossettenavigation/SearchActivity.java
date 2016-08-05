@@ -10,7 +10,11 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
 public class SearchActivity extends AppCompatActivity {
@@ -22,11 +26,12 @@ public class SearchActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        String query = new String();
         Intent searchIntent = getIntent();
 
         if(Intent.ACTION_SEARCH.equals(searchIntent.getAction()))
         {
-            String query = searchIntent.getStringExtra(SearchManager.QUERY);
+            query = searchIntent.getStringExtra(SearchManager.QUERY);
             Toast.makeText(SearchActivity.this, query, Toast.LENGTH_SHORT).show();
         }
 
@@ -39,6 +44,16 @@ public class SearchActivity extends AppCompatActivity {
             }
         });*/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        String[] location = getResources().getStringArray(R.array.locations);
+        ArrayList<String> searchResults = new ArrayList<String>();
+        for (int i=0; i<location.length; i++)
+            if (location[i].toLowerCase().contains(query.toLowerCase()))
+                searchResults.add(location[i]);
+
+        ListView listView_Search=(ListView)findViewById(R.id.listView_search);
+        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.locations));
+        listView_Search.setAdapter(adapter);
     }
 
     @Override
