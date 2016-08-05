@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.util.Log;
 import android.view.View;
 
+import com.example.cossettenavigation.map.Map;
+
 /**
  * Created by Bruno on 2016-08-04.
  */
@@ -36,11 +38,49 @@ public class FloorMapView extends View {
 
         super.onDraw(canvas);
 
-        int width = canvas.getWidth();
-        int height = canvas.getHeight();
-        int inset = 10;
+        int canvasWidth = canvas.getWidth();
+        int canvasHeight = canvas.getHeight();
+        int rectangleMargin = 10;
 
-        canvas.drawRect(inset, inset, width - inset, height - inset, rectanglePaint);
+        int availableCanvasWidth = canvasWidth - (2 * rectangleMargin);
+        int availableCanvasHeight = canvasHeight - (2 * rectangleMargin);
+
+        double mapWidth = Map.gridWidth;
+        double mapHeight = Map.gridHeight;
+
+        double availableCanvasWidthToHeight = (double) availableCanvasWidth / availableCanvasHeight;
+        double mapWidthToHeight = mapWidth / mapHeight;
+
+        int rectangleWidth;
+        int rectangleHeight;
+
+        // Map is wider than available canvas
+        if (mapWidthToHeight > availableCanvasWidthToHeight) {
+            rectangleWidth = availableCanvasWidth;
+            rectangleHeight = (int)(rectangleWidth / mapWidthToHeight);
+        }
+
+        // Map is taller than available canvas
+        else if (mapWidthToHeight < availableCanvasWidthToHeight) {
+            rectangleHeight = availableCanvasHeight;
+            rectangleWidth = (int)(rectangleHeight * mapWidthToHeight);
+        }
+
+        // Map and canvas have same dimension ratio
+        else {
+            rectangleWidth = availableCanvasWidth;
+            rectangleHeight = availableCanvasHeight;
+        }
+
+        int xMargin = (canvasWidth - rectangleWidth) / 2;
+        int yMargin = (canvasHeight - rectangleHeight) / 2;
+
+        canvas.drawRect(
+                xMargin,
+                yMargin,
+                canvasWidth - xMargin,
+                canvasHeight - yMargin,
+                rectanglePaint);
     }
 
 }

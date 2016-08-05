@@ -23,8 +23,8 @@ public class Map {
 
     private static ArrayList<Zone> zones = new ArrayList<>();
 
-    private static double gridWidth = 1;
-    private static double gridHeight = 1;
+    public static double gridWidth = 1;
+    public static double gridHeight = 1;
 
 
 
