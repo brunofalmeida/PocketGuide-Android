@@ -1,11 +1,9 @@
 package com.example.cossettenavigation;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Timer;
@@ -18,19 +16,22 @@ public class DebugActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_debug);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+/*        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        });*/
+
+
 
         final ApplicationBeaconManager beaconManager = (ApplicationBeaconManager) getApplication();
         final TextView beaconList = (TextView) findViewById(R.id.beacon_list);
@@ -46,6 +47,11 @@ public class DebugActivity extends AppCompatActivity {
                 });
             }
         }, 100, 1000);
+
+
+        LinearLayout mapLayout = (LinearLayout) findViewById(R.id.map_layout);
+        FloorMapView floorMapView = new FloorMapView(this);
+        mapLayout.addView(floorMapView);
     }
 
 }

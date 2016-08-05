@@ -211,7 +211,7 @@ public class ApplicationBeaconManager extends Application {
     }
 
     public String getTrackedBeaconsLog() {
-        Log.v(TAG, "getTrackedBeaconsLog()");
+        //Log.v(TAG, "getTrackedBeaconsLog()");
 
         String string = "trackedBeacons:\n";
 
@@ -225,7 +225,7 @@ public class ApplicationBeaconManager extends Application {
     }
 
     public String getTrackedBeaconsDescription() {
-        Log.v(TAG, "getTrackedBeaconsDescription()");
+        //Log.v(TAG, "getTrackedBeaconsDescription()");
 
         String string = "";
 
