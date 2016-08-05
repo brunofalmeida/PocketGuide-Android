@@ -57,6 +57,9 @@ public class ApplicationBeaconManager extends Application {
      */
     private static class BeaconData {
 
+        /**
+         * Oldest measurements first, newest measurements last
+         */
         private ArrayList<Double> accuracyMeasurements = new ArrayList<>();
         private ArrayList<Utils.Proximity> proximityMeasurements = new ArrayList<>();
 
@@ -74,16 +77,21 @@ public class ApplicationBeaconManager extends Application {
         }
 
         public double getEstimatedAccuracy() {
-            double sum = 0;
+            double numerator = 0;
+            double denominator = 0;
 
-            for (Double accuracy : accuracyMeasurements) {
-                sum += accuracy;
+            for (int i = 0,                         weight = 1;
+                 i < accuracyMeasurements.size();
+                 i++,                               weight *= 2) {
+
+                numerator += weight * accuracyMeasurements.get(i);
+                denominator += weight;
             }
 
-            if (accuracyMeasurements.size() == 0) {
+            if (denominator == 0) {
                 return -1;
             } else {
-                return sum / accuracyMeasurements.size();
+                return numerator / denominator;
             }
         }
 
@@ -97,10 +105,11 @@ public class ApplicationBeaconManager extends Application {
             for (Utils.Proximity proximity : proximityMeasurements) {
                 string += proximity + ", ";
             }
-            string += "} }";
+            string += "}, estimatedAccuracy = " + getEstimatedAccuracy() + " }";
 
             return string;
         }
+
     }
 
 
@@ -165,7 +174,7 @@ public class ApplicationBeaconManager extends Application {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                //Log.v(TAG, getTrackedBeaconsLog());
+                Log.v(TAG, getTrackedBeaconsLog());
                 //Log.v(TAG, getTrackedBeaconsDescription());
                 getEstimatedLocation();
             }
@@ -306,11 +315,11 @@ public class ApplicationBeaconManager extends Application {
 
         String string = "trackedBeacons:\n";
 
-/*        for (java.util.Map.Entry<Region, BeaconData> beacon : trackedBeacons.entrySet()) {
+        for (java.util.Map.Entry<Region, BeaconData> beacon : trackedBeacons.entrySet()) {
             string += String.format(
                     "%s : %s\n",
                     beacon.getValue(), beacon.getKey());
-        }*/
+        }
 
         return string;
     }
@@ -392,7 +401,7 @@ public class ApplicationBeaconManager extends Application {
 
 
             Point estimatedLocation = new Point(centroid[0] / Map.metresPerGridUnit, centroid[1] / Map.metresPerGridUnit);
-            //Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
+            Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
             return estimatedLocation;
 
         } else {
