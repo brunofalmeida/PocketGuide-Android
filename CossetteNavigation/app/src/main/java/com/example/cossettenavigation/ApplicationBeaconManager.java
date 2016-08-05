@@ -11,8 +11,11 @@ import com.estimote.sdk.Utils;
 import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Map;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Global application state used to detect and manage beacons.
@@ -39,42 +42,60 @@ public class ApplicationBeaconManager extends Application {
     private HashMap<Region, BeaconData> trackedBeacons = new HashMap<>();
 
 
+
+
     /**
      * A collection of beacon data to be stored and updated over time.
      */
     private static class BeaconData {
 
-        double accuracy;
-        Utils.Proximity proximity;
+        private ArrayList<Double> accuracyMeasurements = new ArrayList<>();
+        private ArrayList<Utils.Proximity> proximityMeasurements = new ArrayList<>();
 
-        public BeaconData(Beacon beacon) {
-            this.accuracy = Utils.computeAccuracy(beacon);
-            this.proximity = Utils.computeProximity(beacon);
+
+        public void addMeasurements(Beacon beacon) {
+            if (accuracyMeasurements.size() >= 5) {
+                accuracyMeasurements.remove(0);
+            }
+            if (proximityMeasurements.size() >= 5) {
+                proximityMeasurements.remove(0);
+            }
+
+            accuracyMeasurements.add(Utils.computeAccuracy(beacon));
+            proximityMeasurements.add(Utils.computeProximity(beacon));
         }
 
-        public double getAccuracy() {
-            return accuracy;
-        }
+        public double getEstimatedAccuracy() {
+            double sum = 0;
 
-        public Utils.Proximity getProximity() {
-            return proximity;
-        }
+            for (Double accuracy : accuracyMeasurements) {
+                sum += accuracy;
+            }
 
-        public void setAccuracy(double accuracy) {
-            this.accuracy = accuracy;
-        }
-
-        public void setProximity(Utils.Proximity proximity) {
-            this.proximity = proximity;
+            if (accuracyMeasurements.size() == 0) {
+                return -1;
+            } else {
+                return sum / accuracyMeasurements.size();
+            }
         }
 
         @Override
         public String toString() {
-            return String.format(
-                    "BeaconData { accuracy = %f, proximity = %s }",
-                    getAccuracy(), getProximity());
+            String string = "BeaconData { accuracyMeasurements = { ";
+            for (Double accuracy : accuracyMeasurements) {
+                string += accuracy + ", ";
+            }
+            string += "}, proximityMeasurements = { ";
+            for (Utils.Proximity proximity : proximityMeasurements) {
+                string += proximity + ", ";
+            }
+            string += "} }";
+
+            return string;
         }
     }
+
+
 
 
     @Override
@@ -91,13 +112,13 @@ public class ApplicationBeaconManager extends Application {
         // Optional, debug logging.
         EstimoteSDK.enableDebugLogging(true);
 
-/*        new Timer().schedule(new TimerTask() {
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 Log.v(TAG, getTrackedBeaconsLog());
-                Log.v(TAG, getTrackedBeaconsDescription());
+                //Log.v(TAG, getTrackedBeaconsDescription());
             }
-        }, 100, 1000);*/
+        }, 100, 1000);
 
         beaconManager = new BeaconManager(this);
 
@@ -210,10 +231,19 @@ public class ApplicationBeaconManager extends Application {
     }
 
     private void updateTrackedBeacon(Region region, Beacon beacon) {
+        Log.v(TAG, "updateTrackedBeacon()");
+
 /*        Log.v(TAG, String.format(
-                "Beacon: accuracy = %f, proximity = %s, %s",
-                Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));*/
-        trackedBeacons.put(region, new BeaconData(beacon));
+        "Beacon: accuracy = %f, proximity = %s, %s",
+        Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));*/
+
+        if (!trackedBeacons.containsKey(region)) {
+            trackedBeacons.put(region, new BeaconData());
+        }
+
+        trackedBeacons.get(region).addMeasurements(beacon);
+
+        Log.v(TAG, trackedBeacons.get(region).toString());
     }
 
     private void removeTrackedBeacon(Region region) {
@@ -225,11 +255,11 @@ public class ApplicationBeaconManager extends Application {
 
         String string = "trackedBeacons:\n";
 
-        for (java.util.Map.Entry<Region, BeaconData> beacon : trackedBeacons.entrySet()) {
+/*        for (java.util.Map.Entry<Region, BeaconData> beacon : trackedBeacons.entrySet()) {
             string += String.format(
                     "%s : %s\n",
                     beacon.getValue(), beacon.getKey());
-        }
+        }*/
 
         return string;
     }
@@ -242,7 +272,7 @@ public class ApplicationBeaconManager extends Application {
         for (java.util.Map.Entry<Region, BeaconData> entry : trackedBeacons.entrySet()) {
             string += String.format(
                     "%s : %.3f m\n",
-                    entry.getKey().getIdentifier(), entry.getValue().getAccuracy());
+                    entry.getKey().getIdentifier(), entry.getValue().getEstimatedAccuracy());
         }
 
         return string;

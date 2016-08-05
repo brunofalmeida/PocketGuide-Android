@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.View;
 
 import com.example.cossettenavigation.map.AnchorBeacon;
@@ -45,7 +44,7 @@ public class FloorMapView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.v(TAG, "onDraw()");
+        //Log.v(TAG, "onDraw()");
 
 /*        Log.v(TAG, String.format(
                 "onDraw(): width = %d, height = %d",
@@ -114,9 +113,9 @@ public class FloorMapView extends View {
             float x = (float)(anchorBeacon.getXPosition() * pixelsPerMapUnit) + xMargin;
             float y = (float)(anchorBeacon.getYPosition() * pixelsPerMapUnit) + yMargin;
 
-            Log.v(TAG, String.format(
+/*            Log.v(TAG, String.format(
                     "onDraw(): x = %f, y = %f, canvasWidth = %d, canvasHeight = %d",
-                    x, y, canvasWidth, canvasHeight));
+                    x, y, canvasWidth, canvasHeight));*/
 
             canvas.drawPoint(x, y, anchorBeaconPaint);
 
