@@ -141,6 +141,8 @@ public class ApplicationBeaconManager extends Application {
                 Log.v(TAG, "BeaconManager.MonitoringListener onExitedRegion()");
 
                 Log.v(TAG, "Region: " + region);
+
+                removeTrackedBeacon(region);
             }
         });
     }
@@ -208,6 +210,10 @@ public class ApplicationBeaconManager extends Application {
                 "Beacon: accuracy = %f, proximity = %s, %s",
                 Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));*/
         trackedBeacons.put(region, new BeaconData(beacon));
+    }
+
+    private void removeTrackedBeacon(Region region) {
+        trackedBeacons.remove(region);
     }
 
     public String getTrackedBeaconsLog() {
