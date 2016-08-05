@@ -165,7 +165,7 @@ public class ApplicationBeaconManager extends Application {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Log.v(TAG, getTrackedBeaconsLog());
+                //Log.v(TAG, getTrackedBeaconsLog());
                 //Log.v(TAG, getTrackedBeaconsDescription());
                 getEstimatedLocation();
             }
@@ -282,7 +282,7 @@ public class ApplicationBeaconManager extends Application {
     }
 
     private void updateTrackedBeacon(Region region, Beacon beacon) {
-        Log.v(TAG, "updateTrackedBeacon()");
+        //Log.v(TAG, "updateTrackedBeacon()");
 
 /*        Log.v(TAG, String.format(
         "Beacon: accuracy = %f, proximity = %s, %s",
@@ -294,7 +294,7 @@ public class ApplicationBeaconManager extends Application {
 
         trackedBeacons.get(region).addMeasurements(beacon);
 
-        Log.v(TAG, trackedBeacons.get(region).toString());
+        //Log.v(TAG, trackedBeacons.get(region).toString());
     }
 
     private void removeTrackedBeacon(Region region) {
