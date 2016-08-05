@@ -49,9 +49,29 @@ public class DebugActivity extends AppCompatActivity {
         }, 100, 1000);
 
 
+
+
         LinearLayout mapLayout = (LinearLayout) findViewById(R.id.map_layout);
-        FloorMapView floorMapView = new FloorMapView(this);
-        mapLayout.addView(floorMapView);
+
+        LinearLayout.LayoutParams floorMapViewLayoutParams = new LinearLayout.LayoutParams(0, 0);
+        floorMapViewLayoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
+        floorMapViewLayoutParams.weight = 1;
+        mapLayout.addView(new FloorMapView(this), floorMapViewLayoutParams);
+
+        // Multiple floor map views - test
+/*        for (int i = 0; i < 2; i++) {
+            // Floor map view
+            LinearLayout.LayoutParams floorMapLayoutParams = new LinearLayout.LayoutParams(0, 0);
+            floorMapLayoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            floorMapLayoutParams.weight = 1;
+            mapLayout.addView(new FloorMapView(this), floorMapLayoutParams);
+
+            // Separator (blank) view
+            LinearLayout.LayoutParams separatorLayoutParams = new LinearLayout.LayoutParams(0, 0);
+            separatorLayoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            separatorLayoutParams.height = 100;
+            mapLayout.addView(new View(this), separatorLayoutParams);
+        }*/
     }
 
 }
