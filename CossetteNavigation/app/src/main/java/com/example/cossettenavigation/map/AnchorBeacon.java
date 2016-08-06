@@ -44,7 +44,6 @@ public class AnchorBeacon extends Beacon {
         super(name, referenceBeacon, xPositionOffset, yPositionOffset, uuid, major, minor);
     }
 
-
     @Override
     public String toString() {
         return String.format(

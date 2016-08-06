@@ -16,6 +16,8 @@ public abstract class Beacon {
     protected int minor;
 
 
+
+
     /**
      * Standard constructor.
      */
@@ -61,6 +63,14 @@ public abstract class Beacon {
     }
 
 
+    @Override
+    public String toString() {
+        return String.format(
+                "%s { name = %s, position = %s, uuid = %s, major = %d, minor = %d }",
+                getClass().getSimpleName(), name, position, uuid, major, minor);
+    }
+
+
     public String getName() {
         return name;
     }
@@ -87,14 +97,6 @@ public abstract class Beacon {
 
     public int getMinor() {
         return minor;
-    }
-
-
-    @Override
-    public String toString() {
-        return String.format(
-                "%s { name = %s, position = %s, uuid = %s, major = %d, minor = %d }",
-                getClass().getSimpleName(), name, position, uuid, major, minor);
     }
 
 }

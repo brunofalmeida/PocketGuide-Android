@@ -10,12 +10,25 @@ import java.util.ArrayList;
  */
 public class BeaconTrackingData {
 
-    /**
-     * Oldest measurements first, newest measurements last
-     */
+    // Oldest measurements first, newest measurements last
     private ArrayList<Double> accuracyMeasurements = new ArrayList<>();
     private ArrayList<Utils.Proximity> proximityMeasurements = new ArrayList<>();
 
+
+    @Override
+    public String toString() {
+        String string = "BeaconTrackingData { accuracyMeasurements = { ";
+        for (Double accuracy : accuracyMeasurements) {
+            string += accuracy + ", ";
+        }
+        string += "}, proximityMeasurements = { ";
+        for (Utils.Proximity proximity : proximityMeasurements) {
+            string += proximity + ", ";
+        }
+        string += "}, estimatedAccuracy = " + getEstimatedAccuracy() + " }";
+
+        return string;
+    }
 
     public void addMeasurements(Beacon beacon) {
         if (accuracyMeasurements.size() >= 5) {
@@ -46,21 +59,6 @@ public class BeaconTrackingData {
         } else {
             return numerator / denominator;
         }
-    }
-
-    @Override
-    public String toString() {
-        String string = "BeaconTrackingData { accuracyMeasurements = { ";
-        for (Double accuracy : accuracyMeasurements) {
-            string += accuracy + ", ";
-        }
-        string += "}, proximityMeasurements = { ";
-        for (Utils.Proximity proximity : proximityMeasurements) {
-            string += proximity + ", ";
-        }
-        string += "}, estimatedAccuracy = " + getEstimatedAccuracy() + " }";
-
-        return string;
     }
 
 }
