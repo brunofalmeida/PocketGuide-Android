@@ -112,7 +112,7 @@ public class ApplicationBeaconManager extends Application {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Log.v(TAG, getTrackedBeaconsLog());
+                //Log.v(TAG, getTrackedBeaconsLog());
                 //Log.v(TAG, getTrackedBeaconsDescription());
                 getEstimatedLocation();
             }
@@ -202,18 +202,7 @@ public class ApplicationBeaconManager extends Application {
         }
     }
 
-    private void stopMonitoring() {
-//        beaconManager.stopMonitoring(ALL_BEACONS_REGION);
 
-        // Stop monitoring all anchor beacons
-        for (AnchorBeacon anchorBeacon : Map.getAnchorBeacons()) {
-            beaconManager.stopMonitoring(new Region(
-                    anchorBeacon.getName(),
-                    anchorBeacon.getUUID(),
-                    anchorBeacon.getMajor(),
-                    anchorBeacon.getMinor()));
-        }
-    }
 
 
     private void startRanging(Region region) {
@@ -339,11 +328,13 @@ public class ApplicationBeaconManager extends Application {
 
 
             Point estimatedLocation = new Point(centroid[0] / Map.metresPerGridUnit, centroid[1] / Map.metresPerGridUnit);
-            Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
+
+            //Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
+
             return estimatedLocation;
 
         } else {
-            Log.i(TAG, "getEstimatedLocation(): Not enough beacons to trilaterate location");
+            //Log.i(TAG, "getEstimatedLocation(): Not enough beacons to trilaterate location");
 
             return null;
         }
