@@ -112,11 +112,12 @@ public class ApplicationBeaconManager extends Application {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                //Log.v(TAG, getTrackedBeaconsLog());
+                //logTrackedBeacons();
                 //Log.v(TAG, getTrackedBeaconsDescription());
-                getEstimatedLocation();
+
+                //getEstimatedLocation();
             }
-        }, 100, 1000);
+        }, 1, 1000);
 
         beaconManager = new BeaconManager(this);
 
@@ -237,10 +238,8 @@ public class ApplicationBeaconManager extends Application {
         trackedBeacons.remove(region);
     }
 
-    public String getTrackedBeaconsLog() {
-        //Log.v(TAG, "getTrackedBeaconsLog()");
-
-        String string = "trackedBeacons:\n";
+    public void logTrackedBeacons() {
+        String string = "logTrackedBeacons():\n";
 
         for (java.util.Map.Entry<Region, BeaconTrackingData> beacon : trackedBeacons.entrySet()) {
             string += String.format(
@@ -248,7 +247,7 @@ public class ApplicationBeaconManager extends Application {
                     beacon.getValue(), beacon.getKey());
         }
 
-        return string;
+        Log.v(TAG, string);
     }
 
     public String getTrackedBeaconsDescription() {
