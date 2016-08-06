@@ -204,7 +204,7 @@ public class ApplicationBeaconManager extends Application {
             for (AnchorBeacon mapAnchorBeacon : Map.anchorBeacons) {
 
                 // If they both refer to the same beacon
-                if (areEqual(trackedBeacon.getKey(), mapAnchorBeacon)) {
+                if (Utilities.areEqual(trackedBeacon.getKey(), mapAnchorBeacon)) {
 
                     // Add position and distance (in metres)
                     positions.add(new double[] {
@@ -226,7 +226,7 @@ public class ApplicationBeaconManager extends Application {
 
             NonLinearLeastSquaresSolver solver = new NonLinearLeastSquaresSolver(
                     new TrilaterationFunction(
-                            getDoubleDoubleArray(positions), getDoubleArray(distances)),
+                            Utilities.getDoubleDoubleArray(positions), Utilities.getDoubleArray(distances)),
                     new LevenbergMarquardtOptimizer());
             LeastSquaresOptimizer.Optimum optimum = solver.solve();
 
@@ -288,53 +288,6 @@ public class ApplicationBeaconManager extends Application {
         }
 
         return string;
-    }
-
-
-
-
-    /**
-     * Checks if a beacon manager Region and a map Beacon represent the same beacon.
-     * @return true if the UUID, major, and minor are equal, or false otherwise
-     */
-    private static boolean areEqual(Region region, com.example.cossettenavigation.map.Beacon beacon) {
-        if (region.getProximityUUID() == beacon.getUUID() &&
-                region.getMajor() == beacon.getMajor() &&
-                region.getMinor() == beacon.getMinor()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * ArrayList to Array conversion for trilateration algorithm.
-     * <br>
-     * ArrayList &lt double[] &gt -> double[][]
-     */
-    private static double[][] getDoubleDoubleArray(ArrayList<double[]> arrayList) {
-        double[][] array = new double[arrayList.size()][];
-
-        for (int i = 0; i < arrayList.size(); i++) {
-            array[i] = arrayList.get(i);
-        }
-
-        return array;
-    }
-
-    /**
-     * ArrayList to Array conversion for trilateration algorithm.
-     * <br>
-     * ArrayList &lt Double &gt -> double[]
-     */
-    private static double[] getDoubleArray(ArrayList<Double> arrayList) {
-        double[] array = new double[arrayList.size()];
-
-        for (int i = 0; i < arrayList.size(); i++) {
-            array[i] = arrayList.get(i);
-        }
-
-        return array;
     }
 
 
