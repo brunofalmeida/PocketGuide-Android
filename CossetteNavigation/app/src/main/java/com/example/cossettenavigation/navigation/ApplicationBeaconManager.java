@@ -97,11 +97,11 @@ public class ApplicationBeaconManager extends Application {
 
     @Override
     public void onCreate() {
-        Log.v(TAG, "onCreate()");
+        //Log.v(TAG, "onCreate()");
 
         super.onCreate();
 
-        // Test Map class
+        // Initialize Map class
         Map map = new Map();
 
         // App ID & App Token can be taken from App section of Estimote Cloud.
@@ -194,7 +194,7 @@ public class ApplicationBeaconManager extends Application {
 //        beaconManager.startMonitoring(ALL_BEACONS_REGION);
 
         // Start monitoring all anchor beacons
-        for (AnchorBeacon anchorBeacon : Map.getAnchorBeacons()) {
+        for (AnchorBeacon anchorBeacon : Map.anchorBeacons) {
             beaconManager.startMonitoring(new Region(
                     anchorBeacon.getName(),
                     anchorBeacon.getUUID(),
@@ -288,7 +288,7 @@ public class ApplicationBeaconManager extends Application {
         for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()) {
 
             // Loop through beacons in map
-            for (AnchorBeacon mapAnchorBeacon : Map.getAnchorBeacons()) {
+            for (AnchorBeacon mapAnchorBeacon : Map.anchorBeacons) {
 
                 // If they both refer to the same beacon
                 if (areEqual(trackedBeacon.getKey(), mapAnchorBeacon)) {

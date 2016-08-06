@@ -19,7 +19,7 @@ public class Map {
     private static final String DEFAULT_UUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
 
 
-    private static ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
+    public static ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
 
     private static ArrayList<Zone> zones = new ArrayList<>();
 
@@ -29,10 +29,6 @@ public class Map {
 
 
 
-
-    public static ArrayList<AnchorBeacon> getAnchorBeacons() {
-        return anchorBeacons;
-    }
 
     /**
      * Adds a beacon to the set of anchor beacons.
@@ -168,12 +164,12 @@ public class Map {
 
         addFloor2();
 
-        for (AnchorBeacon anchorBeacon : anchorBeacons) {
+/*        for (AnchorBeacon anchorBeacon : anchorBeacons) {
             Log.v(TAG, anchorBeacon.toString());
         }
         for (Zone zone : zones) {
             Log.v(TAG, zone.toString());
-        }
+        }*/
     }
 
 }
