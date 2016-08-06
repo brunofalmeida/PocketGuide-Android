@@ -5,12 +5,22 @@ import android.util.Log;
 import java.util.ArrayList;
 
 /**
+ * <p>
  * Organizing class for mapping data.
+ * Uses a rectangular grid system to define the locations of beacons and zones.
+ * </p>
  *
- * Uses a rectangular grid system to define "anchor beacons" and their location.
- * Other beacons ("support beacons") are defined relative to anchor beacons in zones.
+ * <p>
+ * Anchor Beacons - Placed in key locations (e.g. ends of hallways, doors, entrances and exits, stairs, elevators).
+ * </p>
  *
- * Created by Bruno on 2016-07-20.
+ * <p>
+ * Support Beacons - Placed in supporting locations to improve location estimates (e.g. along hallways, middle of rooms).
+ * </p>
+ *
+ * <p>
+ * Zones - Key areas within a floor or building (e.g. hallways, rectangular spaces, stairs, elevators).
+ * </p>
  */
 public class Map {
 
@@ -23,6 +33,10 @@ public class Map {
 
     private static ArrayList<Zone> zones = new ArrayList<>();
 
+    /*
+    Grid properties.
+    The grid is defined with arbitrary units, which can be converted to real distances with the given ratio.
+     */
     public static double gridWidth = 1;
     public static double gridHeight = 1;
     public static double metresPerGridUnit = 1;
@@ -31,7 +45,7 @@ public class Map {
 
 
     /**
-     * Adds a beacon to the set of anchor beacons.
+     * Adds a beacon to the map.
      * @return The anchor beacon that was added.
      */
     private static AnchorBeacon addAnchorBeacon(AnchorBeacon anchorBeacon) {
@@ -40,7 +54,7 @@ public class Map {
     }
 
     /**
-     * Adds a beacon to the set of anchor beacons using an absolute position.
+     * Adds a beacon to the map using an absolute position.
      * @return The anchor beacon that was added.
      */
     private static AnchorBeacon addAnchorBeacon(String name,
@@ -55,7 +69,7 @@ public class Map {
     }
 
     /**
-     * Adds a beacon to the set of anchor beacons using a position relative to another beacon.
+     * Adds a beacon to the map using a position relative to another beacon.
      * @return The anchor beacon that was added.
      */
     private static AnchorBeacon addAnchorBeacon(String name,
@@ -73,11 +87,8 @@ public class Map {
         return addAnchorBeacon(anchorBeacon);
     }
 
-
-
-
     /**
-     * Adds a zone to the set of zones.
+     * Adds a zone to the map.
      * @return The zone that was added.
      */
     private static Zone addZone(String name) {
@@ -87,7 +98,9 @@ public class Map {
     }
 
 
-    private static void addLooseBeacons() {
+
+
+    private static void addOtherBeacons() {
         AnchorBeacon b1 = addAnchorBeacon(
                 "white1 - F1",
                 15, 40,
@@ -154,9 +167,6 @@ public class Map {
         Zone z1 = addZone("Open Area - Floor 2");
         z1.addAnchorBeacons(ice1, ice2, ice3, ice4);
     }
-
-
-
 
     // Define beacons and zones
     static {

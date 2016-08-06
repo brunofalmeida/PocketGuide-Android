@@ -3,11 +3,12 @@ package com.example.cossettenavigation.map;
 import java.util.UUID;
 
 /**
- * Created by Bruno on 2016-07-22.
+ * A beacon on the map, defined with a name, grid position, and identifiers.
  */
 public abstract class Beacon {
 
     protected String name;
+
     protected Point position;
 
     protected UUID uuid;
@@ -59,6 +60,7 @@ public abstract class Beacon {
                 minor);
     }
 
+
     public String getName() {
         return name;
     }
@@ -68,11 +70,11 @@ public abstract class Beacon {
     }
 
     public double getXPosition() {
-        return getPosition().getX();
+        return getPosition().x;
     }
 
     public double getYPosition() {
-        return getPosition().getY();
+        return getPosition().y;
     }
 
     public UUID getUUID() {
@@ -86,6 +88,7 @@ public abstract class Beacon {
     public int getMinor() {
         return minor;
     }
+
 
     @Override
     public String toString() {

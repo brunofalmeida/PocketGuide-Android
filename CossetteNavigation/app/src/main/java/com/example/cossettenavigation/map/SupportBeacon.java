@@ -3,11 +3,17 @@ package com.example.cossettenavigation.map;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by Bruno on 2016-07-22.
+ * A beacon placed in a supporting location and used to improve location estimates.
+ * @see Map
  */
 public class SupportBeacon extends Beacon {
 
+    /**
+     * A reference to the zone this beacon is in. (A SupportBeacon can only be part of one zone.)
+     */
     private WeakReference<Zone> zone = null;
+
+
 
 
     /**
@@ -37,15 +43,15 @@ public class SupportBeacon extends Beacon {
         super(name, referenceBeacon, xPositionOffset, yPositionOffset, uuid, major, minor);
     }
 
-    public void setZone(Zone zone) {
-        this.zone = new WeakReference<Zone>(zone);
-    }
-
     @Override
     public String toString() {
         return String.format(
                 "%s { name = %s, position = %s, uuid = %s, major = %d, minor = %d, zone = %s }",
                 getClass().getSimpleName(), name, position, uuid, major, minor, zone);
+    }
+
+    public void setZone(Zone zone) {
+        this.zone = new WeakReference<>(zone);
     }
 
 }

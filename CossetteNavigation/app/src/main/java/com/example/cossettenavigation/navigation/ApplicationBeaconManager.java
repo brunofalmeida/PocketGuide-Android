@@ -267,7 +267,7 @@ public class ApplicationBeaconManager extends Application {
         } else {
             string += String.format(
                     "(%f, %f)",
-                    estimatedLocation.getX(), estimatedLocation.getY());
+                    estimatedLocation.x, estimatedLocation.y);
         }
 
         return string;

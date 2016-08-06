@@ -4,11 +4,17 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
- * Created by Bruno on 2016-07-22.
+ * A beacon placed in a key location and used to define zones.
+ * @see Map
  */
 public class AnchorBeacon extends Beacon {
 
+    /**
+     * References to zones this beacon is a part of.
+     */
     private ArrayList<WeakReference<Zone>> zones = new ArrayList<>();
+
+
 
 
     /**
@@ -38,6 +44,7 @@ public class AnchorBeacon extends Beacon {
         super(name, referenceBeacon, xPositionOffset, yPositionOffset, uuid, major, minor);
     }
 
+
     @Override
     public String toString() {
         return String.format(
@@ -46,7 +53,7 @@ public class AnchorBeacon extends Beacon {
     }
 
     public void addZone(Zone zone) {
-        zones.add(new WeakReference<Zone>(zone));
+        zones.add(new WeakReference<>(zone));
     }
 
 }
