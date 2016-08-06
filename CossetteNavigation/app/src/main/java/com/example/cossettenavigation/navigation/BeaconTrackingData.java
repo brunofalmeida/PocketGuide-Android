@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * A collection of data for tracking a beacon, to be stored and updated over time.
  */
-public class BeaconData {
+public class BeaconTrackingData {
 
     /**
      * Oldest measurements first, newest measurements last
@@ -50,7 +50,7 @@ public class BeaconData {
 
     @Override
     public String toString() {
-        String string = "BeaconData { accuracyMeasurements = { ";
+        String string = "BeaconTrackingData { accuracyMeasurements = { ";
         for (Double accuracy : accuracyMeasurements) {
             string += accuracy + ", ";
         }

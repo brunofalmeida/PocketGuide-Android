@@ -46,7 +46,7 @@ public class ApplicationBeaconManager extends Application {
     /**
      * Set of beacons to be tracked over time (for location algorithms).
      */
-    private HashMap<Region, BeaconData> trackedBeacons = new HashMap<>();
+    private HashMap<Region, BeaconTrackingData> trackedBeacons = new HashMap<>();
 
 
 
@@ -236,7 +236,7 @@ public class ApplicationBeaconManager extends Application {
         Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));*/
 
         if (!trackedBeacons.containsKey(region)) {
-            trackedBeacons.put(region, new BeaconData());
+            trackedBeacons.put(region, new BeaconTrackingData());
         }
 
         trackedBeacons.get(region).addMeasurements(beacon);
@@ -253,7 +253,7 @@ public class ApplicationBeaconManager extends Application {
 
         String string = "trackedBeacons:\n";
 
-        for (java.util.Map.Entry<Region, BeaconData> beacon : trackedBeacons.entrySet()) {
+        for (java.util.Map.Entry<Region, BeaconTrackingData> beacon : trackedBeacons.entrySet()) {
             string += String.format(
                     "%s : %s\n",
                     beacon.getValue(), beacon.getKey());
@@ -267,7 +267,7 @@ public class ApplicationBeaconManager extends Application {
 
         String string = "";
 
-        for (java.util.Map.Entry<Region, BeaconData> entry : trackedBeacons.entrySet()) {
+        for (java.util.Map.Entry<Region, BeaconTrackingData> entry : trackedBeacons.entrySet()) {
             string += String.format(
                     "%s : %.3f m\n",
                     entry.getKey().getIdentifier(), entry.getValue().getEstimatedAccuracy());
@@ -297,7 +297,7 @@ public class ApplicationBeaconManager extends Application {
         ArrayList<Double> distances = new ArrayList<>();
 
         // Loop through tracked beacons
-        for (HashMap.Entry<Region, BeaconData> trackedBeacon : trackedBeacons.entrySet()) {
+        for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()) {
 
             // Loop through beacons in map
             for (AnchorBeacon mapAnchorBeacon : Map.getAnchorBeacons()) {
