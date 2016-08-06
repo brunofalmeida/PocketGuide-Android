@@ -7,7 +7,6 @@ import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.EstimoteSDK;
 import com.estimote.sdk.Region;
-import com.estimote.sdk.Utils;
 import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.Point;
@@ -50,67 +49,6 @@ public class ApplicationBeaconManager extends Application {
     private HashMap<Region, BeaconData> trackedBeacons = new HashMap<>();
 
 
-
-
-    /**
-     * A collection of beacon data to be stored and updated over time.
-     */
-    private static class BeaconData {
-
-        /**
-         * Oldest measurements first, newest measurements last
-         */
-        private ArrayList<Double> accuracyMeasurements = new ArrayList<>();
-        private ArrayList<Utils.Proximity> proximityMeasurements = new ArrayList<>();
-
-
-        public void addMeasurements(Beacon beacon) {
-            if (accuracyMeasurements.size() >= 5) {
-                accuracyMeasurements.remove(0);
-            }
-            if (proximityMeasurements.size() >= 5) {
-                proximityMeasurements.remove(0);
-            }
-
-            accuracyMeasurements.add(Utils.computeAccuracy(beacon));
-            proximityMeasurements.add(Utils.computeProximity(beacon));
-        }
-
-        public double getEstimatedAccuracy() {
-            double numerator = 0;
-            double denominator = 0;
-
-            for (int i = 0,                         weight = 1;
-                 i < accuracyMeasurements.size();
-                 i++,                               weight *= 2) {
-
-                numerator += weight * accuracyMeasurements.get(i);
-                denominator += weight;
-            }
-
-            if (denominator == 0) {
-                return -1;
-            } else {
-                return numerator / denominator;
-            }
-        }
-
-        @Override
-        public String toString() {
-            String string = "BeaconData { accuracyMeasurements = { ";
-            for (Double accuracy : accuracyMeasurements) {
-                string += accuracy + ", ";
-            }
-            string += "}, proximityMeasurements = { ";
-            for (Utils.Proximity proximity : proximityMeasurements) {
-                string += proximity + ", ";
-            }
-            string += "}, estimatedAccuracy = " + getEstimatedAccuracy() + " }";
-
-            return string;
-        }
-
-    }
 
 
     /**
