@@ -1,4 +1,4 @@
-package com.example.cossettenavigation;
+package com.example.cossettenavigation.navigation;
 
 import android.app.Application;
 import android.util.Log;
