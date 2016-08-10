@@ -1,6 +1,7 @@
 package com.example.cossettenavigation.map;
 
 import android.util.Log;
+import android.util.Pair;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,11 @@ import java.util.ArrayList;
  */
 public class Map {
 
+    /**
+     * In m/s.
+     */
+    private static final double NORMAL_WALKING_SPEED = 1.4;
+
     private static final String TAG = "Map";
 
     private static final String DEFAULT_UUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
@@ -41,6 +47,16 @@ public class Map {
     public static double metresPerGridUnit = 1;
 
 
+    /**
+     * Assumes that both beacons are part of the same zone and have a straight-line connection.
+     * @return The estimated travel time (in seconds) between the two beacons.
+     */
+    public static double estimateTravelTime(Beacon startBeacon, Beacon endBeacon) {
+        double distance = Math.sqrt(
+                Math.pow(endBeacon.getXPosition() - startBeacon.getXPosition(), 2) +
+                Math.pow(endBeacon.getYPosition() - startBeacon.getYPosition(), 2) );
+        return distance * metresPerGridUnit / NORMAL_WALKING_SPEED;
+    }
 
 
     /**
@@ -169,6 +185,16 @@ public class Map {
         Zone z4 = addZone("4");
         Zone z5 = addZone("5");
         z1.addAnchorBeacons(ice1, ice2, /*ice3,*/ ice4);
+
+
+        // Test Pathfinder
+        Pair<Double, ArrayList<Beacon>> result = Pathfinder.getShortestPath(ice4, ice2);
+
+        String log = "Time: " + result.first.toString() + ", Path = { ";
+        for (Beacon beacon : result.second) {
+            log += beacon.toString() + ", ";
+        }
+        Log.v(TAG, log);
     }
 
     // Define beacons and zones
