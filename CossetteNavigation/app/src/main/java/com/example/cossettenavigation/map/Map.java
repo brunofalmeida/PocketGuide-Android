@@ -164,6 +164,10 @@ public class Map {
                 DEFAULT_UUID, 42484, 10171);
 
         Zone z1 = addZone("Open Area - Floor 2");
+        Zone z2 = addZone("2");
+        Zone z3 = addZone("3");
+        Zone z4 = addZone("4");
+        Zone z5 = addZone("5");
         z1.addAnchorBeacons(ice1, ice2, /*ice3,*/ ice4);
     }
 

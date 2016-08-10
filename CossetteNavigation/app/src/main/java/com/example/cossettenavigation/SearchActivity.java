@@ -21,23 +21,27 @@ public class SearchActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String query = new String();
+        String query ;
         Intent searchIntent = getIntent();
 
         if(Intent.ACTION_SEARCH.equals(searchIntent.getAction()))
         {
             query = searchIntent.getStringExtra(SearchManager.QUERY);
+            //create listview of returned results
+            //act as if top choice clicked
+            //pull down keyboard to view suggestions
+            //do nothing if no results
             Toast.makeText(SearchActivity.this, query, Toast.LENGTH_SHORT).show();
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String[] location = getResources().getStringArray(R.array.locations);
+        /*String[] location = getResources().getStringArray(R.array.locations);
         ArrayList<String> searchResults = new ArrayList<>();
         for (int i=0; i<location.length; i++)
             if (location[i].toLowerCase().contains(query.toLowerCase()))
-                searchResults.add(location[i]);
-        
+                searchResults.add(location[i]);*/
+
     }
 
     @Override
