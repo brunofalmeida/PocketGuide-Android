@@ -1,6 +1,7 @@
 package com.example.cossettenavigation.map;
 
 import android.util.Log;
+import android.util.Pair;
 
 import java.util.ArrayList;
 
@@ -180,6 +181,16 @@ public class Map {
 
         Zone z1 = addZone("Open Area - Floor 2");
         z1.addAnchorBeacons(ice1, ice2, /*ice3,*/ ice4);
+
+
+        // Test Pathfinder
+        Pair<Double, ArrayList<Beacon>> result = Pathfinder.getShortestPath(ice4, ice2);
+
+        String log = "Time: " + result.first.toString() + ", Path = { ";
+        for (Beacon beacon : result.second) {
+            log += beacon.toString() + ", ";
+        }
+        Log.v(TAG, log);
     }
 
     // Define beacons and zones

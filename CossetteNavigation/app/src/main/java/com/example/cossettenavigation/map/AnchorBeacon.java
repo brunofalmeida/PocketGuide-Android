@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * A beacon placed in a key location and used to define zones.
  * @see Map
  */
-public class AnchorBeacon extends Beacon {
+public class AnchorBeacon extends Beacon implements Comparable {
 
     /**
      * References to zones this beacon is a part of.
@@ -57,6 +57,17 @@ public class AnchorBeacon extends Beacon {
 
     public void addZone(Zone zone) {
         zones.add(new WeakReference<>(zone));
+    }
+
+    @Override
+    public int compareTo(Object another) {
+        if (another instanceof AnchorBeacon) {
+            AnchorBeacon anotherAnchorBeacon = (AnchorBeacon) another;
+            return this.name.compareTo(anotherAnchorBeacon.name);
+        }
+        else {
+            return 0;
+        }
     }
 
 }
