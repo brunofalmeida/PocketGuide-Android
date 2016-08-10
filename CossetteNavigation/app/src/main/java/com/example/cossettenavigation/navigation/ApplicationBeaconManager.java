@@ -1,4 +1,4 @@
-package com.example.cossettenavigation;
+package com.example.cossettenavigation.navigation;
 
 import android.app.Application;
 import android.util.Log;
@@ -7,7 +7,6 @@ import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.EstimoteSDK;
 import com.estimote.sdk.Region;
-import com.estimote.sdk.Utils;
 import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.Point;
@@ -38,6 +37,7 @@ import java.util.TimerTask;
  */
 public class ApplicationBeaconManager extends Application {
 
+
     private final String TAG = "AppBeaconManager";
 
     private final Region ALL_BEACONS_REGION = new Region("All Beacons", null, null, null);
@@ -47,123 +47,18 @@ public class ApplicationBeaconManager extends Application {
     /**
      * Set of beacons to be tracked over time (for location algorithms).
      */
-    private HashMap<Region, BeaconData> trackedBeacons = new HashMap<>();
+    private HashMap<Region, BeaconTrackingData> trackedBeacons = new HashMap<>();
 
 
 
-
-    /**
-     * A collection of beacon data to be stored and updated over time.
-     */
-    private static class BeaconData {
-
-        /**
-         * Oldest measurements first, newest measurements last
-         */
-        private ArrayList<Double> accuracyMeasurements = new ArrayList<>();
-        private ArrayList<Utils.Proximity> proximityMeasurements = new ArrayList<>();
-
-
-        public void addMeasurements(Beacon beacon) {
-            if (accuracyMeasurements.size() >= 5) {
-                accuracyMeasurements.remove(0);
-            }
-            if (proximityMeasurements.size() >= 5) {
-                proximityMeasurements.remove(0);
-            }
-
-            accuracyMeasurements.add(Utils.computeAccuracy(beacon));
-            proximityMeasurements.add(Utils.computeProximity(beacon));
-        }
-
-        public double getEstimatedAccuracy() {
-            double numerator = 0;
-            double denominator = 0;
-
-            for (int i = 0,                         weight = 1;
-                 i < accuracyMeasurements.size();
-                 i++,                               weight *= 2) {
-
-                numerator += weight * accuracyMeasurements.get(i);
-                denominator += weight;
-            }
-
-            if (denominator == 0) {
-                return -1;
-            } else {
-                return numerator / denominator;
-            }
-        }
-
-        @Override
-        public String toString() {
-            String string = "BeaconData { accuracyMeasurements = { ";
-            for (Double accuracy : accuracyMeasurements) {
-                string += accuracy + ", ";
-            }
-            string += "}, proximityMeasurements = { ";
-            for (Utils.Proximity proximity : proximityMeasurements) {
-                string += proximity + ", ";
-            }
-            string += "}, estimatedAccuracy = " + getEstimatedAccuracy() + " }";
-
-            return string;
-        }
-
-    }
-
-
-    /**
-     * Checks if a beacon manager Region and a map Beacon represent the same beacon.
-     * @return true if the UUID, major, and minor are equal, or false otherwise
-     */
-    private static boolean areEqual(Region region, com.example.cossettenavigation.map.Beacon beacon) {
-        if (region.getProximityUUID() == beacon.getUUID() &&
-                region.getMajor() == beacon.getMajor() &&
-                region.getMinor() == beacon.getMinor()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * ArrayList to Array conversion for trilateration algorithm.
-     * <br>
-     * ArrayList &lt double[] &gt -> double[][]
-     */
-    private static double[][] getDoubleDoubleArray(ArrayList<double[]> arrayList) {
-        double[][] array = new double[arrayList.size()][];
-
-        for (int i = 0; i < arrayList.size(); i++) {
-            array[i] = arrayList.get(i);
-        }
-
-        return array;
-    }
-
-    /**
-     * ArrayList to Array conversion for trilateration algorithm.
-     * <br>
-     * ArrayList &lt Double &gt -> double[]
-     */
-    private static double[] getDoubleArray(ArrayList<Double> arrayList) {
-        double[] array = new double[arrayList.size()];
-
-        for (int i = 0; i < arrayList.size(); i++) {
-            array[i] = arrayList.get(i);
-        }
-
-        return array;
-    }
 
     @Override
     public void onCreate() {
-        Log.v(TAG, "onCreate()");
+        //Log.v(TAG, "onCreate()");
 
         super.onCreate();
 
-        // Test Map class
+        // Initialize Map class
         Map map = new Map();
 
         // App ID & App Token can be taken from App section of Estimote Cloud.
@@ -174,11 +69,12 @@ public class ApplicationBeaconManager extends Application {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Log.v(TAG, getTrackedBeaconsLog());
+                //logTrackedBeacons();
                 //Log.v(TAG, getTrackedBeaconsDescription());
-                getEstimatedLocation();
+
+                //getEstimatedLocation();
             }
-        }, 100, 1000);
+        }, 1, 1000);
 
         beaconManager = new BeaconManager(this);
 
@@ -197,6 +93,8 @@ public class ApplicationBeaconManager extends Application {
     }
 
 
+
+
     private void setMonitoringListener() {
         beaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
             @Override
@@ -208,7 +106,7 @@ public class ApplicationBeaconManager extends Application {
                     Log.v(TAG, "Beacon: " + beacon);
                 }
 
-                startRanging(region);
+                beaconManager.startRanging(region);
 
                 if (list.size() == 1) {
                     updateTrackedBeacon(region, list.get(0));
@@ -223,12 +121,13 @@ public class ApplicationBeaconManager extends Application {
 
                 Log.v(TAG, "Region: " + region);
 
-                stopRanging(region);
+                beaconManager.stopRanging(region);
 
                 removeTrackedBeacon(region);
             }
         });
     }
+
 
     private void setRangingListener() {
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
@@ -254,8 +153,8 @@ public class ApplicationBeaconManager extends Application {
     private void startMonitoring() {
 //        beaconManager.startMonitoring(ALL_BEACONS_REGION);
 
-        // Start monitoring all anchor beacons
-        for (AnchorBeacon anchorBeacon : Map.getAnchorBeacons()) {
+        // Monitor all anchor beacons
+        for (AnchorBeacon anchorBeacon : Map.anchorBeacons) {
             beaconManager.startMonitoring(new Region(
                     anchorBeacon.getName(),
                     anchorBeacon.getUUID(),
@@ -264,31 +163,8 @@ public class ApplicationBeaconManager extends Application {
         }
     }
 
-    private void stopMonitoring() {
-//        beaconManager.stopMonitoring(ALL_BEACONS_REGION);
-
-        // Stop monitoring all anchor beacons
-        for (AnchorBeacon anchorBeacon : Map.getAnchorBeacons()) {
-            beaconManager.stopMonitoring(new Region(
-                    anchorBeacon.getName(),
-                    anchorBeacon.getUUID(),
-                    anchorBeacon.getMajor(),
-                    anchorBeacon.getMinor()));
-        }
-    }
 
 
-    private void startRanging(Region region) {
-//        beaconManager.startRanging(ALL_BEACONS_REGION);
-
-        beaconManager.startRanging(region);
-    }
-
-    private void stopRanging(Region region) {
-//        beaconManager.stopRanging(ALL_BEACONS_REGION);
-
-        beaconManager.stopRanging(region);
-    }
 
     private void updateTrackedBeacon(Region region, Beacon beacon) {
         //Log.v(TAG, "updateTrackedBeacon()");
@@ -298,7 +174,7 @@ public class ApplicationBeaconManager extends Application {
         Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));*/
 
         if (!trackedBeacons.containsKey(region)) {
-            trackedBeacons.put(region, new BeaconData());
+            trackedBeacons.put(region, new BeaconTrackingData());
         }
 
         trackedBeacons.get(region).addMeasurements(beacon);
@@ -308,43 +184,6 @@ public class ApplicationBeaconManager extends Application {
 
     private void removeTrackedBeacon(Region region) {
         trackedBeacons.remove(region);
-    }
-
-    public String getTrackedBeaconsLog() {
-        //Log.v(TAG, "getTrackedBeaconsLog()");
-
-        String string = "trackedBeacons:\n";
-
-        for (java.util.Map.Entry<Region, BeaconData> beacon : trackedBeacons.entrySet()) {
-            string += String.format(
-                    "%s : %s\n",
-                    beacon.getValue(), beacon.getKey());
-        }
-
-        return string;
-    }
-
-    public String getTrackedBeaconsDescription() {
-        //Log.v(TAG, "getTrackedBeaconsDescription()");
-
-        String string = "";
-
-        for (java.util.Map.Entry<Region, BeaconData> entry : trackedBeacons.entrySet()) {
-            string += String.format(
-                    "%s : %.3f m\n",
-                    entry.getKey().getIdentifier(), entry.getValue().getEstimatedAccuracy());
-        }
-
-        Point estimatedLocation = getEstimatedLocation();
-        if (estimatedLocation == null) {
-            string += "Location Unavailable";
-        } else {
-            string += String.format(
-                    "(%f, %f)",
-                    estimatedLocation.getX(), estimatedLocation.getY());
-        }
-
-        return string;
     }
 
     /**
@@ -359,13 +198,13 @@ public class ApplicationBeaconManager extends Application {
         ArrayList<Double> distances = new ArrayList<>();
 
         // Loop through tracked beacons
-        for (HashMap.Entry<Region, BeaconData> trackedBeacon : trackedBeacons.entrySet()) {
+        for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()) {
 
             // Loop through beacons in map
-            for (AnchorBeacon mapAnchorBeacon : Map.getAnchorBeacons()) {
+            for (AnchorBeacon mapAnchorBeacon : Map.anchorBeacons) {
 
                 // If they both refer to the same beacon
-                if (areEqual(trackedBeacon.getKey(), mapAnchorBeacon)) {
+                if (Utilities.areEqual(trackedBeacon.getKey(), mapAnchorBeacon)) {
 
                     // Add position and distance (in metres)
                     positions.add(new double[] {
@@ -387,7 +226,7 @@ public class ApplicationBeaconManager extends Application {
 
             NonLinearLeastSquaresSolver solver = new NonLinearLeastSquaresSolver(
                     new TrilaterationFunction(
-                            getDoubleDoubleArray(positions), getDoubleArray(distances)),
+                            Utilities.getDoubleDoubleArray(positions), Utilities.getDoubleArray(distances)),
                     new LevenbergMarquardtOptimizer());
             LeastSquaresOptimizer.Optimum optimum = solver.solve();
 
@@ -401,14 +240,55 @@ public class ApplicationBeaconManager extends Application {
 
 
             Point estimatedLocation = new Point(centroid[0] / Map.metresPerGridUnit, centroid[1] / Map.metresPerGridUnit);
-            Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
+
+            //Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
+
             return estimatedLocation;
 
         } else {
-            Log.i(TAG, "getEstimatedLocation(): Not enough beacons to trilaterate location");
+            //Log.i(TAG, "getEstimatedLocation(): Not enough beacons to trilaterate location");
 
             return null;
         }
     }
+
+
+
+
+    public void logTrackedBeacons() {
+        String string = "logTrackedBeacons():\n";
+
+        for (java.util.Map.Entry<Region, BeaconTrackingData> beacon : trackedBeacons.entrySet()) {
+            string += String.format(
+                    "%s : %s\n",
+                    beacon.getValue(), beacon.getKey());
+        }
+
+        Log.v(TAG, string);
+    }
+
+    public String getTrackedBeaconsDescription() {
+        //Log.v(TAG, "getTrackedBeaconsDescription()");
+
+        String string = "";
+
+        for (java.util.Map.Entry<Region, BeaconTrackingData> entry : trackedBeacons.entrySet()) {
+            string += String.format(
+                    "%s : %.3f m\n",
+                    entry.getKey().getIdentifier(), entry.getValue().getEstimatedAccuracy());
+        }
+
+        Point estimatedLocation = getEstimatedLocation();
+        if (estimatedLocation == null) {
+            string += "Location Unavailable";
+        } else {
+            string += String.format(
+                    "(%f, %f)",
+                    estimatedLocation.x, estimatedLocation.y);
+        }
+
+        return string;
+    }
+
 
 }

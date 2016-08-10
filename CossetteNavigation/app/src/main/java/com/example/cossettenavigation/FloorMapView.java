@@ -109,7 +109,7 @@ public class FloorMapView extends View {
         // Test drawText
         //canvas.drawText("Test", canvasWidth / 2, canvasHeight / 2, anchorBeaconLabelPaint);
 
-        for (AnchorBeacon anchorBeacon : Map.getAnchorBeacons()) {
+        for (AnchorBeacon anchorBeacon : Map.anchorBeacons) {
             float x = (float)(anchorBeacon.getXPosition() * pixelsPerMapUnit) + xMargin;
             float y = (float)(anchorBeacon.getYPosition() * pixelsPerMapUnit) + yMargin;
 
