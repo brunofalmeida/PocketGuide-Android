@@ -30,25 +30,14 @@ public class SearchActivity extends AppCompatActivity {
             Toast.makeText(SearchActivity.this, query, Toast.LENGTH_SHORT).show();
         }
 
-        /**FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String[] location = getResources().getStringArray(R.array.locations);
-        ArrayList<String> searchResults = new ArrayList<String>();
+        ArrayList<String> searchResults = new ArrayList<>();
         for (int i=0; i<location.length; i++)
             if (location[i].toLowerCase().contains(query.toLowerCase()))
                 searchResults.add(location[i]);
-
-/*        ListView listView_Search=(ListView)findViewById(R.id.listView_search);
-        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.locations));
-        listView_Search.setAdapter(adapter);*/
+        
     }
 
     @Override
