@@ -10,10 +10,18 @@ import java.util.ArrayList;
  */
 public class BeaconTrackingData {
 
+    private com.example.cossettenavigation.map.Beacon beacon;
+
     // Oldest measurements first, newest measurements last
     private ArrayList<Double> accuracyMeasurements = new ArrayList<>();
     private ArrayList<Utils.Proximity> proximityMeasurements = new ArrayList<>();
 
+
+
+
+    public BeaconTrackingData(com.example.cossettenavigation.map.Beacon beacon) {
+        this.beacon = beacon;
+    }
 
     @Override
     public String toString() {
@@ -28,6 +36,10 @@ public class BeaconTrackingData {
         string += "}, estimatedAccuracy = " + getEstimatedAccuracy() + " }";
 
         return string;
+    }
+
+    public com.example.cossettenavigation.map.Beacon getBeacon() {
+        return beacon;
     }
 
     public void addMeasurements(Beacon beacon) {

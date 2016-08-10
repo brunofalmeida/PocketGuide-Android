@@ -10,6 +10,8 @@ import com.estimote.sdk.Region;
 import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.Point;
+import com.example.cossettenavigation.map.SupportBeacon;
+import com.example.cossettenavigation.map.Zone;
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver;
 import com.lemmingapex.trilateration.TrilaterationFunction;
 
@@ -41,6 +43,12 @@ public class ApplicationBeaconManager extends Application {
     private final String TAG = "AppBeaconManager";
 
     private final Region ALL_BEACONS_REGION = new Region("All Beacons", null, null, null);
+
+    /**
+     * The maximum distance a beacon can be from the device while being used in the position
+     * trilateration algorithm (in metres).
+     */
+    private static double MAX_BEACON_TRILATERATION_DISTANCE = 5;
 
     private BeaconManager beaconManager;
 
@@ -173,10 +181,36 @@ public class ApplicationBeaconManager extends Application {
         "Beacon: accuracy = %f, proximity = %s, %s",
         Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));*/
 
+        // Add the beacon if it isn't already tracked
         if (!trackedBeacons.containsKey(region)) {
-            trackedBeacons.put(region, new BeaconTrackingData());
+
+            // Try to find the beacon in the map
+            com.example.cossettenavigation.map.Beacon mapBeacon = null;
+
+            for (AnchorBeacon anchorBeacon : Map.anchorBeacons) {
+                if (Utilities.areEqual(region, anchorBeacon)) {
+                    mapBeacon = anchorBeacon;
+                }
+            }
+
+            for (Zone zone : Map.zones) {
+                for (SupportBeacon supportBeacon : zone.getSupportBeacons()) {
+                    if (Utilities.areEqual(region, supportBeacon)) {
+                        mapBeacon = supportBeacon;
+                    }
+                }
+            }
+
+            if (mapBeacon == null) {
+                Log.e(TAG, String.format(
+                        "updateTrackedBeacon(): Tracked beacon not found in map\nregion = %s\nbeacon = %s",
+                        region, beacon));
+            } else {
+                trackedBeacons.put(region, new BeaconTrackingData(mapBeacon));
+            }
         }
 
+        // The beacon must be in the tracked set, so update it with measurements
         trackedBeacons.get(region).addMeasurements(beacon);
 
         //Log.v(TAG, trackedBeacons.get(region).toString());
@@ -199,19 +233,12 @@ public class ApplicationBeaconManager extends Application {
 
         // Loop through tracked beacons
         for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()) {
-
-            // Loop through beacons in map
-            for (AnchorBeacon mapAnchorBeacon : Map.anchorBeacons) {
-
-                // If they both refer to the same beacon
-                if (Utilities.areEqual(trackedBeacon.getKey(), mapAnchorBeacon)) {
-
-                    // Add position and distance (in metres)
-                    positions.add(new double[] {
-                            mapAnchorBeacon.getXPosition() * Map.metresPerGridUnit,
-                            mapAnchorBeacon.getYPosition() * Map.metresPerGridUnit });
-                    distances.add(trackedBeacon.getValue().getEstimatedAccuracy());
-                }
+            if (trackedBeacon.getValue().getEstimatedAccuracy() <= MAX_BEACON_TRILATERATION_DISTANCE) {
+                // Add position and distance (in metres)
+                positions.add(new double[]{
+                        trackedBeacon.getValue().getBeacon().getXPosition() * Map.metresPerGridUnit,
+                        trackedBeacon.getValue().getBeacon().getYPosition() * Map.metresPerGridUnit});
+                distances.add(trackedBeacon.getValue().getEstimatedAccuracy());
             }
         }
 
@@ -241,12 +268,14 @@ public class ApplicationBeaconManager extends Application {
 
             Point estimatedLocation = new Point(centroid[0] / Map.metresPerGridUnit, centroid[1] / Map.metresPerGridUnit);
 
-            //Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
+            Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
 
             return estimatedLocation;
 
         } else {
-            //Log.i(TAG, "getEstimatedLocation(): Not enough beacons to trilaterate location");
+            Log.i(TAG, String.format(
+                    "getEstimatedLocation(): Not enough beacons within %.1fm to trilaterate location",
+                    MAX_BEACON_TRILATERATION_DISTANCE));
 
             return null;
         }

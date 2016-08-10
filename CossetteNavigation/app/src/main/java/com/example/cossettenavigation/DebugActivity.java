@@ -58,7 +58,7 @@ public class DebugActivity extends AppCompatActivity {
         LinearLayout.LayoutParams floorMapViewLayoutParams = new LinearLayout.LayoutParams(0, 0);
         floorMapViewLayoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
         floorMapViewLayoutParams.weight = 1;
-        final FloorMapView floorMapView = new FloorMapView(this);
+        final FloorMapView floorMapView = new FloorMapView(this, (ApplicationBeaconManager) getApplication());
         mapLayout.addView(floorMapView, floorMapViewLayoutParams);
 
         new Timer().schedule(new TimerTask() {
