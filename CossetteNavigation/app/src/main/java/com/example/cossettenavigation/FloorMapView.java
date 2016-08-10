@@ -9,6 +9,8 @@ import android.view.View;
 
 import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Map;
+import com.example.cossettenavigation.map.Point;
+import com.example.cossettenavigation.navigation.ApplicationBeaconManager;
 
 /**
  * Created by Bruno on 2016-08-04.
@@ -17,13 +19,20 @@ public class FloorMapView extends View {
 
     private static final String TAG = "FloorMapView";
 
+    ApplicationBeaconManager beaconManager;
+
     private Paint rectanglePaint;
     private Paint anchorBeaconPaint;
     private Paint anchorBeaconLabelPaint;
+    private Paint locationPaint;
 
 
-    public FloorMapView(Context context) {
+
+
+    public FloorMapView(Context context, ApplicationBeaconManager beaconManager) {
         super(context);
+
+        this.beaconManager = beaconManager;
 
         rectanglePaint = new Paint();
         rectanglePaint.setColor(Color.WHITE);
@@ -40,6 +49,11 @@ public class FloorMapView extends View {
         anchorBeaconLabelPaint.setTypeface(Typeface.DEFAULT);
         anchorBeaconLabelPaint.setTextSize(48);
         anchorBeaconLabelPaint.setTextAlign(Paint.Align.CENTER);
+
+        locationPaint = new Paint();
+        locationPaint.setColor(Color.RED);
+        locationPaint.setStyle(Paint.Style.FILL);
+        locationPaint.setStrokeWidth(150);
     }
 
     @Override
@@ -120,6 +134,16 @@ public class FloorMapView extends View {
             canvas.drawPoint(x, y, anchorBeaconPaint);
 
             canvas.drawText(anchorBeacon.getName(), x, y - 100, anchorBeaconLabelPaint);
+        }
+
+        Point estimatedLocation = beaconManager.getEstimatedLocation();
+
+        if (estimatedLocation != null) {
+            float x = (float) (estimatedLocation.x * pixelsPerMapUnit) + xMargin;
+            float y = (float) (estimatedLocation.y * pixelsPerMapUnit) + yMargin;
+
+            canvas.drawCircle(x, y, 50, locationPaint);
+//            canvas.drawPoint(x, y, locationPaint);
         }
     }
 

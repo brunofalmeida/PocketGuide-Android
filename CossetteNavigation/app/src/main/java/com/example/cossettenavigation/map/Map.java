@@ -154,17 +154,17 @@ public class Map {
                 "ice2 - F2",
                 0, 75,
                 DEFAULT_UUID, 27598, 15040);
-        AnchorBeacon ice3 = addAnchorBeacon(
+/*        AnchorBeacon ice3 = addAnchorBeacon(
                 "ice3 - F2",
                 10, 0,
-                DEFAULT_UUID, 62693, 23343);
+                DEFAULT_UUID, 62693, 23343);*/
         AnchorBeacon ice4 = addAnchorBeacon(
                 "ice4 - F2",
                 50, 100,
                 DEFAULT_UUID, 42484, 10171);
 
         Zone z1 = addZone("Open Area - Floor 2");
-        z1.addAnchorBeacons(ice1, ice2, ice3, ice4);
+        z1.addAnchorBeacons(ice1, ice2, /*ice3,*/ ice4);
     }
 
     // Define beacons and zones
