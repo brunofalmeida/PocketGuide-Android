@@ -50,6 +50,10 @@ public class SupportBeacon extends Beacon {
                 getClass().getSimpleName(), name, position, uuid, major, minor, zone);
     }
 
+    public WeakReference<Zone> getZone() {
+        return zone;
+    }
+
     public void setZone(Zone zone) {
         this.zone = new WeakReference<>(zone);
     }
