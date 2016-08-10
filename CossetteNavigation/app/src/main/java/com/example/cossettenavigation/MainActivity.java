@@ -25,10 +25,7 @@ import android.widget.ImageView;
 
 import com.estimote.sdk.SystemRequirementsChecker;
 
-/**
- * A full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
+
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String TAG = "MainActivity";
@@ -82,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         ImageView currentDirection = new ImageView(this);
 
-        currentDirection.setImageResource(R.drawable.uparrow);
+        currentDirection.setImageResource(R.drawable.ic_arrow_right);
 
         int width=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
         int height=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
