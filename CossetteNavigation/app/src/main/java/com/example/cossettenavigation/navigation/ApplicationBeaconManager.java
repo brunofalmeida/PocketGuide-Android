@@ -44,6 +44,12 @@ public class ApplicationBeaconManager extends Application {
 
     private final Region ALL_BEACONS_REGION = new Region("All Beacons", null, null, null);
 
+    /**
+     * The maximum distance a beacon can be from the device while being used in the position
+     * trilateration algorithm (in metres).
+     */
+    private static double MAX_BEACON_TRILATERATION_DISTANCE = 5;
+
     private BeaconManager beaconManager;
 
     /**
@@ -227,11 +233,13 @@ public class ApplicationBeaconManager extends Application {
 
         // Loop through tracked beacons
         for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()) {
-            // Add position and distance (in metres)
-            positions.add(new double[] {
-                    trackedBeacon.getValue().getBeacon().getXPosition() * Map.metresPerGridUnit,
-                    trackedBeacon.getValue().getBeacon().getYPosition() * Map.metresPerGridUnit });
-            distances.add(trackedBeacon.getValue().getEstimatedAccuracy());
+            if (trackedBeacon.getValue().getEstimatedAccuracy() <= MAX_BEACON_TRILATERATION_DISTANCE) {
+                // Add position and distance (in metres)
+                positions.add(new double[]{
+                        trackedBeacon.getValue().getBeacon().getXPosition() * Map.metresPerGridUnit,
+                        trackedBeacon.getValue().getBeacon().getYPosition() * Map.metresPerGridUnit});
+                distances.add(trackedBeacon.getValue().getEstimatedAccuracy());
+            }
         }
 
 
@@ -260,12 +268,14 @@ public class ApplicationBeaconManager extends Application {
 
             Point estimatedLocation = new Point(centroid[0] / Map.metresPerGridUnit, centroid[1] / Map.metresPerGridUnit);
 
-            //Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
+            Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
 
             return estimatedLocation;
 
         } else {
-            //Log.i(TAG, "getEstimatedLocation(): Not enough beacons to trilaterate location");
+            Log.i(TAG, String.format(
+                    "getEstimatedLocation(): Not enough beacons within %.1fm to trilaterate location",
+                    MAX_BEACON_TRILATERATION_DISTANCE));
 
             return null;
         }
