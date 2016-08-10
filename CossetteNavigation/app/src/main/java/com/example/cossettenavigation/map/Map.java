@@ -30,8 +30,7 @@ public class Map {
 
 
     public static ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
-
-    private static ArrayList<Zone> zones = new ArrayList<>();
+    public static ArrayList<Zone> zones = new ArrayList<>();
 
     /*
     Grid properties.

@@ -37,6 +37,9 @@ public class Zone {
                 getClass().getSimpleName(), name, anchorBeacons, supportBeacons);
     }
 
+    public ArrayList<SupportBeacon> getSupportBeacons() {
+        return supportBeacons;
+    }
 
     /**
      * Also updates the anchor beacon to refer to this zone.
