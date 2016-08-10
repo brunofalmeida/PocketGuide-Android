@@ -51,6 +51,10 @@ public class AnchorBeacon extends Beacon {
                 getClass().getSimpleName(), name, position, uuid, major, minor, zones);
     }
 
+    public ArrayList<WeakReference<Zone>> getZones() {
+        return zones;
+    }
+
     public void addZone(Zone zone) {
         zones.add(new WeakReference<>(zone));
     }
