@@ -3,6 +3,8 @@ package com.example.cossettenavigation.map;
 import android.util.Log;
 import android.util.Pair;
 
+import com.example.cossettenavigation.pathfinding.Pathfinder;
+
 import java.util.ArrayList;
 
 /**

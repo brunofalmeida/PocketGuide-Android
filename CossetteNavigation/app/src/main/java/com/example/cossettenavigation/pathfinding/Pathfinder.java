@@ -1,7 +1,13 @@
-package com.example.cossettenavigation.map;
+package com.example.cossettenavigation.pathfinding;
 
 import android.util.Log;
 import android.util.Pair;
+
+import com.example.cossettenavigation.map.AnchorBeacon;
+import com.example.cossettenavigation.map.Beacon;
+import com.example.cossettenavigation.map.Map;
+import com.example.cossettenavigation.map.SupportBeacon;
+import com.example.cossettenavigation.map.Zone;
 
 import java.util.ArrayList;
 import java.util.HashMap;
