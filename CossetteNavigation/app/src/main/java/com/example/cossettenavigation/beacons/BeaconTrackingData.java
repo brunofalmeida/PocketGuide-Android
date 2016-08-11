@@ -1,4 +1,4 @@
-package com.example.cossettenavigation.navigation;
+package com.example.cossettenavigation.beacons;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.Utils;

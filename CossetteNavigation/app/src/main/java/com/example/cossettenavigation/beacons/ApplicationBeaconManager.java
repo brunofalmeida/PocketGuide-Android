@@ -1,4 +1,4 @@
-package com.example.cossettenavigation.navigation;
+package com.example.cossettenavigation.beacons;
 
 import android.app.Application;
 import android.util.Log;
