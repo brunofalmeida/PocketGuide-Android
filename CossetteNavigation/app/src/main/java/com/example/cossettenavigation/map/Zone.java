@@ -1,6 +1,5 @@
 package com.example.cossettenavigation.map;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +14,7 @@ public class Zone {
      * References to anchor beacons that define this zone.
      * (A Zone does not own its anchor beacons, since they can define multiple zones.)
      */
-    private ArrayList<WeakReference<AnchorBeacon>> anchorBeacons = new ArrayList<>();
+    private ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
 
     /**
      * Support beacons that are part of this zone.
@@ -32,12 +31,28 @@ public class Zone {
 
     @Override
     public String toString() {
+        String anchorBeaconsString = "{ ";
+        for (AnchorBeacon anchorBeacon : anchorBeacons) {
+            anchorBeaconsString += String.format("\"%s\", ", anchorBeacon.getName());
+        }
+        anchorBeaconsString += "}";
+
+        String supportBeaconsString = "{ ";
+        for (SupportBeacon supportBeacon : supportBeacons) {
+            supportBeaconsString += String.format("\"%s\", ", supportBeacon.getName());
+        }
+        supportBeaconsString += "}";
+
         return String.format(
                 "%s { name = %s, anchorBeacons = %s, supportBeacons = %s }",
-                getClass().getSimpleName(), name, anchorBeacons, supportBeacons);
+                getClass().getSimpleName(), name, anchorBeaconsString, supportBeaconsString);
     }
 
-    public ArrayList<WeakReference<AnchorBeacon>> getAnchorBeacons() {
+    public String getName() {
+        return name;
+    }
+
+    public ArrayList<AnchorBeacon> getAnchorBeacons() {
         return anchorBeacons;
     }
 
@@ -50,7 +65,7 @@ public class Zone {
      * Also updates the anchor beacon to refer to this zone.
      */
     public void addAnchorBeacon(AnchorBeacon anchorBeacon) {
-        anchorBeacons.add(new WeakReference<>(anchorBeacon));
+        anchorBeacons.add(anchorBeacon);
         anchorBeacon.addZone(this);
     }
 

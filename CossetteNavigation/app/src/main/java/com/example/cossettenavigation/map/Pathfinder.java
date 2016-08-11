@@ -3,7 +3,6 @@ package com.example.cossettenavigation.map;
 import android.util.Log;
 import android.util.Pair;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
@@ -30,10 +29,7 @@ public class Pathfinder {
             double minimumTime = INFINITY;
             ArrayList<Beacon> shortestPath = null;
 
-            for (   WeakReference<AnchorBeacon> anchorBeaconReference :
-                    startSupportBeacon.getZone().get().getAnchorBeacons()) {
-
-                AnchorBeacon anchorBeacon = anchorBeaconReference.get();
+            for (AnchorBeacon anchorBeacon : startSupportBeacon.getZone().getAnchorBeacons()) {
 
                 Pair<Double, ArrayList<Beacon>> testPath = getShortestPath(anchorBeacon, endBeacon);
                 double testTime = Map.estimateTravelTime(startSupportBeacon, anchorBeacon) + testPath.first;
@@ -59,10 +55,8 @@ public class Pathfinder {
             double minimumTime = INFINITY;
             ArrayList<Beacon> shortestPath = null;
 
-            for (   WeakReference<AnchorBeacon> anchorBeaconReference :
-                    endSupportBeacon.getZone().get().getAnchorBeacons()) {
-
-                AnchorBeacon anchorBeacon = anchorBeaconReference.get();
+            for (   AnchorBeacon anchorBeacon :
+                    endSupportBeacon.getZone().getAnchorBeacons()) {
 
                 Pair<Double, ArrayList<Beacon>> testPath = getShortestPath(startBeacon, anchorBeacon);
                 double testTime = testPath.first + Map.estimateTravelTime(anchorBeacon, endSupportBeacon);
@@ -103,11 +97,9 @@ public class Pathfinder {
         for (AnchorBeacon beacon : Map.anchorBeacons) {
             ArrayList<Pair<AnchorBeacon, Double>> beaconConnections = new ArrayList<>();
 
-            for (WeakReference<Zone> zoneReference : beacon.getZones()) {
-                Zone zone = zoneReference.get();
+            for (Zone zone : beacon.getZones()) {
 
-                for (WeakReference<AnchorBeacon> connectedBeaconReference : zone.getAnchorBeacons()) {
-                    AnchorBeacon connectedBeacon = connectedBeaconReference.get();
+                for (AnchorBeacon connectedBeacon : zone.getAnchorBeacons()) {
 
                     if (beacon != connectedBeacon) {
                         beaconConnections.add(new Pair<>(
