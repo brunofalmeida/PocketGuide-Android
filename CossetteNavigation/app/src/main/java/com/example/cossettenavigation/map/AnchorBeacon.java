@@ -1,5 +1,7 @@
 package com.example.cossettenavigation.map;
 
+import com.example.cossettenavigation.Utilities;
+
 import java.util.ArrayList;
 
 /**
@@ -43,15 +45,10 @@ public class AnchorBeacon extends Beacon implements Comparable {
 
     @Override
     public String toString() {
-        String zonesString = "{ ";
-        for (Zone zone : zones) {
-            zonesString += String.format("\"%s\", ", zone.getName());
-        }
-        zonesString += "}";
-
         return String.format(
-                "%s { name = \"%s\", position = %s, uuid = %s, major = %d, minor = %d, zones = %s }",
-                getClass().getSimpleName(), name, position, uuid, major, minor, zonesString);
+                "%s { name = \"%s\", position = %s, uuid = %s, major = %d, minor = %d, zones = %s, floors = %s }",
+                getClass().getSimpleName(), name, position, uuid, major, minor,
+                Utilities.getZoneNamesString(zones), Utilities.getFloorNamesString(floors));
     }
 
     public ArrayList<Zone> getZones() {

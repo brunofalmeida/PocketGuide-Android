@@ -1,5 +1,7 @@
 package com.example.cossettenavigation.map;
 
+import com.example.cossettenavigation.Utilities;
+
 import java.util.ArrayList;
 
 /**
@@ -48,8 +50,9 @@ public class SupportBeacon extends Beacon {
     @Override
     public String toString() {
         return String.format(
-                "%s { name = \"%s\", position = %s, uuid = %s, major = %d, minor = %d, zone = \"%s\" }",
-                getClass().getSimpleName(), name, position, uuid, major, minor, zone.getName());
+                "%s { name = \"%s\", position = %s, uuid = %s, major = %d, minor = %d, zone = \"%s\", floors = %s }",
+                getClass().getSimpleName(), name, position, uuid, major, minor,
+                zone.getName(), Utilities.getFloorNamesString(floors));
     }
 
     public Zone getZone() {

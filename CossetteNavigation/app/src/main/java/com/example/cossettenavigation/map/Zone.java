@@ -1,5 +1,7 @@
 package com.example.cossettenavigation.map;
 
+import com.example.cossettenavigation.Utilities;
+
 import java.util.ArrayList;
 
 /**
@@ -22,21 +24,13 @@ public class Zone {
 
     @Override
     public String toString() {
-        String anchorBeaconsString = "{ ";
-        for (AnchorBeacon anchorBeacon : anchorBeacons) {
-            anchorBeaconsString += String.format("\"%s\", ", anchorBeacon.getName());
-        }
-        anchorBeaconsString += "}";
-
-        String supportBeaconsString = "{ ";
-        for (SupportBeacon supportBeacon : supportBeacons) {
-            supportBeaconsString += String.format("\"%s\", ", supportBeacon.getName());
-        }
-        supportBeaconsString += "}";
-
         return String.format(
-                "%s { name = %s, anchorBeacons = %s, supportBeacons = %s }",
-                getClass().getSimpleName(), name, anchorBeaconsString, supportBeaconsString);
+                "%s { name = %s, anchorBeacons = %s, supportBeacons = %s, floors = %s }",
+                getClass().getSimpleName(),
+                name,
+                Utilities.getAnchorBeaconNamesString(anchorBeacons),
+                Utilities.getSupportBeaconNamesString(supportBeacons),
+                Utilities.getFloorNamesString(floors));
     }
 
     public String getName() {
