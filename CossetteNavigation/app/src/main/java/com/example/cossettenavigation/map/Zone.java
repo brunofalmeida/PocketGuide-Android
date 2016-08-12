@@ -14,7 +14,9 @@ public class Zone {
 
     private ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
     private ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
+
     private ArrayList<Floor> floors = new ArrayList<>();
+
 
 
 
@@ -47,27 +49,37 @@ public class Zone {
 
 
     /**
-     * Also updates the anchor beacons to refer to this zone.
+     * Also updates the anchor beacons and associated floors to refer to this zone.
      */
     public void addAnchorBeacons(AnchorBeacon... anchorBeacons) {
         for (AnchorBeacon anchorBeacon : anchorBeacons) {
-            this.anchorBeacons.add(anchorBeacon);
+            if (!this.anchorBeacons.contains(anchorBeacon)) {
+                this.anchorBeacons.add(anchorBeacon);
+            }
             anchorBeacon.addZone(this);
+
+            if (!this.floors.contains(anchorBeacon.getFloor())) {
+                this.floors.add(anchorBeacon.getFloor());
+            }
+            anchorBeacon.getFloor().addZone(this);
         }
     }
 
     /**
-     * Also updates the support beacons to refer to this zone.
+     * Also updates the support beacons and associated floors to refer to this zone.
      */
     public void addSupportBeacons(SupportBeacon... supportBeacons) {
         for (SupportBeacon supportBeacon : supportBeacons) {
-            this.supportBeacons.add(supportBeacon);
+            if (!this.supportBeacons.contains(supportBeacon)) {
+                this.supportBeacons.add(supportBeacon);
+            }
             supportBeacon.setZone(this);
-        }
-    }
 
-    public void addFloor(Floor floor) {
-        floors.add(floor);
+            if (!this.floors.contains(supportBeacon.getFloor())) {
+                this.floors.add(supportBeacon.getFloor());
+            }
+            supportBeacon.getFloor().addZone(this);
+        }
     }
 
 }

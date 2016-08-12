@@ -11,7 +11,6 @@ import java.util.ArrayList;
 public class AnchorBeacon extends Beacon implements Comparable {
 
     private ArrayList<Zone> zones = new ArrayList<>();
-    private ArrayList<Floor> floors = new ArrayList<>();
 
 
 
@@ -46,9 +45,9 @@ public class AnchorBeacon extends Beacon implements Comparable {
     @Override
     public String toString() {
         return String.format(
-                "%s { name = \"%s\", position = %s, uuid = %s, major = %d, minor = %d, zones = %s, floors = %s }",
-                getClass().getSimpleName(), name, position, uuid, major, minor,
-                Utilities.getZoneNamesString(zones), Utilities.getFloorNamesString(floors));
+                "%s { name = \"%s\", position = %s, uuid = %s, major = %d, minor = %d, floor = \"%s\", zones = %s }",
+                getClass().getSimpleName(), name, position, uuid, major, minor, floor.getName(),
+                Utilities.getZoneNamesString(zones));
     }
 
     public ArrayList<Zone> getZones() {
@@ -56,12 +55,11 @@ public class AnchorBeacon extends Beacon implements Comparable {
     }
 
     public void addZone(Zone zone) {
-        zones.add(zone);
+        if (!this.zones.contains(zone)) {
+            this.zones.add(zone);
+        }
     }
 
-    public void addFloor(Floor floor) {
-        floors.add(floor);
-    }
 
     @Override
     public int compareTo(Object another) {

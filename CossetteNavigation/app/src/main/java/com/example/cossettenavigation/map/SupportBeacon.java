@@ -1,8 +1,6 @@
 package com.example.cossettenavigation.map;
 
-import com.example.cossettenavigation.Utilities;
-
-import java.util.ArrayList;
+import android.util.Log;
 
 /**
  * A beacon placed in a supporting location and used to improve location estimates.
@@ -10,12 +8,12 @@ import java.util.ArrayList;
  */
 public class SupportBeacon extends Beacon {
 
+    private static final String TAG = "SupportBeacon";
+
     /**
      * A SupportBeacon can only be part of one zone.
      */
     private Zone zone = null;
-
-    private ArrayList<Floor> floors = new ArrayList<>();
 
 
 
@@ -50,9 +48,9 @@ public class SupportBeacon extends Beacon {
     @Override
     public String toString() {
         return String.format(
-                "%s { name = \"%s\", position = %s, uuid = %s, major = %d, minor = %d, zone = \"%s\", floors = %s }",
-                getClass().getSimpleName(), name, position, uuid, major, minor,
-                zone.getName(), Utilities.getFloorNamesString(floors));
+                "%s { name = \"%s\", position = %s, uuid = %s, major = %d, minor = %d, floor = \"%s\", zone = \"%s\" }",
+                getClass().getSimpleName(), name, position, uuid, major, minor, floor.getName(),
+                zone.getName());
     }
 
     public Zone getZone() {
@@ -60,11 +58,10 @@ public class SupportBeacon extends Beacon {
     }
 
     public void setZone(Zone zone) {
+        if (this.zone != null) {
+            Log.e(TAG, "Overriding zone for support beacon: " + this);
+        }
         this.zone = zone;
-    }
-
-    public void addFloor(Floor floor) {
-        floors.add(floor);
     }
 
 }

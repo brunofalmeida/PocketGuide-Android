@@ -192,7 +192,13 @@ public class Map {
 
 
 
-    // Define beacons and zones
+    /*
+    Define beacons and zones
+
+    1. define beacons
+    2. define floors -> add beacons
+    3. define zones -> add beacons
+     */
     static {
         Log.v(TAG, "static initializer");
 
@@ -255,16 +261,16 @@ public class Map {
                 50, 100,
                 DEFAULT_UUID, 42484, 10171);
 
+        Floor floor2 = addFloor("Floor 2");
+        floor2.addAnchorBeacons(ice1, ice2, ice4);
+
         Zone z1 = addZone("Open Area - Floor 2");
-        z1.addAnchorBeacons(ice1, ice2, /*ice3,*/ ice4);
+        z1.addAnchorBeacons(ice1, ice2, ice4);
 
 /*        Zone z2 = addZone("2");
         Zone z3 = addZone("3");
         Zone z4 = addZone("4");
         Zone z5 = addZone("5");*/
-
-        Floor floor2 = addFloor("Floor 2");
-        floor2.addZones(z1);
 
         // End floor 2
 

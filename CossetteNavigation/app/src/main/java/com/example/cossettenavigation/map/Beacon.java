@@ -1,11 +1,15 @@
 package com.example.cossettenavigation.map;
 
+import android.util.Log;
+
 import java.util.UUID;
 
 /**
  * A beacon on the map, defined with a name, grid position, and identifiers.
  */
 public abstract class Beacon {
+
+    private static final String TAG = "Beacon";
 
     protected String name;
 
@@ -14,6 +18,8 @@ public abstract class Beacon {
     protected UUID uuid;
     protected int major;
     protected int minor;
+
+    protected Floor floor = null;
 
 
 
@@ -97,6 +103,18 @@ public abstract class Beacon {
 
     public int getMinor() {
         return minor;
+    }
+
+    public Floor getFloor() {
+        return floor;
+    }
+
+
+    public void setFloor(Floor floor) {
+        if (this.floor != null) {
+            Log.e(TAG, "Overriding floor for beacon: " + this);
+        }
+        this.floor = floor;
     }
 
 }

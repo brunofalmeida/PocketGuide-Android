@@ -13,6 +13,7 @@ public class Floor {
 
     private ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
     private ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
+
     private ArrayList<Zone> zones = new ArrayList<>();
 
 
@@ -38,10 +39,6 @@ public class Floor {
         return name;
     }
 
-    public ArrayList<Zone> getZones() {
-        return zones;
-    }
-
     public ArrayList<AnchorBeacon> getAnchorBeacons() {
         return anchorBeacons;
     }
@@ -50,21 +47,40 @@ public class Floor {
         return supportBeacons;
     }
 
+    public ArrayList<Zone> getZones() {
+        return zones;
+    }
 
-    public void addZones(Zone... zones) {
-        for (Zone zone: zones) {
-            for (AnchorBeacon anchorBeacon : zone.getAnchorBeacons()) {
+
+    /**
+     * Also updates the anchor beacons to refer to this floor.
+     */
+    public void addAnchorBeacons(AnchorBeacon... anchorBeacons) {
+        for (AnchorBeacon anchorBeacon : anchorBeacons) {
+            if (!this.anchorBeacons.contains(anchorBeacon)) {
                 this.anchorBeacons.add(anchorBeacon);
-                anchorBeacon.addFloor(this);
             }
+            anchorBeacon.setFloor(this);
+        }
+    }
 
-            for (SupportBeacon supportBeacon : zone.getSupportBeacons()) {
+    /**
+     * Also updates the support beacons to refer to this floor.
+     */
+    public void addSupportBeacons(SupportBeacon... supportBeacons) {
+        for (SupportBeacon supportBeacon : supportBeacons) {
+            if (!this.supportBeacons.contains(supportBeacon)) {
                 this.supportBeacons.add(supportBeacon);
-                supportBeacon.addFloor(this);
             }
+            supportBeacon.setFloor(this);
+        }
+    }
 
+
+    // TODO - check for valid references
+    public void addZone(Zone zone) {
+        if (!this.zones.contains(zone)) {
             this.zones.add(zone);
-            zone.addFloor(this);
         }
     }
 
