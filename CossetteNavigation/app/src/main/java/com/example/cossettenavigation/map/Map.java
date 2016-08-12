@@ -176,6 +176,18 @@ public class Map {
 
 
 
+    /**
+     * @return The floor that was added.
+     */
+    private static Floor addFloor(String name) {
+        Floor floor = new Floor(name);
+        floors.add(floor);
+        return floor;
+    }
+
+
+
+
 
 
 
@@ -244,21 +256,15 @@ public class Map {
                 DEFAULT_UUID, 42484, 10171);
 
         Zone z1 = addZone("Open Area - Floor 2");
-        Zone z2 = addZone("2");
-        Zone z3 = addZone("3");
-        Zone z4 = addZone("4");
-        Zone z5 = addZone("5");
         z1.addAnchorBeacons(ice1, ice2, /*ice3,*/ ice4);
 
+/*        Zone z2 = addZone("2");
+        Zone z3 = addZone("3");
+        Zone z4 = addZone("4");
+        Zone z5 = addZone("5");*/
 
-        // Test Pathfinder
-        Pair<Double, ArrayList<Beacon>> result = Pathfinder.getShortestPath(ice4, ice2);
-
-        String log = "Time: " + result.first.toString() + ", Path = { ";
-        for (Beacon beacon : result.second) {
-            log += beacon.toString() + ", ";
-        }
-        Log.v(TAG, log);
+        Floor floor2 = addFloor("Floor 2");
+        floor2.addZones(z1);
 
         // End floor 2
 
@@ -281,12 +287,29 @@ public class Map {
 
 
 
-/*        for (AnchorBeacon anchorBeacon : anchorBeacons) {
+        // Test Pathfinder
+        Pair<Double, ArrayList<Beacon>> result = Pathfinder.getShortestPath(ice4, ice2);
+
+        String log = "Time: " + result.first.toString() + ", Path = { ";
+        for (Beacon beacon : result.second) {
+            log += beacon.toString() + ", ";
+        }
+        Log.v(TAG, log);
+
+
+        // Log all mapping data
+        for (AnchorBeacon anchorBeacon : anchorBeacons) {
             Log.v(TAG, anchorBeacon.toString());
+        }
+        for (SupportBeacon supportBeacon : supportBeacons) {
+            Log.v(TAG, supportBeacon.toString());
         }
         for (Zone zone : zones) {
             Log.v(TAG, zone.toString());
-        }*/
+        }
+        for (Floor floor : floors) {
+            Log.v(TAG, floor.toString());
+        }
     }
 
 }
