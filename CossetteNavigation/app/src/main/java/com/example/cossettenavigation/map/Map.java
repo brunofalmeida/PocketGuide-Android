@@ -44,6 +44,7 @@ public class Map {
     public static ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
     public static ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
     public static ArrayList<Zone> zones = new ArrayList<>();
+    public static ArrayList<Floor> floors = new ArrayList<>();
 
     /*
     Grid properties.

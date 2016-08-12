@@ -10,16 +10,9 @@ public class Zone {
 
     private String name;
 
-    /**
-     * Anchor beacons that define this zone.
-     */
     private ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
-
-    /**
-     * Support beacons that are part of this zone.
-     */
     private ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
-
+    private ArrayList<Floor> floors = new ArrayList<>();
 
 
 
@@ -77,6 +70,10 @@ public class Zone {
             this.supportBeacons.add(supportBeacon);
             supportBeacon.setZone(this);
         }
+    }
+
+    public void addFloor(Floor floor) {
+        floors.add(floor);
     }
 
 }

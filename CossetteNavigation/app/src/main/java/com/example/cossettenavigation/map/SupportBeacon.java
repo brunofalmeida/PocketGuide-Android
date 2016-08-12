@@ -1,5 +1,7 @@
 package com.example.cossettenavigation.map;
 
+import java.util.ArrayList;
+
 /**
  * A beacon placed in a supporting location and used to improve location estimates.
  * @see Map
@@ -7,9 +9,11 @@ package com.example.cossettenavigation.map;
 public class SupportBeacon extends Beacon {
 
     /**
-     * A reference to the zone this beacon is in. (A SupportBeacon can only be part of one zone.)
+     * A SupportBeacon can only be part of one zone.
      */
     private Zone zone = null;
+
+    private ArrayList<Floor> floors = new ArrayList<>();
 
 
 
@@ -54,6 +58,10 @@ public class SupportBeacon extends Beacon {
 
     public void setZone(Zone zone) {
         this.zone = zone;
+    }
+
+    public void addFloor(Floor floor) {
+        floors.add(floor);
     }
 
 }

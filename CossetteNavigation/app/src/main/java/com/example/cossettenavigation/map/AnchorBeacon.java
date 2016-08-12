@@ -8,10 +8,8 @@ import java.util.ArrayList;
  */
 public class AnchorBeacon extends Beacon implements Comparable {
 
-    /**
-     * References to zones this beacon is a part of.
-     */
     private ArrayList<Zone> zones = new ArrayList<>();
+    private ArrayList<Floor> floors = new ArrayList<>();
 
 
 
@@ -62,6 +60,10 @@ public class AnchorBeacon extends Beacon implements Comparable {
 
     public void addZone(Zone zone) {
         zones.add(zone);
+    }
+
+    public void addFloor(Floor floor) {
+        floors.add(floor);
     }
 
     @Override
