@@ -11,13 +11,13 @@ import com.example.cossettenavigation.map.SupportBeacon;
 import java.util.ArrayList;
 
 /**
- * Created by Bruno on 2016-08-10.
+ * Client code interface for the pathfinding algorithm.
  */
 public class Pathfinder {
 
     private static final String TAG = "Pathfinder";
 
-    static double INFINITY = 999999999;
+    static double INFINITY = Double.POSITIVE_INFINITY;
 
 
 
