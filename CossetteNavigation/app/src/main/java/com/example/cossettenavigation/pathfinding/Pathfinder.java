@@ -80,7 +80,7 @@ public class Pathfinder {
         }
 
         else if (startBeacon instanceof AnchorBeacon && endBeacon instanceof AnchorBeacon) {
-            return SPFA.spfa((AnchorBeacon) startBeacon, (AnchorBeacon) endBeacon);
+            return new SPFA((AnchorBeacon) startBeacon, (AnchorBeacon) endBeacon).getShortestPath();
         }
 
         else {

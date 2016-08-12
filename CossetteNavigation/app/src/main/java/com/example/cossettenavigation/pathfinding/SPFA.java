@@ -13,12 +13,13 @@ import java.util.HashMap;
 import java.util.PriorityQueue;
 
 /**
- * <p>
+ * <h1>
  *     Shortest Path Faster Algorithm (SPFA)
- * </p>
+ * </h1>
  *
  * <p>
- *     Should not be used directly by client code; use the algorithm through the Pathfinding class.
+ *     Each use of the algorithm requires its own SPFA object.
+ *     Should not be used directly by client code; use the Pathfinding class instead.
  * </p>
  *
  * @see Pathfinder
@@ -28,46 +29,94 @@ class SPFA {
 
     private static final String TAG = "SPFA";
 
-    static Pair<Double, ArrayList<Beacon>> spfa(AnchorBeacon startBeacon,
-                                                        AnchorBeacon endBeacon) {
-        // Construct graph from map (adjacency list)
-        // each AnchorBeacon -> { (connected beacon, travel time), ... }
-        HashMap<AnchorBeacon, ArrayList<Pair<AnchorBeacon, Double>>> graph = new HashMap<>();
+
+    /**
+     * <h1>Graph (adjacency list)</h1>
+     * <p>each AnchorBeacon -> { (connected beacon, travel time), ... }</p>
+     * <p>
+     *     The graph is the same for all algorithm uses, so it belongs to the class
+     *     and should only be constructed once.
+     * </p>
+     */
+    private static HashMap<AnchorBeacon, ArrayList<Pair<AnchorBeacon, Double>>> graph = null;
 
 
-        for (AnchorBeacon beacon : Map.anchorBeacons) {
-            ArrayList<Pair<AnchorBeacon, Double>> beaconConnections = new ArrayList<>();
+    private AnchorBeacon startBeacon;
+    private AnchorBeacon endBeacon;
 
-            for (Zone zone : beacon.getZones()) {
+    /**
+     * each AnchorBeacon -> (shortest travel time from root, previous beacon in shortest path)
+     */
+    private HashMap<AnchorBeacon, Pair<Double, AnchorBeacon>> shortestTravelTimes;
 
-                for (AnchorBeacon connectedBeacon : zone.getAnchorBeacons()) {
 
-                    if (beacon != connectedBeacon) {
-                        beaconConnections.add(new Pair<>(
-                                connectedBeacon,
-                                Map.estimateTravelTime(beacon, connectedBeacon)));
+
+
+    SPFA(AnchorBeacon startBeacon, AnchorBeacon endBeacon) {
+        // If the graph doesn't exist yet, construct it
+        if (graph == null) {
+            graph = new HashMap<>();
+
+            // Go through all anchor beacons
+            for (AnchorBeacon beacon : Map.anchorBeacons) {
+
+                // Connections for this anchor beacon
+                ArrayList<Pair<AnchorBeacon, Double>> beaconConnections = new ArrayList<>();
+
+                // Go through all zones this anchor beacon is part of
+                for (Zone zone : beacon.getZones()) {
+
+                    // Go through all anchor beacons in this zone
+                    for (AnchorBeacon connectedBeacon : zone.getAnchorBeacons()) {
+
+                        // Check that the anchor beacons are different
+                        if (beacon != connectedBeacon) {
+
+                            // Add connection
+                            beaconConnections.add(new Pair<>(
+                                    connectedBeacon,
+                                    Map.estimateTravelTime(beacon, connectedBeacon)));
+                        }
                     }
                 }
-            }
 
-            graph.put(beacon, beaconConnections);
+                graph.put(beacon, beaconConnections);
+            }
         }
 
 
-        // each AnchorBeacon -> (shortest travel time from root, previous beacon in shortest path)
-        HashMap<AnchorBeacon, Pair<Double, AnchorBeacon>> shortestTotalTimes = new HashMap<>();
+        this.startBeacon = startBeacon;
+        this.endBeacon = endBeacon;
 
+        // Set all travel times to infinity
+        shortestTravelTimes = new HashMap<>();
+        for (AnchorBeacon beacon : graph.keySet()) {
+            shortestTravelTimes.put(beacon, new Pair<Double, AnchorBeacon>(Pathfinder.INFINITY, null));
+        }
+    }
+
+
+    /**
+     * Runs the algorithm and gets the shortest path result.
+     * @return (shortest travel time in seconds, path of beacons), or null if no path was found.
+     */
+    Pair<Double, ArrayList<Beacon>> getShortestPath() {
+        run();
+        return getResult();
+    }
+
+
+
+
+    /**
+     * Runs the algorithm, storing the results in `shortestTravelTimes`.
+     */
+    private void run() {
         // List of nodes to be visited next
         PriorityQueue<AnchorBeacon> queue = new PriorityQueue<>();
 
-
-        // Set all travel times to infinity
-        for (AnchorBeacon beacon : graph.keySet()) {
-            shortestTotalTimes.put(beacon, new Pair<Double, AnchorBeacon>(Pathfinder.INFINITY, null));
-        }
-
         // Setup root node
-        shortestTotalTimes.put(startBeacon, new Pair<Double, AnchorBeacon>(0.0, null));
+        shortestTravelTimes.put(startBeacon, new Pair<Double, AnchorBeacon>(0.0, null));
         queue.offer(startBeacon);
 
         while (queue.size() > 0) {
@@ -77,38 +126,54 @@ class SPFA {
                 AnchorBeacon connectedBeacon = connection.first;
                 double connectionTime = connection.second;
 
-                double testTotalTime = shortestTotalTimes.get(currentBeacon).first + connectionTime;
+                double testTravelTime = shortestTravelTimes.get(currentBeacon).first + connectionTime;
 
-                if (testTotalTime < shortestTotalTimes.get(connectedBeacon).first) {
-                    shortestTotalTimes.put(connectedBeacon, new Pair<>(testTotalTime, currentBeacon));
+                if (testTravelTime < shortestTravelTimes.get(connectedBeacon).first) {
+                    shortestTravelTimes.put(connectedBeacon, new Pair<>(testTravelTime, currentBeacon));
                     if (!queue.contains(connectedBeacon)) {
                         queue.offer(connectedBeacon);
                     }
                 }
             }
         }
+    }
 
-        if (shortestTotalTimes.get(endBeacon).first == Pathfinder.INFINITY) {
-            Log.e(TAG, "spfa(): No path found");
+
+    /**
+     * Gets the algorithm result from `shortestTravelTimes`.
+     * @return (shortest travel time in seconds, path of beacons), or null if no path was found.
+     */
+    private Pair<Double, ArrayList<Beacon>> getResult() {
+        // No result found
+        if (shortestTravelTimes.get(endBeacon).first == Pathfinder.INFINITY) {
+            Log.e(TAG, "getResult(): No path found");
 
             return null;
 
+        // Result found
         } else {
-            Log.e(TAG, "spfa(): Path found");
+            Log.i(TAG, "getResult(): Path found");
 
-            double shortestTotalTime = shortestTotalTimes.get(endBeacon).first;
-            ArrayList<Beacon> path = new ArrayList<>();
-
-            path.add(endBeacon);
-
-            AnchorBeacon currentBeacon = endBeacon;
-            while (shortestTotalTimes.get(currentBeacon).second != null) {
-                currentBeacon = shortestTotalTimes.get(currentBeacon).second;
-                path.add(0, currentBeacon);
-            }
-
-            return new Pair<>(shortestTotalTime, path);
+            return new Pair<>(shortestTravelTimes.get(endBeacon).first, constructPath(endBeacon));
         }
+    }
+
+
+    /**
+     * Constructs the path stored in `shortestTravelTimes` up to the given node.
+     */
+    private ArrayList<Beacon> constructPath(AnchorBeacon finalBeacon) {
+        ArrayList<Beacon> path = new ArrayList<>();
+
+        path.add(finalBeacon);
+
+        AnchorBeacon currentBeacon = finalBeacon;
+        while (shortestTravelTimes.get(currentBeacon).second != null) {
+            currentBeacon = shortestTravelTimes.get(currentBeacon).second;
+            path.add(0, currentBeacon);
+        }
+
+        return path;
     }
 
 }
