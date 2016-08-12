@@ -60,29 +60,13 @@ public class Zone {
 
 
     /**
-     * Also updates the anchor beacon to refer to this zone.
-     */
-    public void addAnchorBeacon(AnchorBeacon anchorBeacon) {
-        anchorBeacons.add(anchorBeacon);
-        anchorBeacon.addZone(this);
-    }
-
-    /**
      * Also updates the anchor beacons to refer to this zone.
      */
     public void addAnchorBeacons(AnchorBeacon... anchorBeacons) {
         for (AnchorBeacon anchorBeacon : anchorBeacons) {
-            addAnchorBeacon(anchorBeacon);
+            this.anchorBeacons.add(anchorBeacon);
+            anchorBeacon.addZone(this);
         }
-    }
-
-
-    /**
-     * Also updates the support beacon to refer to this zone.
-     */
-    public void addSupportBeacon(SupportBeacon supportBeacon) {
-        supportBeacons.add(supportBeacon);
-        supportBeacon.setZone(this);
     }
 
     /**
@@ -90,7 +74,8 @@ public class Zone {
      */
     public void addSupportBeacons(SupportBeacon... supportBeacons) {
         for (SupportBeacon supportBeacon : supportBeacons) {
-            addSupportBeacon(supportBeacon);
+            this.supportBeacons.add(supportBeacon);
+            supportBeacon.setZone(this);
         }
     }
 

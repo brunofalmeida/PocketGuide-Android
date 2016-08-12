@@ -27,6 +27,10 @@ import java.util.ArrayList;
  */
 public class Map {
 
+    // TODO - add Floor class, references in Zone, Beacon
+    // TODO - separate list of floor-connecting Zone's?
+    // TODO - add optional estimatedTravelTime property to Zone objects?
+
     /**
      * In m/s.
      */
