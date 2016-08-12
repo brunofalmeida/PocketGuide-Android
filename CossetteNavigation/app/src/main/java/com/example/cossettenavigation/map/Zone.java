@@ -11,14 +11,12 @@ public class Zone {
     private String name;
 
     /**
-     * References to anchor beacons that define this zone.
-     * (A Zone does not own its anchor beacons, since they can define multiple zones.)
+     * Anchor beacons that define this zone.
      */
     private ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
 
     /**
      * Support beacons that are part of this zone.
-     * (A zone owns its support beacons, since they are only part of that zone.)
      */
     private ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
 

@@ -38,6 +38,7 @@ public class Map {
 
 
     public static ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
+    public static ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
     public static ArrayList<Zone> zones = new ArrayList<>();
 
     /*
@@ -47,6 +48,8 @@ public class Map {
     public static double gridWidth = 1;
     public static double gridHeight = 1;
     public static double metresPerGridUnit = 1;
+
+
 
 
     /**
@@ -61,8 +64,10 @@ public class Map {
     }
 
 
+
+
     /**
-     * Adds a beacon to the map.
+     * Adds an anchor beacon to the map.
      * @return The anchor beacon that was added.
      */
     private static AnchorBeacon addAnchorBeacon(AnchorBeacon anchorBeacon) {
@@ -71,7 +76,7 @@ public class Map {
     }
 
     /**
-     * Adds a beacon to the map using an absolute position.
+     * Adds an anchor beacon to the map using an absolute position.
      * @return The anchor beacon that was added.
      */
     private static AnchorBeacon addAnchorBeacon(String name,
@@ -86,7 +91,7 @@ public class Map {
     }
 
     /**
-     * Adds a beacon to the map using a position relative to another beacon.
+     * Adds an anchor beacon to the map using a position relative to another beacon.
      * @return The anchor beacon that was added.
      */
     private static AnchorBeacon addAnchorBeacon(String name,
@@ -104,6 +109,55 @@ public class Map {
         return addAnchorBeacon(anchorBeacon);
     }
 
+
+
+
+    /**
+     * Adds a support beacon to the map.
+     * @return The support beacon that was added.
+     */
+    private static SupportBeacon addSupportBeacon(SupportBeacon supportBeacon) {
+        supportBeacons.add(supportBeacon);
+        return supportBeacon;
+    }
+
+    /**
+     * Adds a support beacon to the map using an absolute position.
+     * @return The support beacon that was added.
+     */
+    private static SupportBeacon addSupportBeacon(String name,
+                                                  double xPosition,
+                                                  double yPosition,
+                                                  String uuid,
+                                                  int major,
+                                                  int minor) {
+
+        SupportBeacon supportBeacon = new SupportBeacon(name, xPosition, yPosition, uuid, major, minor);
+        return addSupportBeacon(supportBeacon);
+    }
+
+    /**
+     * Adds a support beacon to the map using a position relative to another beacon.
+     * @return The support beacon that was added.
+     */
+    private static SupportBeacon addSupportBeacon(String name,
+                                                  Beacon referenceBeacon,
+                                                  double xPositionOffset,
+                                                  double yPositionOffset,
+                                                  String uuid,
+                                                  int major,
+                                                  int minor) {
+
+        SupportBeacon supportBeacon = new SupportBeacon(
+                name,
+                referenceBeacon, xPositionOffset, yPositionOffset,
+                uuid, major, minor);
+        return addSupportBeacon(supportBeacon);
+    }
+
+
+
+
     /**
      * Adds a zone to the map.
      * @return The zone that was added.
@@ -117,16 +171,7 @@ public class Map {
 
 
 
-    private static void addOtherBeacons() {
-        AnchorBeacon b1 = addAnchorBeacon(
-                "white1 - F1",
-                15, 40,
-                DEFAULT_UUID, 6607, 59029);
-        AnchorBeacon b2 = addAnchorBeacon(
-                "white2 - F1",
-                30, 20,
-                DEFAULT_UUID, 62315, 20156);
-    }
+
 
     private static void addFloor1() {
         gridWidth = 30;
@@ -198,6 +243,18 @@ public class Map {
         }
         Log.v(TAG, log);
     }
+
+    private static void addOtherBeacons() {
+        AnchorBeacon b1 = addAnchorBeacon(
+                "white1 - F1",
+                15, 40,
+                DEFAULT_UUID, 6607, 59029);
+        AnchorBeacon b2 = addAnchorBeacon(
+                "white2 - F1",
+                30, 20,
+                DEFAULT_UUID, 62315, 20156);
+    }
+
 
     // Define beacons and zones
     static {
