@@ -27,8 +27,6 @@ import java.util.ArrayList;
  */
 public class Map {
 
-    // TODO - add Floor class, references in Zone, Beacon
-    // TODO - separate list of floor-connecting Zone's?
     // TODO - add optional estimatedTravelTime property to Zone objects?
 
     /**
@@ -310,11 +308,11 @@ public class Map {
         for (SupportBeacon supportBeacon : supportBeacons) {
             Log.v(TAG, supportBeacon.toString());
         }
-        for (Zone zone : zones) {
-            Log.v(TAG, zone.toString());
-        }
         for (Floor floor : floors) {
             Log.v(TAG, floor.toString());
+        }
+        for (Zone zone : zones) {
+            Log.v(TAG, zone.toString());
         }
     }
 
