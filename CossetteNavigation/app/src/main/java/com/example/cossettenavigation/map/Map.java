@@ -178,8 +178,18 @@ public class Map {
 
 
 
-    private static void addFloor1() {
-        gridWidth = 30;
+
+
+    // Define beacons and zones
+    static {
+        Log.v(TAG, "static initializer");
+
+
+
+
+        // Start floor 1
+
+/*        gridWidth = 30;
         gridHeight = 100;
 
         AnchorBeacon b1 = addAnchorBeacon(
@@ -195,21 +205,23 @@ public class Map {
                 30, 20,
                 DEFAULT_UUID, 62315, 20156);
 
-/*        // TODO - make a support beacon
+*//*        // TODO - make a support beacon
         AnchorBeacon b4 = addAnchorBeacon(
                 "white5 - Kitchen",
                 b1, -5, 25,
-                DEFAULT_UUID, 33753, 28870);*/
+                DEFAULT_UUID, 33753, 28870);*//*
 
         Zone z1 = addZone("Main Lower Hallway");
         z1.addAnchorBeacons(b1, b2, b3);
-//        z1.addSupportBeacons(b4);
-    }
+//        z1.addSupportBeacons(b4);*/
 
-    /**
-     * Roughly a 10m x 10m grid.
-     */
-    private static void addFloor2() {
+        // End floor 1
+
+
+
+
+        // Start floor 2
+
         gridWidth = 100;
         gridHeight = 100;
         metresPerGridUnit = 0.1;
@@ -247,25 +259,27 @@ public class Map {
             log += beacon.toString() + ", ";
         }
         Log.v(TAG, log);
-    }
 
-    private static void addOtherBeacons() {
-        AnchorBeacon b1 = addAnchorBeacon(
+        // End floor 2
+
+
+
+
+        // Start other beacons
+
+/*        AnchorBeacon b1 = addAnchorBeacon(
                 "white1 - F1",
                 15, 40,
                 DEFAULT_UUID, 6607, 59029);
         AnchorBeacon b2 = addAnchorBeacon(
                 "white2 - F1",
                 30, 20,
-                DEFAULT_UUID, 62315, 20156);
-    }
+                DEFAULT_UUID, 62315, 20156);*/
+
+        // End other beacons
 
 
-    // Define beacons and zones
-    static {
-        Log.v(TAG, "static initializer");
 
-        addFloor2();
 
 /*        for (AnchorBeacon anchorBeacon : anchorBeacons) {
             Log.v(TAG, anchorBeacon.toString());
