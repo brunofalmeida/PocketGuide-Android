@@ -6,7 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.cossettenavigation.navigation.ApplicationBeaconManager;
+import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
 
 import java.util.Timer;
 import java.util.TimerTask;

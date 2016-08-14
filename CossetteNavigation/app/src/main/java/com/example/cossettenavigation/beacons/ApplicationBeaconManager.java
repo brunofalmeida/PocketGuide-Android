@@ -1,4 +1,4 @@
-package com.example.cossettenavigation.navigation;
+package com.example.cossettenavigation.beacons;
 
 import android.app.Application;
 import android.util.Log;
@@ -7,6 +7,7 @@ import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.EstimoteSDK;
 import com.estimote.sdk.Region;
+import com.example.cossettenavigation.Utilities;
 import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.Point;

@@ -1,6 +1,5 @@
 package com.example.cossettenavigation.map;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -12,14 +11,12 @@ public class Zone {
     private String name;
 
     /**
-     * References to anchor beacons that define this zone.
-     * (A Zone does not own its anchor beacons, since they can define multiple zones.)
+     * Anchor beacons that define this zone.
      */
-    private ArrayList<WeakReference<AnchorBeacon>> anchorBeacons = new ArrayList<>();
+    private ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
 
     /**
      * Support beacons that are part of this zone.
-     * (A zone owns its support beacons, since they are only part of that zone.)
      */
     private ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
 
@@ -32,12 +29,28 @@ public class Zone {
 
     @Override
     public String toString() {
+        String anchorBeaconsString = "{ ";
+        for (AnchorBeacon anchorBeacon : anchorBeacons) {
+            anchorBeaconsString += String.format("\"%s\", ", anchorBeacon.getName());
+        }
+        anchorBeaconsString += "}";
+
+        String supportBeaconsString = "{ ";
+        for (SupportBeacon supportBeacon : supportBeacons) {
+            supportBeaconsString += String.format("\"%s\", ", supportBeacon.getName());
+        }
+        supportBeaconsString += "}";
+
         return String.format(
                 "%s { name = %s, anchorBeacons = %s, supportBeacons = %s }",
-                getClass().getSimpleName(), name, anchorBeacons, supportBeacons);
+                getClass().getSimpleName(), name, anchorBeaconsString, supportBeaconsString);
     }
 
-    public ArrayList<WeakReference<AnchorBeacon>> getAnchorBeacons() {
+    public String getName() {
+        return name;
+    }
+
+    public ArrayList<AnchorBeacon> getAnchorBeacons() {
         return anchorBeacons;
     }
 
@@ -47,29 +60,13 @@ public class Zone {
 
 
     /**
-     * Also updates the anchor beacon to refer to this zone.
-     */
-    public void addAnchorBeacon(AnchorBeacon anchorBeacon) {
-        anchorBeacons.add(new WeakReference<>(anchorBeacon));
-        anchorBeacon.addZone(this);
-    }
-
-    /**
      * Also updates the anchor beacons to refer to this zone.
      */
     public void addAnchorBeacons(AnchorBeacon... anchorBeacons) {
         for (AnchorBeacon anchorBeacon : anchorBeacons) {
-            addAnchorBeacon(anchorBeacon);
+            this.anchorBeacons.add(anchorBeacon);
+            anchorBeacon.addZone(this);
         }
-    }
-
-
-    /**
-     * Also updates the support beacon to refer to this zone.
-     */
-    public void addSupportBeacon(SupportBeacon supportBeacon) {
-        supportBeacons.add(supportBeacon);
-        supportBeacon.setZone(this);
     }
 
     /**
@@ -77,7 +74,8 @@ public class Zone {
      */
     public void addSupportBeacons(SupportBeacon... supportBeacons) {
         for (SupportBeacon supportBeacon : supportBeacons) {
-            addSupportBeacon(supportBeacon);
+            this.supportBeacons.add(supportBeacon);
+            supportBeacon.setZone(this);
         }
     }
 

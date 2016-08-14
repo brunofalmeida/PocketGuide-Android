@@ -1,6 +1,5 @@
 package com.example.cossettenavigation.map;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -12,7 +11,7 @@ public class AnchorBeacon extends Beacon implements Comparable {
     /**
      * References to zones this beacon is a part of.
      */
-    private ArrayList<WeakReference<Zone>> zones = new ArrayList<>();
+    private ArrayList<Zone> zones = new ArrayList<>();
 
 
 
@@ -46,17 +45,23 @@ public class AnchorBeacon extends Beacon implements Comparable {
 
     @Override
     public String toString() {
+        String zonesString = "{ ";
+        for (Zone zone : zones) {
+            zonesString += String.format("\"%s\", ", zone.getName());
+        }
+        zonesString += "}";
+
         return String.format(
-                "%s { name = %s, position = %s, uuid = %s, major = %d, minor = %d, zones = %s }",
-                getClass().getSimpleName(), name, position, uuid, major, minor, zones);
+                "%s { name = \"%s\", position = %s, uuid = %s, major = %d, minor = %d, zones = %s }",
+                getClass().getSimpleName(), name, position, uuid, major, minor, zonesString);
     }
 
-    public ArrayList<WeakReference<Zone>> getZones() {
+    public ArrayList<Zone> getZones() {
         return zones;
     }
 
     public void addZone(Zone zone) {
-        zones.add(new WeakReference<>(zone));
+        zones.add(zone);
     }
 
     @Override

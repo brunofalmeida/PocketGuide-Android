@@ -10,7 +10,7 @@ import android.view.View;
 import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.Point;
-import com.example.cossettenavigation.navigation.ApplicationBeaconManager;
+import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
 
 /**
  * Created by Bruno on 2016-08-04.
