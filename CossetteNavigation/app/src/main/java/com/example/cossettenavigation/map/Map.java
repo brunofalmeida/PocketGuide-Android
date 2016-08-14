@@ -27,8 +27,6 @@ import java.util.ArrayList;
  */
 public class Map {
 
-    // TODO - add Floor class, references in Zone, Beacon
-    // TODO - separate list of floor-connecting Zone's?
     // TODO - add optional estimatedTravelTime property to Zone objects?
 
     /**
@@ -44,6 +42,7 @@ public class Map {
     public static ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
     public static ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
     public static ArrayList<Zone> zones = new ArrayList<>();
+    public static ArrayList<Floor> floors = new ArrayList<>();
 
     /*
     Grid properties.
@@ -175,10 +174,38 @@ public class Map {
 
 
 
+    /**
+     * @return The floor that was added.
+     */
+    private static Floor addFloor(String name) {
+        Floor floor = new Floor(name);
+        floors.add(floor);
+        return floor;
+    }
 
 
-    private static void addFloor1() {
-        gridWidth = 30;
+
+
+
+
+
+
+    /*
+    Define beacons and zones
+
+    1. define beacons
+    2. define floors -> add beacons
+    3. define zones -> add beacons
+     */
+    static {
+        Log.v(TAG, "static initializer");
+
+
+
+
+        // Start floor 1
+
+/*        gridWidth = 30;
         gridHeight = 100;
 
         AnchorBeacon b1 = addAnchorBeacon(
@@ -194,21 +221,23 @@ public class Map {
                 30, 20,
                 DEFAULT_UUID, 62315, 20156);
 
-/*        // TODO - make a support beacon
+*//*        // TODO - make a support beacon
         AnchorBeacon b4 = addAnchorBeacon(
                 "white5 - Kitchen",
                 b1, -5, 25,
-                DEFAULT_UUID, 33753, 28870);*/
+                DEFAULT_UUID, 33753, 28870);*//*
 
         Zone z1 = addZone("Main Lower Hallway");
         z1.addAnchorBeacons(b1, b2, b3);
-//        z1.addSupportBeacons(b4);
-    }
+//        z1.addSupportBeacons(b4);*/
 
-    /**
-     * Roughly a 10m x 10m grid.
-     */
-    private static void addFloor2() {
+        // End floor 1
+
+
+
+
+        // Start floor 2
+
         gridWidth = 100;
         gridHeight = 100;
         metresPerGridUnit = 0.1;
@@ -230,12 +259,36 @@ public class Map {
                 50, 100,
                 DEFAULT_UUID, 42484, 10171);
 
+        Floor floor2 = addFloor("Floor 2");
+        floor2.addAnchorBeacons(ice1, ice2, ice4);
+
         Zone z1 = addZone("Open Area - Floor 2");
-        Zone z2 = addZone("2");
+        z1.addAnchorBeacons(ice1, ice2, ice4);
+
+/*        Zone z2 = addZone("2");
         Zone z3 = addZone("3");
         Zone z4 = addZone("4");
-        Zone z5 = addZone("5");
-        z1.addAnchorBeacons(ice1, ice2, /*ice3,*/ ice4);
+        Zone z5 = addZone("5");*/
+
+        // End floor 2
+
+
+
+
+        // Start other beacons
+
+/*        AnchorBeacon b1 = addAnchorBeacon(
+                "white1 - F1",
+                15, 40,
+                DEFAULT_UUID, 6607, 59029);
+        AnchorBeacon b2 = addAnchorBeacon(
+                "white2 - F1",
+                30, 20,
+                DEFAULT_UUID, 62315, 20156);*/
+
+        // End other beacons
+
+
 
 
         // Test Pathfinder
@@ -246,32 +299,21 @@ public class Map {
             log += beacon.toString() + ", ";
         }
         Log.v(TAG, log);
-    }
-
-    private static void addOtherBeacons() {
-        AnchorBeacon b1 = addAnchorBeacon(
-                "white1 - F1",
-                15, 40,
-                DEFAULT_UUID, 6607, 59029);
-        AnchorBeacon b2 = addAnchorBeacon(
-                "white2 - F1",
-                30, 20,
-                DEFAULT_UUID, 62315, 20156);
-    }
 
 
-    // Define beacons and zones
-    static {
-        Log.v(TAG, "static initializer");
-
-        addFloor2();
-
-/*        for (AnchorBeacon anchorBeacon : anchorBeacons) {
+        // Log all mapping data
+        for (AnchorBeacon anchorBeacon : anchorBeacons) {
             Log.v(TAG, anchorBeacon.toString());
+        }
+        for (SupportBeacon supportBeacon : supportBeacons) {
+            Log.v(TAG, supportBeacon.toString());
+        }
+        for (Floor floor : floors) {
+            Log.v(TAG, floor.toString());
         }
         for (Zone zone : zones) {
             Log.v(TAG, zone.toString());
-        }*/
+        }
     }
 
 }

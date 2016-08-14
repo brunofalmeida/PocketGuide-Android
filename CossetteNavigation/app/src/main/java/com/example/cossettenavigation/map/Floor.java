@@ -5,35 +5,35 @@ import com.example.cossettenavigation.Utilities;
 import java.util.ArrayList;
 
 /**
- * A key area within a floor or building.
- * @see Map
+ *
  */
-public class Zone {
+public class Floor {
 
     private String name;
 
     private ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
     private ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
 
-    private ArrayList<Floor> floors = new ArrayList<>();
+    private ArrayList<Zone> zones = new ArrayList<>();
 
 
 
 
-    public Zone(String name) {
+    public Floor(String name) {
         this.name = name;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "%s { name = %s, anchorBeacons = %s, supportBeacons = %s, floors = %s }",
+                "%s { name = %s, anchorBeacons = %s, supportBeacons = %s, zones = %s }",
                 getClass().getSimpleName(),
                 name,
                 Utilities.getAnchorBeaconNamesString(anchorBeacons),
                 Utilities.getSupportBeaconNamesString(supportBeacons),
-                Utilities.getFloorNamesString(floors));
+                Utilities.getZoneNamesString(zones));
     }
+
 
     public String getName() {
         return name;
@@ -47,38 +47,40 @@ public class Zone {
         return supportBeacons;
     }
 
+    public ArrayList<Zone> getZones() {
+        return zones;
+    }
+
 
     /**
-     * Also updates the anchor beacons and associated floors to refer to this zone.
+     * Also updates the anchor beacons to refer to this floor.
      */
     public void addAnchorBeacons(AnchorBeacon... anchorBeacons) {
         for (AnchorBeacon anchorBeacon : anchorBeacons) {
             if (!this.anchorBeacons.contains(anchorBeacon)) {
                 this.anchorBeacons.add(anchorBeacon);
             }
-            anchorBeacon.addZone(this);
-
-            if (!this.floors.contains(anchorBeacon.getFloor())) {
-                this.floors.add(anchorBeacon.getFloor());
-            }
-            anchorBeacon.getFloor().addZone(this);
+            anchorBeacon.setFloor(this);
         }
     }
 
     /**
-     * Also updates the support beacons and associated floors to refer to this zone.
+     * Also updates the support beacons to refer to this floor.
      */
     public void addSupportBeacons(SupportBeacon... supportBeacons) {
         for (SupportBeacon supportBeacon : supportBeacons) {
             if (!this.supportBeacons.contains(supportBeacon)) {
                 this.supportBeacons.add(supportBeacon);
             }
-            supportBeacon.setZone(this);
+            supportBeacon.setFloor(this);
+        }
+    }
 
-            if (!this.floors.contains(supportBeacon.getFloor())) {
-                this.floors.add(supportBeacon.getFloor());
-            }
-            supportBeacon.getFloor().addZone(this);
+
+    // TODO - check for valid references
+    public void addZone(Zone zone) {
+        if (!this.zones.contains(zone)) {
+            this.zones.add(zone);
         }
     }
 
