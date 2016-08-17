@@ -189,7 +189,7 @@ public class Map {
                 50, 100,
                 DEFAULT_UUID, 42484, 10171));
 
-        Floor floor2 = addFloor(new Floor("Floor 2"));
+        Floor floor2 = addFloor(new Floor("Floor 2", 5));
         floor2.addAnchorBeacons(ice1, ice2, ice4);
 
         Zone z1 = addZone(new Zone("Open Area - Floor 2"));
