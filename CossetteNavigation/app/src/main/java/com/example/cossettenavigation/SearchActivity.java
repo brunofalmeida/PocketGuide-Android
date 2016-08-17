@@ -2,6 +2,7 @@ package com.example.cossettenavigation;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -9,19 +10,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.example.cossettenavigation.map.DatabaseHelper;
 
 
 public class SearchActivity extends AppCompatActivity {
 
+    //0);
+
+    private DatabaseHelper dbHelper;
+    public static SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String query ;
+        dbHelper=new DatabaseHelper(this);
+        db=dbHelper.getReadableDatabase();
+
+        String query;
         Intent searchIntent = getIntent();
 
         if(Intent.ACTION_SEARCH.equals(searchIntent.getAction()))

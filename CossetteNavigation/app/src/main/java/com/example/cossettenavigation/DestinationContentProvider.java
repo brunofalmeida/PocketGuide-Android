@@ -16,17 +16,20 @@ import java.util.ArrayList;
  */
 public class DestinationContentProvider extends ContentProvider {
 
-    public static ArrayList<Zone> destinations= Map.zones;
-
     @Override
     public boolean onCreate() {
-        return false;
+        //db initialization here instead?
+        //changed to true?
+        return true;
     }
 
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+        String table="zones";
+        String[] columns=new String[]{"_ID","name"};
+        Cursor result=SearchActivity.db.query(table,columns,selection,selectionArgs,null,null,sortOrder,null);
+        return result;
     }
 
     @Nullable
