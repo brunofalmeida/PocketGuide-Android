@@ -56,6 +56,9 @@ public class Map {
     public static double metresPerGridUnit = 1;
 
 
+    public static Path testPath;
+
+
 
 
     /**
@@ -186,7 +189,7 @@ public class Map {
                 0,0,
                 DEFAULT_UUID, 2949, 35856));
 
-        SupportBeacon white1 = addSupportBeacon(new SupportBeacon(
+        AnchorBeacon white1 = addAnchorBeacon(new AnchorBeacon(
                 "white1 - F2",
                 floor2, white15,
                 0, -8,
@@ -246,12 +249,10 @@ public class Map {
         z2.addAnchorBeacons(white10, white15);
 
         Zone z3 = addZone(new Zone("Health Lab - Floor 2", Zone.ZoneType.ROOM));
-        z3.addAnchorBeacons(white15);
-        z3.addSupportBeacons(white1);
+        z3.addAnchorBeacons(white15, white1);
 
         Zone z4 = addZone(new Zone("Open Area - Floor 2", Zone.ZoneType.ROOM));
-        z4.addAnchorBeacons(white25, white9);
-        z4.addSupportBeacons(white1);
+        z4.addAnchorBeacons(white25, white9, white1);
 
         //End Zones
 
@@ -279,6 +280,8 @@ public class Map {
         } else {
             Log.e(TAG, "Pathfinder test failed");
         }*/
+
+        testPath = Pathfinder.getShortestPath(white17, white1);
 
 
         // Log all mapping data
