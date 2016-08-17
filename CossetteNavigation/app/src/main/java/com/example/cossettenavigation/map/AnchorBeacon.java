@@ -67,16 +67,4 @@ public class AnchorBeacon extends Beacon implements Comparable {
         }
     }
 
-
-    @Override
-    public int compareTo(Object another) {
-        if (another instanceof AnchorBeacon) {
-            AnchorBeacon anotherAnchorBeacon = (AnchorBeacon) another;
-            return this.name.compareTo(anotherAnchorBeacon.name);
-        }
-        else {
-            return 0;
-        }
-    }
-
 }

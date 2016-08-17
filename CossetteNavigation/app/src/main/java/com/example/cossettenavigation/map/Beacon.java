@@ -77,6 +77,16 @@ public abstract class Beacon {
                 getClass().getSimpleName(), name, floor.getName(), position, uuid, major, minor);
     }
 
+    public int compareTo(Object another) {
+        if (another instanceof Beacon) {
+            Beacon anotherBeacon = (Beacon) another;
+            return this.name.compareTo(anotherBeacon.name);
+        }
+        else {
+            return 0;
+        }
+    }
+
 
     public String getName() {
         return name;

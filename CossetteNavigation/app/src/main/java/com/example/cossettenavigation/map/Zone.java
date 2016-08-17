@@ -12,10 +12,10 @@ public class Zone {
 
     private String name;
 
+    private ArrayList<Floor> floors = new ArrayList<>();
+
     private ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
     private ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
-
-    private ArrayList<Floor> floors = new ArrayList<>();
 
 
 
@@ -37,6 +37,10 @@ public class Zone {
 
     public String getName() {
         return name;
+    }
+
+    public ArrayList<Floor> getFloors() {
+        return floors;
     }
 
     public ArrayList<AnchorBeacon> getAnchorBeacons() {
