@@ -11,6 +11,9 @@ import com.example.cossettenavigation.map.Map;
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
  */
 public class ApplicationTest extends ApplicationTestCase<Application> {
+
+    private static final String TAG = "ApplicationTest";
+
     public ApplicationTest() {
         super(Application.class);
     }
@@ -25,7 +28,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         for (AnchorBeacon anchorBeacon1 : Map.anchorBeacons) {
             for (AnchorBeacon anchorBeacon2 : Map.anchorBeacons) {
                 if (anchorBeacon1 != anchorBeacon2) {
-                    Log.v("ApplicationTest",
+                    Log.v(TAG,
                             anchorBeacon1 + "\n" + anchorBeacon2 + "\n" +
                             Map.estimateTravelAngle(anchorBeacon1, anchorBeacon2) + " degrees");
                 }
@@ -33,4 +36,15 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
         }
     }
+
+    public void test_getShortestPath() {
+/*        for (AnchorBeacon anchorBeacon1 : Map.anchorBeacons) {
+            for (AnchorBeacon anchorBeacon2 : Map.anchorBeacons) {
+                if (anchorBeacon1 != anchorBeacon2) {
+                    Log.v(TAG, Pathfinder.getShortestPath(anchorBeacon1, anchorBeacon2).toString());
+                }
+            }
+        }*/
+    }
+
 }
