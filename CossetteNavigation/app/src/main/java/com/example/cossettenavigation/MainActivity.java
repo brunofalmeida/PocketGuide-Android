@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Matrix;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
@@ -19,9 +21,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.estimote.sdk.SystemRequirementsChecker;
 
@@ -37,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private boolean cGranted;
     private FrameLayout m_camera_view = null;
     private CameraView mCameraView = null;
+
+    private ImageView direction;
+    private TextView instruction;
 
 
     @Override
@@ -77,21 +84,29 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             cameraPermissionGranted();
         }
 
-        ImageView currentDirection = new ImageView(this);
+        //set up arrow and direction description
 
-        currentDirection.setImageResource(R.drawable.ic_arrow_right);
+        direction = new ImageView(this);
+        direction.setImageResource(R.drawable.ic_arrow);
 
-        int width=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
-        int height=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
+        instruction=new TextView(this);
+        instruction.setTextColor(getResources().getColor(R.color.colorAccent));
+        instruction.setTextSize(TypedValue.COMPLEX_UNIT_DIP,55);
 
-        FrameLayout.LayoutParams params=new FrameLayout.LayoutParams(width,height);
-        params.gravity=Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
+        int arrowWidth=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
+        int arrowHeight=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
 
-        currentDirection.setLayoutParams(params);
+        FrameLayout.LayoutParams arrowParams=new FrameLayout.LayoutParams(arrowWidth,arrowHeight);
+        FrameLayout.LayoutParams instructionParams=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        m_camera_view.setForegroundGravity(Gravity.CENTER);
+        arrowParams.gravity=Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
+        instructionParams.gravity=Gravity.BOTTOM;
 
-        m_camera_view.addView(currentDirection);
+        direction.setLayoutParams(arrowParams);
+        instruction.setLayoutParams(instructionParams);
+
+        m_camera_view.addView(direction);
+        m_camera_view.addView(instruction);
     }
 
     @Override
