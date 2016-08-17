@@ -29,10 +29,10 @@ public class Map {
 
     // TODO - add optional estimatedTravelTime property to Zone objects?
 
-    /**
-     * In m/s.
-     */
-    private static final double NORMAL_WALKING_SPEED = 1.4;
+    // Average speeds, in metres/second
+    private static final double WALKING_TRAVEL_SPEED = 1.0;
+    private static final double STAIRS_TRAVEL_SPEED = 0.5;
+    private static final double ELEVATOR_TRAVEL_SPEED = 0.4;
 
     private static final String TAG = "Map";
 
@@ -62,11 +62,28 @@ public class Map {
      * Assumes that both beacons are part of the same zone and have a straight-line connection.
      * @return The estimated travel time (in seconds) between the two beacons.
      */
-    public static double estimateTravelTime(Beacon startBeacon, Beacon endBeacon) {
+    public static double estimateTravelTime(Beacon startBeacon, Beacon endBeacon, Zone zone) {
+        // Calculate straight line distance
         double distance = Math.sqrt(
                 Math.pow(endBeacon.getXPosition() - startBeacon.getXPosition(), 2) +
-                Math.pow(endBeacon.getYPosition() - startBeacon.getYPosition(), 2) );
-        return distance * metresPerGridUnit / NORMAL_WALKING_SPEED;
+                Math.pow(endBeacon.getYPosition() - startBeacon.getYPosition(), 2) +
+                Math.pow(endBeacon.getFloor().getZPosition() - startBeacon.getFloor().getZPosition(), 2));
+
+        double metres = distance * metresPerGridUnit;
+
+        switch (zone.getZoneType()) {
+            case HALLWAY:
+                return metres / WALKING_TRAVEL_SPEED;
+            case ROOM:
+                return metres / WALKING_TRAVEL_SPEED;
+            case STAIRS:
+                return metres / STAIRS_TRAVEL_SPEED;
+            case ELEVATOR:
+                return metres / ELEVATOR_TRAVEL_SPEED;
+            default:
+                Log.e(TAG, "estimateTravelTime(): ZoneType not found");
+                return metres / WALKING_TRAVEL_SPEED;
+        }
     }
 
 

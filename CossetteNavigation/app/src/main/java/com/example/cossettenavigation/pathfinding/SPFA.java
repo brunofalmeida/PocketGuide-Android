@@ -75,7 +75,7 @@ class SPFA {
                             // Add connection
                             beaconConnections.add(new Pair<>(
                                     connectedBeacon,
-                                    Map.estimateTravelTime(beacon, connectedBeacon)));
+                                    Map.estimateTravelTime(beacon, connectedBeacon, zone)));
                         }
                     }
                 }

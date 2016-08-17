@@ -106,7 +106,7 @@ public class Pathfinder {
         for (AnchorBeacon anchorBeacon : startBeacon.getZone().getAnchorBeacons()) {
 
             Pair<Double, ArrayList<Beacon>> testPath = getShortestPath(anchorBeacon, endBeacon);
-            double testTime = Map.estimateTravelTime(startBeacon, anchorBeacon) + testPath.first;
+            double testTime = Map.estimateTravelTime(startBeacon, anchorBeacon, startBeacon.getZone()) + testPath.first;
 
             if (testTime < minimumTime) {
                 minimumTime = testTime;
@@ -146,7 +146,7 @@ public class Pathfinder {
 
         for (AnchorBeacon anchorBeacon : endBeacon.getZone().getAnchorBeacons()) {
             Pair<Double, ArrayList<Beacon>> testPath = getShortestPath(startBeacon, anchorBeacon);
-            double testTime = testPath.first + Map.estimateTravelTime(anchorBeacon, endBeacon);
+            double testTime = testPath.first + Map.estimateTravelTime(anchorBeacon, endBeacon, endBeacon.getZone());
 
             if (testTime < minimumTime) {
                 minimumTime = testTime;

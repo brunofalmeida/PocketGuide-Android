@@ -26,7 +26,7 @@ public class Step {
         this.startBeacon = startBeacon;
         this.endBeacon = endBeacon;
         this.zone = zone;
-        this.travelTime = Map.estimateTravelTime(startBeacon, endBeacon);
+        this.travelTime = Map.estimateTravelTime(startBeacon, endBeacon, zone);
         this.absoluteAngle = absoluteAngle;
         this.relativeAngle = relativeAngle;
     }
