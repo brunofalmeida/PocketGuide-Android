@@ -116,14 +116,14 @@ public class Utilities {
     }
 
     public static String getStepsString(ArrayList<Step> steps) {
-        String string = "{ ";
+        String string = "{";
         for (Step step : steps) {
-            string += String.format("%s, ", step);
+            string += String.format("\n%s,", step);
         }
-        if (string.endsWith(", ")) {
-            string = string.substring(0, string.length() - 2);
+        if (string.endsWith(",")) {
+            string = string.substring(0, string.length() - 1) + "\n";
         }
-        string += " }";
+        string += "}";
         return string;
     }
 
