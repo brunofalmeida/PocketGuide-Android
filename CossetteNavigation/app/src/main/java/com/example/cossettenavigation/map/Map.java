@@ -171,7 +171,7 @@ public class Map {
                 DEFAULT_UUID, 42484, 10171));
 
 
-        Zone z1 = addZone(new Zone("Open Area - Floor 2"));
+        Zone z1 = addZone(new Zone("Open Area - Floor 2", Zone.ZoneType.ROOM));
         z1.addAnchorBeacons(ice1, ice2, ice4);
 
 /*        Zone z2 = addZone("2");

@@ -10,7 +10,16 @@ import java.util.ArrayList;
  */
 public class Zone {
 
+    public static enum ZoneType {
+        HALLWAY,
+        ROOM,
+        STAIRS,
+        ELEVATOR
+    }
+
     private String name;
+
+    private ZoneType zoneType;
 
     private ArrayList<Floor> floors = new ArrayList<>();
 
@@ -20,16 +29,18 @@ public class Zone {
 
 
 
-    public Zone(String name) {
+    public Zone(String name, ZoneType zoneType) {
         this.name = name;
+        this.zoneType = zoneType;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "%s { name = %s, anchorBeacons = %s, supportBeacons = %s, floors = %s }",
+                "%s { name = %s, zoneType = %s, anchorBeacons = %s, supportBeacons = %s, floors = %s }",
                 getClass().getSimpleName(),
                 name,
+                zoneType.name(),
                 Utilities.getAnchorBeaconNamesString(anchorBeacons),
                 Utilities.getSupportBeaconNamesString(supportBeacons),
                 Utilities.getFloorNamesString(floors));
@@ -37,6 +48,10 @@ public class Zone {
 
     public String getName() {
         return name;
+    }
+
+    public ZoneType getZoneType() {
+        return zoneType;
     }
 
     public ArrayList<Floor> getFloors() {
