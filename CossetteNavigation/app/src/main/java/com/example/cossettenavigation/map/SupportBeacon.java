@@ -22,19 +22,22 @@ public class SupportBeacon extends Beacon {
      * Constructor using an absolute position.
      */
     public SupportBeacon(String name,
+                         Floor floor,
                          double xPosition,
                          double yPosition,
                          String uuid,
                          int major,
                          int minor) {
 
-        super(name, xPosition, yPosition, uuid, major, minor);
+        super(name, floor, xPosition, yPosition, uuid, major, minor);
+        floor.addSupportBeacon(this);
     }
 
     /**
      * Constructor using a position relative to another beacon.
      */
     public SupportBeacon(String name,
+                         Floor floor,
                          Beacon referenceBeacon,
                          double xPositionOffset,
                          double yPositionOffset,
@@ -42,16 +45,20 @@ public class SupportBeacon extends Beacon {
                          int major,
                          int minor) {
 
-        super(name, referenceBeacon, xPositionOffset, yPositionOffset, uuid, major, minor);
+        super(name, floor, referenceBeacon, xPositionOffset, yPositionOffset, uuid, major, minor);
+        floor.addSupportBeacon(this);
     }
+
 
     @Override
     public String toString() {
         return String.format(
-                "%s { name = \"%s\", position = %s, uuid = %s, major = %d, minor = %d, floor = \"%s\", zone = \"%s\" }",
-                getClass().getSimpleName(), name, position, uuid, major, minor, floor.getName(),
+                "%s { name = \"%s\", floor = \"%s\", position = %s, uuid = %s, major = %d, minor = %d, zone = \"%s\" }",
+                getClass().getSimpleName(),
+                name, floor.getName(), position, uuid, major, minor,
                 zone.getName());
     }
+
 
     public Zone getZone() {
         return zone;

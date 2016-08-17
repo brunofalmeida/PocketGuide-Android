@@ -65,30 +65,17 @@ public class Floor {
     }
 
 
-    /**
-     * Also updates the anchor beacons to refer to this floor.
-     */
-    public void addAnchorBeacons(AnchorBeacon... anchorBeacons) {
-        for (AnchorBeacon anchorBeacon : anchorBeacons) {
-            if (!this.anchorBeacons.contains(anchorBeacon)) {
-                this.anchorBeacons.add(anchorBeacon);
-            }
-            anchorBeacon.setFloor(this);
+    public void addAnchorBeacon(AnchorBeacon anchorBeacon) {
+        if (!this.anchorBeacons.contains(anchorBeacon)) {
+            this.anchorBeacons.add(anchorBeacon);
         }
     }
 
-    /**
-     * Also updates the support beacons to refer to this floor.
-     */
-    public void addSupportBeacons(SupportBeacon... supportBeacons) {
-        for (SupportBeacon supportBeacon : supportBeacons) {
-            if (!this.supportBeacons.contains(supportBeacon)) {
-                this.supportBeacons.add(supportBeacon);
-            }
-            supportBeacon.setFloor(this);
+    public void addSupportBeacon(SupportBeacon supportBeacon) {
+        if (!this.supportBeacons.contains(supportBeacon)) {
+            this.supportBeacons.add(supportBeacon);
         }
     }
-
 
     // TODO - check for valid references
     public void addZone(Zone zone) {

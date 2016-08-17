@@ -1,7 +1,5 @@
 package com.example.cossettenavigation.map;
 
-import android.util.Log;
-
 import java.util.UUID;
 
 /**
@@ -13,13 +11,12 @@ public abstract class Beacon {
 
     protected String name;
 
+    protected Floor floor;
     protected Point position;
 
     protected UUID uuid;
     protected int major;
     protected int minor;
-
-    protected Floor floor = null;
 
 
 
@@ -27,8 +24,9 @@ public abstract class Beacon {
     /**
      * Standard constructor.
      */
-    public Beacon(String name, Point position, UUID uuid, int major, int minor) {
+    private Beacon(String name, Floor floor, Point position, UUID uuid, int major, int minor) {
         this.name = name;
+        this.floor = floor;
         this.position = position;
         this.uuid = uuid;
         this.major = major;
@@ -39,19 +37,21 @@ public abstract class Beacon {
      * Constructor using an absolute position.
      */
     public Beacon(String name,
+                  Floor floor,
                   double xPosition,
                   double yPosition,
                   String uuid,
                   int major,
                   int minor) {
 
-        this(name, new Point(xPosition, yPosition), UUID.fromString(uuid), major, minor);
+        this(name, floor, new Point(xPosition, yPosition), UUID.fromString(uuid), major, minor);
     }
 
     /**
      * Constructor using a position relative to another beacon.
      */
     public Beacon(String name,
+                  Floor floor,
                   Beacon referenceBeacon,
                   double xPositionOffset,
                   double yPositionOffset,
@@ -61,6 +61,7 @@ public abstract class Beacon {
 
         this(
                 name,
+                floor,
                 referenceBeacon.getXPosition() + xPositionOffset,
                 referenceBeacon.getYPosition() + yPositionOffset,
                 uuid,
@@ -72,13 +73,17 @@ public abstract class Beacon {
     @Override
     public String toString() {
         return String.format(
-                "%s { name = %s, position = %s, uuid = %s, major = %d, minor = %d }",
-                getClass().getSimpleName(), name, position, uuid, major, minor);
+                "%s { name = \"%s\", floor = \"%s\", position = %s, uuid = %s, major = %d, minor = %d }",
+                getClass().getSimpleName(), name, floor.getName(), position, uuid, major, minor);
     }
 
 
     public String getName() {
         return name;
+    }
+
+    public Floor getFloor() {
+        return floor;
     }
 
     public Point getPosition() {
@@ -103,18 +108,6 @@ public abstract class Beacon {
 
     public int getMinor() {
         return minor;
-    }
-
-    public Floor getFloor() {
-        return floor;
-    }
-
-
-    public void setFloor(Floor floor) {
-        if (this.floor != null) {
-            Log.e(TAG, "Overriding floor for beacon: " + this);
-        }
-        this.floor = floor;
     }
 
 }
