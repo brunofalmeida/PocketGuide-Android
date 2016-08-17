@@ -86,7 +86,11 @@ public class Map {
         }
     }
 
-    
+    public static double estimateTravelAngle(Beacon startBeacon, Beacon endBeacon) {
+        return Math.toDegrees(Math.atan2(
+                endBeacon.getYPosition() - startBeacon.getYPosition(),
+                endBeacon.getXPosition() - startBeacon.getXPosition()));
+    }
 
 
 
