@@ -78,40 +78,6 @@ public class Map {
         return anchorBeacon;
     }
 
-    /**
-     * Adds an anchor beacon to the map using an absolute position.
-     * @return The anchor beacon that was added.
-     */
-    private static AnchorBeacon addAnchorBeacon(String name,
-                                                double xPosition,
-                                                double yPosition,
-                                                String uuid,
-                                                int major,
-                                                int minor) {
-
-        AnchorBeacon anchorBeacon = new AnchorBeacon(name, xPosition, yPosition, uuid, major, minor);
-        return addAnchorBeacon(anchorBeacon);
-    }
-
-    /**
-     * Adds an anchor beacon to the map using a position relative to another beacon.
-     * @return The anchor beacon that was added.
-     */
-    private static AnchorBeacon addAnchorBeacon(String name,
-                                                Beacon referenceBeacon,
-                                                double xPositionOffset,
-                                                double yPositionOffset,
-                                                String uuid,
-                                                int major,
-                                                int minor) {
-
-        AnchorBeacon anchorBeacon = new AnchorBeacon(
-                name,
-                referenceBeacon, xPositionOffset, yPositionOffset,
-                uuid, major, minor);
-        return addAnchorBeacon(anchorBeacon);
-    }
-
 
 
 
@@ -124,40 +90,6 @@ public class Map {
         return supportBeacon;
     }
 
-    /**
-     * Adds a support beacon to the map using an absolute position.
-     * @return The support beacon that was added.
-     */
-    private static SupportBeacon addSupportBeacon(String name,
-                                                  double xPosition,
-                                                  double yPosition,
-                                                  String uuid,
-                                                  int major,
-                                                  int minor) {
-
-        SupportBeacon supportBeacon = new SupportBeacon(name, xPosition, yPosition, uuid, major, minor);
-        return addSupportBeacon(supportBeacon);
-    }
-
-    /**
-     * Adds a support beacon to the map using a position relative to another beacon.
-     * @return The support beacon that was added.
-     */
-    private static SupportBeacon addSupportBeacon(String name,
-                                                  Beacon referenceBeacon,
-                                                  double xPositionOffset,
-                                                  double yPositionOffset,
-                                                  String uuid,
-                                                  int major,
-                                                  int minor) {
-
-        SupportBeacon supportBeacon = new SupportBeacon(
-                name,
-                referenceBeacon, xPositionOffset, yPositionOffset,
-                uuid, major, minor);
-        return addSupportBeacon(supportBeacon);
-    }
-
 
 
 
@@ -165,8 +97,7 @@ public class Map {
      * Adds a zone to the map.
      * @return The zone that was added.
      */
-    private static Zone addZone(String name) {
-        Zone zone = new Zone(name);
+    private static Zone addZone(Zone zone) {
         zones.add(zone);
         return zone;
     }
@@ -177,8 +108,7 @@ public class Map {
     /**
      * @return The floor that was added.
      */
-    private static Floor addFloor(String name) {
-        Floor floor = new Floor(name);
+    private static Floor addFloor(Floor floor) {
         floors.add(floor);
         return floor;
     }
@@ -242,27 +172,27 @@ public class Map {
         gridHeight = 100;
         metresPerGridUnit = 0.1;
 
-        AnchorBeacon ice1 = addAnchorBeacon(
+        AnchorBeacon ice1 = addAnchorBeacon(new AnchorBeacon(
                 "ice1 - F2",
                 20, 100,
-                DEFAULT_UUID, 9051, 52752);
-        AnchorBeacon ice2 = addAnchorBeacon(
+                DEFAULT_UUID, 9051, 52752));
+        AnchorBeacon ice2 = addAnchorBeacon(new AnchorBeacon(
                 "ice2 - F2",
                 0, 75,
-                DEFAULT_UUID, 27598, 15040);
-/*        AnchorBeacon ice3 = addAnchorBeacon(
+                DEFAULT_UUID, 27598, 15040));
+/*        AnchorBeacon ice3 = addAnchorBeacon(new AnchorBeacon(
                 "ice3 - F2",
                 10, 0,
-                DEFAULT_UUID, 62693, 23343);*/
-        AnchorBeacon ice4 = addAnchorBeacon(
+                DEFAULT_UUID, 62693, 23343));*/
+        AnchorBeacon ice4 = addAnchorBeacon(new AnchorBeacon(
                 "ice4 - F2",
                 50, 100,
-                DEFAULT_UUID, 42484, 10171);
+                DEFAULT_UUID, 42484, 10171));
 
-        Floor floor2 = addFloor("Floor 2");
+        Floor floor2 = addFloor(new Floor("Floor 2"));
         floor2.addAnchorBeacons(ice1, ice2, ice4);
 
-        Zone z1 = addZone("Open Area - Floor 2");
+        Zone z1 = addZone(new Zone("Open Area - Floor 2"));
         z1.addAnchorBeacons(ice1, ice2, ice4);
 
 /*        Zone z2 = addZone("2");
