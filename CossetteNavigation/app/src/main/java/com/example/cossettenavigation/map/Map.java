@@ -237,7 +237,20 @@ public class Map {
 
         // End floor 2
 
+        //Zones
+        z1.addAnchorBeacons(white17, white10);
+        z1.addSupportBeacons(white5);
 
+        z2.addAnchorBeacons(white10, white15);
+
+        z3.addAnchorBeacons(white15);
+        z3.addSupportBeacons(white1);
+
+        Zone z4 = addZone(new Zone("Open Area - Floor 2", Zone.ZoneType.ROOM));
+        z4.addAnchorBeacons(white25, white9);
+        z4.addSupportBeacons(white1);
+
+        //End Zones
 
 
         // Start other beacons
