@@ -1,8 +1,8 @@
 package com.example.cossettenavigation.map;
 
 import android.util.Log;
-import android.util.Pair;
 
+import com.example.cossettenavigation.pathfinding.Path;
 import com.example.cossettenavigation.pathfinding.Pathfinder;
 
 import java.util.ArrayList;
@@ -201,13 +201,12 @@ public class Map {
 
 
         // Test Pathfinder
-        Pair<Double, ArrayList<Beacon>> result = Pathfinder.getShortestPath(ice4, ice2);
-
-        String log = "Time: " + result.first.toString() + ", Path = { ";
-        for (Beacon beacon : result.second) {
-            log += beacon.toString() + ", ";
+        Path result = Pathfinder.getShortestPath(ice4, ice2);
+        if (result != null) {
+            Log.v(TAG, "Pathfinder Test: " + result);
+        } else {
+            Log.e(TAG, "Pathfinder test failed");
         }
-        Log.v(TAG, log);
 
 
         // Log all mapping data

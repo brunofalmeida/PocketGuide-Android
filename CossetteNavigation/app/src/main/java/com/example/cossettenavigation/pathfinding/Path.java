@@ -1,5 +1,7 @@
 package com.example.cossettenavigation.pathfinding;
 
+import com.example.cossettenavigation.Utilities;
+
 import java.util.ArrayList;
 
 /**
@@ -7,21 +9,29 @@ import java.util.ArrayList;
  */
 public class Path {
 
-    private ArrayList<Step> steps;
     private double travelTime;
+    private ArrayList<Step> steps;
 
 
-    public Path(ArrayList<Step> steps, double travelTime) {
-        this.steps = steps;
+
+    public Path(double travelTime, ArrayList<Step> steps) {
         this.travelTime = travelTime;
+        this.steps = steps;
     }
 
-    public ArrayList<Step> getSteps() {
-        return steps;
+    @Override
+    public String toString() {
+        return String.format(
+                "%s { travelTime = %.1f, steps = %s }",
+                getClass().getSimpleName(), travelTime, Utilities.getStepsString(steps));
     }
 
     public double getTravelTime() {
         return travelTime;
+    }
+
+    public ArrayList<Step> getSteps() {
+        return steps;
     }
 
 }

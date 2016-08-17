@@ -7,6 +7,7 @@ import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Beacon;
 import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.SupportBeacon;
+import com.example.cossettenavigation.map.Zone;
 
 import java.util.ArrayList;
 
@@ -35,17 +36,64 @@ public class Pathfinder {
      * @return The shortest travel time (in seconds); a list of beacons representing the shortest path,
      * beginning with startBeacon and ending with endBeacon. Returns null if no path is found.
      */
-    public static Pair<Double, ArrayList<Beacon>> getShortestPath(Beacon startBeacon, Beacon endBeacon) {
+    public static Path getShortestPath(Beacon startBeacon, Beacon endBeacon) {
+        Pair<Double, ArrayList<Beacon>> result = null;
+
         if (startBeacon instanceof SupportBeacon) {
-            return getShortestPath((SupportBeacon) startBeacon, endBeacon);
+            result = getShortestPath((SupportBeacon) startBeacon, endBeacon);
         }
 
         else if (startBeacon instanceof AnchorBeacon) {
-            return getShortestPath((AnchorBeacon) startBeacon, endBeacon);
+            result = getShortestPath((AnchorBeacon) startBeacon, endBeacon);
         }
 
         else {
             Log.e(TAG, "getShortestPath(Beacon, Beacon): Invalid startBeacon type");
+            return null;
+        }
+
+
+        if (result != null) {
+            // Decompose results
+            double travelTime = result.first;
+            ArrayList<Beacon> beacons = result.second;
+
+            ArrayList<Step> steps = new ArrayList<>();
+
+            // Generate each step
+            for (int i = 0; i < beacons.size() - 1; i++) {
+                Beacon beaconOne = beacons.get(i);
+                Beacon beaconTwo = beacons.get(i + 1);
+
+                // Find the common zone
+                Zone zone = null;
+                for (Zone beaconOneZone : beaconOne.getZones()) {
+                    if (beaconTwo.getZones().contains(beaconOneZone)) {
+                        zone = beaconOneZone;
+                    }
+                }
+
+                // TODO - calculate absolute and relative angles (replace 90 with calculation)
+                if (zone != null) {
+                    Step step;
+
+                    if (i == 0) {
+                        step = new Step(beaconOne, beaconTwo, zone, 90, 90);
+                    } else {
+                        step = new Step(beaconOne, beaconTwo, zone, 90, 90 - steps.get(i - 1).getAbsoluteAngle());
+                    }
+
+                    steps.add(step);
+
+                } else {
+                    Log.e(TAG, "getShortestPath(Beacon, Beacon): Zone for Step " + i + " not found");
+                    return null;
+                }
+            }
+
+            return new Path(travelTime, steps);
+
+        } else {
             return null;
         }
     }

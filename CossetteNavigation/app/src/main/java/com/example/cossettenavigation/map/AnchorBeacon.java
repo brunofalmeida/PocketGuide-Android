@@ -56,7 +56,7 @@ public class AnchorBeacon extends Beacon implements Comparable {
                 Utilities.getZoneNamesString(zones));
     }
 
-
+    @Override
     public ArrayList<Zone> getZones() {
         return zones;
     }
