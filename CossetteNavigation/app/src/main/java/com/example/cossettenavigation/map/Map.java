@@ -238,11 +238,14 @@ public class Map {
         // End floor 2
 
         //Zones
+        Zone z1 = addZone(new Zone("Main Hallway - Floor 1", Zone.ZoneType.ROOM));
         z1.addAnchorBeacons(white17, white10);
         z1.addSupportBeacons(white5);
 
+        Zone z2 = addZone(new Zone("Stairs- Floor 1 to Floor 2", Zone.ZoneType.STAIRS));
         z2.addAnchorBeacons(white10, white15);
 
+        Zone z3 = addZone(new Zone("Health Lab - Floor 2", Zone.ZoneType.ROOM));
         z3.addAnchorBeacons(white15);
         z3.addSupportBeacons(white1);
 
