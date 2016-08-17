@@ -1,5 +1,6 @@
 package com.example.cossettenavigation.map;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -119,5 +120,7 @@ public abstract class Beacon {
     public int getMinor() {
         return minor;
     }
+
+    public abstract ArrayList<Zone> getZones();
 
 }

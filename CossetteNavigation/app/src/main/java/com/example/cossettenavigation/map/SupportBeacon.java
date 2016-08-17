@@ -2,6 +2,8 @@ package com.example.cossettenavigation.map;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+
 /**
  * A beacon placed in a supporting location and used to improve location estimates.
  * @see Map
@@ -62,6 +64,13 @@ public class SupportBeacon extends Beacon {
 
     public Zone getZone() {
         return zone;
+    }
+
+    @Override
+    public ArrayList<Zone> getZones() {
+        ArrayList<Zone> zones = new ArrayList<>();
+        zones.add(zone);
+        return zones;
     }
 
     public void setZone(Zone zone) {
