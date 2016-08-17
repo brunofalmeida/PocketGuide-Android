@@ -39,10 +39,13 @@ public class Map {
     private static final String DEFAULT_UUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
 
 
+    public static ArrayList<Floor> floors = new ArrayList<>();
+
     public static ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
     public static ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
+
     public static ArrayList<Zone> zones = new ArrayList<>();
-    public static ArrayList<Floor> floors = new ArrayList<>();
+
 
     /*
     Grid properties.
@@ -69,104 +72,22 @@ public class Map {
 
 
 
-    /**
-     * Adds an anchor beacon to the map.
-     * @return The anchor beacon that was added.
-     */
+    private static Floor addFloor(Floor floor) {
+        floors.add(floor);
+        return floor;
+    }
+
     private static AnchorBeacon addAnchorBeacon(AnchorBeacon anchorBeacon) {
         anchorBeacons.add(anchorBeacon);
         return anchorBeacon;
     }
 
-    /**
-     * Adds an anchor beacon to the map using an absolute position.
-     * @return The anchor beacon that was added.
-     */
-    private static AnchorBeacon addAnchorBeacon(String name,
-                                                double xPosition,
-                                                double yPosition,
-                                                String uuid,
-                                                int major,
-                                                int minor) {
-
-        AnchorBeacon anchorBeacon = new AnchorBeacon(name, xPosition, yPosition, uuid, major, minor);
-        return addAnchorBeacon(anchorBeacon);
-    }
-
-    /**
-     * Adds an anchor beacon to the map using a position relative to another beacon.
-     * @return The anchor beacon that was added.
-     */
-    private static AnchorBeacon addAnchorBeacon(String name,
-                                                Beacon referenceBeacon,
-                                                double xPositionOffset,
-                                                double yPositionOffset,
-                                                String uuid,
-                                                int major,
-                                                int minor) {
-
-        AnchorBeacon anchorBeacon = new AnchorBeacon(
-                name,
-                referenceBeacon, xPositionOffset, yPositionOffset,
-                uuid, major, minor);
-        return addAnchorBeacon(anchorBeacon);
-    }
-
-
-
-
-    /**
-     * Adds a support beacon to the map.
-     * @return The support beacon that was added.
-     */
     private static SupportBeacon addSupportBeacon(SupportBeacon supportBeacon) {
         supportBeacons.add(supportBeacon);
         return supportBeacon;
     }
 
-    /**
-     * Adds a support beacon to the map using an absolute position.
-     * @return The support beacon that was added.
-     */
-    private static SupportBeacon addSupportBeacon(String name,
-                                                  double xPosition,
-                                                  double yPosition,
-                                                  String uuid,
-                                                  int major,
-                                                  int minor) {
-
-        SupportBeacon supportBeacon = new SupportBeacon(name, xPosition, yPosition, uuid, major, minor);
-        return addSupportBeacon(supportBeacon);
-    }
-
-    /**
-     * Adds a support beacon to the map using a position relative to another beacon.
-     * @return The support beacon that was added.
-     */
-    private static SupportBeacon addSupportBeacon(String name,
-                                                  Beacon referenceBeacon,
-                                                  double xPositionOffset,
-                                                  double yPositionOffset,
-                                                  String uuid,
-                                                  int major,
-                                                  int minor) {
-
-        SupportBeacon supportBeacon = new SupportBeacon(
-                name,
-                referenceBeacon, xPositionOffset, yPositionOffset,
-                uuid, major, minor);
-        return addSupportBeacon(supportBeacon);
-    }
-
-
-
-
-    /**
-     * Adds a zone to the map.
-     * @return The zone that was added.
-     */
-    private static Zone addZone(String name) {
-        Zone zone = new Zone(name);
+    private static Zone addZone(Zone zone) {
         zones.add(zone);
         return zone;
     }
@@ -174,31 +95,15 @@ public class Map {
 
 
 
-    /**
-     * @return The floor that was added.
-     */
-    private static Floor addFloor(String name) {
-        Floor floor = new Floor(name);
-        floors.add(floor);
-        return floor;
-    }
-
-
-
-
-
-
-
-
     /*
-    Define beacons and zones
+    Define floors, beacons, and zones
 
-    1. define beacons
-    2. define floors -> add beacons
-    3. define zones -> add beacons
+    1. define floor
+    2. define beacons -> associate with floor
+    3. define zones -> associate with beacons
      */
     static {
-        Log.v(TAG, "static initializer");
+        Log.v(TAG, "static {}");
 
 
 
@@ -242,27 +147,31 @@ public class Map {
         gridHeight = 100;
         metresPerGridUnit = 0.1;
 
-        AnchorBeacon ice1 = addAnchorBeacon(
+        Floor floor2 = addFloor(new Floor("Floor 2", 5));
+
+        AnchorBeacon ice1 = addAnchorBeacon(new AnchorBeacon(
                 "ice1 - F2",
+                floor2,
                 20, 100,
-                DEFAULT_UUID, 9051, 52752);
-        AnchorBeacon ice2 = addAnchorBeacon(
+                DEFAULT_UUID, 9051, 52752));
+        AnchorBeacon ice2 = addAnchorBeacon(new AnchorBeacon(
                 "ice2 - F2",
+                floor2,
                 0, 75,
-                DEFAULT_UUID, 27598, 15040);
-/*        AnchorBeacon ice3 = addAnchorBeacon(
+                DEFAULT_UUID, 27598, 15040));
+/*        AnchorBeacon ice3 = addAnchorBeacon(new AnchorBeacon(
                 "ice3 - F2",
+                floor2,
                 10, 0,
-                DEFAULT_UUID, 62693, 23343);*/
-        AnchorBeacon ice4 = addAnchorBeacon(
+                DEFAULT_UUID, 62693, 23343));*/
+        AnchorBeacon ice4 = addAnchorBeacon(new AnchorBeacon(
                 "ice4 - F2",
+                floor2,
                 50, 100,
-                DEFAULT_UUID, 42484, 10171);
+                DEFAULT_UUID, 42484, 10171));
 
-        Floor floor2 = addFloor("Floor 2");
-        floor2.addAnchorBeacons(ice1, ice2, ice4);
 
-        Zone z1 = addZone("Open Area - Floor 2");
+        Zone z1 = addZone(new Zone("Open Area - Floor 2"));
         z1.addAnchorBeacons(ice1, ice2, ice4);
 
 /*        Zone z2 = addZone("2");
@@ -302,14 +211,14 @@ public class Map {
 
 
         // Log all mapping data
+        for (Floor floor : floors) {
+            Log.v(TAG, floor.toString());
+        }
         for (AnchorBeacon anchorBeacon : anchorBeacons) {
             Log.v(TAG, anchorBeacon.toString());
         }
         for (SupportBeacon supportBeacon : supportBeacons) {
             Log.v(TAG, supportBeacon.toString());
-        }
-        for (Floor floor : floors) {
-            Log.v(TAG, floor.toString());
         }
         for (Zone zone : zones) {
             Log.v(TAG, zone.toString());
