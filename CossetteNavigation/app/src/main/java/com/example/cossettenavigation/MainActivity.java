@@ -5,8 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Matrix;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
@@ -28,6 +26,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.estimote.sdk.SystemRequirementsChecker;
+import com.example.cossettenavigation.map.Map;
+import com.example.cossettenavigation.pathfinding.Path;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -44,6 +47,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private ImageView direction;
     private TextView instruction;
+
+    Path testPath = Map.testPath;
+    int testStepIndex = 0;
 
 
     @Override
@@ -107,6 +113,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         m_camera_view.addView(direction);
         m_camera_view.addView(instruction);
+
+
+        if (testPath == null) {
+            Log.e(TAG, "onCreate(): testPath == null");
+        } else {
+            Log.v(TAG, testPath.toString());
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (testStepIndex < testPath.getSteps().size()) {
+                        double relativeAngle = testPath.getSteps().get(testStepIndex).getRelativeAngle();
+                        Log.v(TAG, relativeAngle + "");
+                        direction.setRotation((float) (90 - relativeAngle));
+                        testStepIndex++;
+                    } else {
+                        Log.v(TAG, "done path");
+                        cancel();
+                    }
+                }
+            }, 5000, 5000);
+        }
     }
 
     @Override

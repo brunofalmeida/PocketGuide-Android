@@ -58,7 +58,7 @@ public class SupportBeacon extends Beacon {
                 "%s { name = \"%s\", floor = \"%s\", position = %s, uuid = %s, major = %d, minor = %d, zone = \"%s\" }",
                 getClass().getSimpleName(),
                 name, floor.getName(), position, uuid, major, minor,
-                zone.getName());
+                (zone != null) ? zone.getName() : "null");
     }
 
 

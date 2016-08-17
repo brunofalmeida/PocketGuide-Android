@@ -53,7 +53,10 @@ public class Pathfinder {
         }
 
 
-        if (result != null) {
+        if (result == null) {
+            return null;
+
+        } else {
             // Decompose results
             double travelTime = result.first;
             ArrayList<Beacon> beacons = result.second;
@@ -74,27 +77,26 @@ public class Pathfinder {
                 }
 
                 // TODO - calculate absolute and relative angles (replace 90 with calculation)
-                if (zone != null) {
+                if (zone == null) {
+                    Log.e(TAG, "getShortestPath(Beacon, Beacon): Zone for Step " + i + " not found");
+                    return null;
+
+                } else {
                     Step step;
 
+                    double absoluteAngle = Map.estimateTravelAngle(beaconOne, beaconTwo);
+
                     if (i == 0) {
-                        step = new Step(beaconOne, beaconTwo, zone, 90, 90);
+                        step = new Step(beaconOne, beaconTwo, zone, absoluteAngle, 90);
                     } else {
-                        step = new Step(beaconOne, beaconTwo, zone, 90, 90 - steps.get(i - 1).getAbsoluteAngle());
+                        step = new Step(beaconOne, beaconTwo, zone, absoluteAngle, 90 + (absoluteAngle - steps.get(i - 1).getAbsoluteAngle()));
                     }
 
                     steps.add(step);
-
-                } else {
-                    Log.e(TAG, "getShortestPath(Beacon, Beacon): Zone for Step " + i + " not found");
-                    return null;
                 }
             }
 
             return new Path(travelTime, steps);
-
-        } else {
-            return null;
         }
     }
 
@@ -106,12 +108,15 @@ public class Pathfinder {
         for (AnchorBeacon anchorBeacon : startBeacon.getZone().getAnchorBeacons()) {
 
             Pair<Double, ArrayList<Beacon>> testPath = getShortestPath(anchorBeacon, endBeacon);
-            double testTime = Map.estimateTravelTime(startBeacon, anchorBeacon, startBeacon.getZone()) + testPath.first;
 
-            if (testTime < minimumTime) {
-                minimumTime = testTime;
-                shortestPath = testPath.second;
-                shortestPath.add(0, startBeacon);
+            if (testPath != null) {
+                double testTime = Map.estimateTravelTime(startBeacon, anchorBeacon, startBeacon.getZone()) + testPath.first;
+
+                if (testTime < minimumTime) {
+                    minimumTime = testTime;
+                    shortestPath = testPath.second;
+                    shortestPath.add(0, startBeacon);
+                }
             }
         }
 
@@ -146,12 +151,15 @@ public class Pathfinder {
 
         for (AnchorBeacon anchorBeacon : endBeacon.getZone().getAnchorBeacons()) {
             Pair<Double, ArrayList<Beacon>> testPath = getShortestPath(startBeacon, anchorBeacon);
-            double testTime = testPath.first + Map.estimateTravelTime(anchorBeacon, endBeacon, endBeacon.getZone());
 
-            if (testTime < minimumTime) {
-                minimumTime = testTime;
-                shortestPath = testPath.second;
-                shortestPath.add(endBeacon);
+            if (testPath != null) {
+                double testTime = testPath.first + Map.estimateTravelTime(anchorBeacon, endBeacon, endBeacon.getZone());
+
+                if (testTime < minimumTime) {
+                    minimumTime = testTime;
+                    shortestPath = testPath.second;
+                    shortestPath.add(endBeacon);
+                }
             }
         }
 
