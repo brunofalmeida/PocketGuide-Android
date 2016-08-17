@@ -86,6 +86,8 @@ public class Map {
         }
     }
 
+    
+
 
 
 
@@ -130,18 +132,6 @@ public class Map {
 /*        gridWidth = 30;
         gridHeight = 100;
 
-        AnchorBeacon b1 = addAnchorBeacon(
-                "white17 - F1",
-                20, 100,
-                DEFAULT_UUID, 46447, 25300);
-        AnchorBeacon b2 = addAnchorBeacon(
-                "white1 - F1",
-                15, 40,
-                DEFAULT_UUID, 6607, 59029);
-        AnchorBeacon b3 = addAnchorBeacon(
-                "white2 - F1",
-                30, 20,
-                DEFAULT_UUID, 62315, 20156);
 
 *//*        // TODO - make a support beacon
         AnchorBeacon b4 = addAnchorBeacon(
@@ -152,6 +142,14 @@ public class Map {
         Zone z1 = addZone("Main Lower Hallway");
         z1.addAnchorBeacons(b1, b2, b3);
 //        z1.addSupportBeacons(b4);*/
+
+        Floor floor1 = addFloor(new Floor("Floor 1", 0));
+
+        AnchorBeacon white17 = addAnchorBeacon(new AnchorBeacon(
+                "white17 - F1",
+                floor1,
+                5, 0,
+                DEFAULT_UUID, 46447, 25300));
 
         // End floor 1
 
