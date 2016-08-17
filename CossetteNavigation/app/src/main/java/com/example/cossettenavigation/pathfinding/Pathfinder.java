@@ -11,9 +11,17 @@ import com.example.cossettenavigation.map.SupportBeacon;
 import java.util.ArrayList;
 
 /**
- * Client code interface for the pathfinding algorithm.
+ * Interface for the pathfinding algorithm.
  */
 public class Pathfinder {
+
+    // TODO - add Path class - list of Step objects (2 beacons, zone, string description)
+    // TODO - add ZoneType enum - hallway, open room, stairs, elevator
+    // TODO - use Zone type for string description
+    // TODO - account for not starting at a beacon? (go to nearest exit, close/far end of hallway, etc.) - can skip and assume starting beacon
+    // TODO - estimate current Zone - closest beacon -> how many zones? -> 1 zone (definite), 2 zones (whichever has the next closest beacon)
+    // TODO - add constants for average speed by stairs/elevator - calculate estimated distance based on Zone type
+    // TODO - calculate angle for transitioning between steps - round to nearest 90 degree angle -> direction?
 
     private static final String TAG = "Pathfinder";
 
