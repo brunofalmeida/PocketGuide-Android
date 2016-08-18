@@ -17,11 +17,10 @@ public class BeaconTrackingData {
     private ArrayList<Utils.Proximity> proximityMeasurements = new ArrayList<>();
 
 
-
-
     public BeaconTrackingData(com.example.cossettenavigation.map.Beacon beacon) {
         this.beacon = beacon;
     }
+
 
     @Override
     public String toString() {
@@ -37,6 +36,7 @@ public class BeaconTrackingData {
 
         return string;
     }
+
 
     public com.example.cossettenavigation.map.Beacon getBeacon() {
         return beacon;
@@ -60,14 +60,14 @@ public class BeaconTrackingData {
 
         for (int i = 0, weight = 1;
              i < accuracyMeasurements.size();
-             i++,       weight *= 2) {
+             i++,       weight *= 1.5) {
 
             numerator += weight * accuracyMeasurements.get(i);
             denominator += weight;
         }
 
         if (denominator == 0) {
-            return -1;
+            return Double.POSITIVE_INFINITY;
         } else {
             return numerator / denominator;
         }

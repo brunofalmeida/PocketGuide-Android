@@ -37,7 +37,6 @@ import java.util.TimerTask;
  */
 public class ApplicationBeaconManager extends Application {
 
-
     private final String TAG = "AppBeaconManager";
 
     private final Region ALL_BEACONS_REGION = new Region("All Beacons", null, null, null);
@@ -156,6 +155,8 @@ public class ApplicationBeaconManager extends Application {
     }
 
 
+
+
     private void startMonitoring() {
         // Monitor all beacons
         for (com.example.cossettenavigation.map.Beacon beacon : Map.getAllBeacons()) {
@@ -208,6 +209,9 @@ public class ApplicationBeaconManager extends Application {
     private void removeTrackedBeacon(Region region) {
         trackedBeacons.remove(region);
     }
+
+
+
 
     /**
      * @see <a href="https://github.com/lemmingapex/Trilateration">Trilateration example</a>
