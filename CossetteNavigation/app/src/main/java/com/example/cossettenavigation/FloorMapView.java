@@ -133,7 +133,7 @@ public class FloorMapView extends View {
 
             canvas.drawPoint(x, y, anchorBeaconPaint);
 
-            canvas.drawText(anchorBeacon.getName(), x, y - 100, anchorBeaconLabelPaint);
+            canvas.drawText(anchorBeacon.getName(), x, y - 60, anchorBeaconLabelPaint);
         }
 
         Point estimatedLocation = beaconManager.getEstimatedLocation();

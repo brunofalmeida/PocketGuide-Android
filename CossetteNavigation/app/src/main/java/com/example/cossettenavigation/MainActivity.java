@@ -125,9 +125,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 @Override
                 public void run() {
                     if (testStepIndex < testPath.getSteps().size()) {
-                        double relativeAngle = testPath.getSteps().get(testStepIndex).getRelativeAngle();
+                        final double relativeAngle = testPath.getSteps().get(testStepIndex).getRelativeAngle();
                         Log.v(TAG, String.format("relativeAngle = %.0f degrees", relativeAngle));
-                        direction.setRotation((float) (90 - relativeAngle));
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                direction.setRotation((float) (90 - relativeAngle));
+                            }
+                        });
+
                         testStepIndex++;
 
                     } else {
