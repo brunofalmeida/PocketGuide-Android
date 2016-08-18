@@ -29,6 +29,11 @@ public class Pathfinder {
      * beginning with startBeacon and ending with endBeacon. Returns null if no path is found.
      */
     public static Path getShortestPath(Beacon startBeacon, Beacon endBeacon) {
+        if (startBeacon == endBeacon) {
+            return new Path(0, new ArrayList<Step>());
+        }
+
+
         Pair<Double, ArrayList<Beacon>> result = null;
 
         if (startBeacon instanceof SupportBeacon) {

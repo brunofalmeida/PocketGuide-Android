@@ -108,9 +108,17 @@ public class Map {
      * @return Angle of travel in standard position.
      */
     public static double estimateTravelAngle(Beacon startBeacon, Beacon endBeacon) {
-        return Math.toDegrees(Math.atan2(
-                endBeacon.getYPosition() - startBeacon.getYPosition(),
-                endBeacon.getXPosition() - startBeacon.getXPosition()));
+        if (startBeacon == endBeacon) {
+            return 90;
+        } else if (startBeacon.getFloor().getZPosition() < endBeacon.getFloor().getZPosition()) {
+            return 90;
+        } else if (startBeacon.getFloor().getZPosition() > endBeacon.getFloor().getZPosition()){
+            return -90;
+        } else {
+            return Math.toDegrees(Math.atan2(
+                    endBeacon.getYPosition() - startBeacon.getYPosition(),
+                    endBeacon.getXPosition() - startBeacon.getXPosition()));
+        }
     }
 
 
