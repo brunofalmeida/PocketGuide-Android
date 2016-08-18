@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         m_camera_view.addView(instruction);
 
 
+        // Test navigation UI
         if (testPath == null) {
             Log.e(TAG, "onCreate(): testPath == null");
         } else {
@@ -125,11 +126,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 public void run() {
                     if (testStepIndex < testPath.getSteps().size()) {
                         double relativeAngle = testPath.getSteps().get(testStepIndex).getRelativeAngle();
-                        Log.v(TAG, relativeAngle + "");
+                        Log.v(TAG, String.format("relativeAngle = %.0f degrees", relativeAngle));
                         direction.setRotation((float) (90 - relativeAngle));
                         testStepIndex++;
+
                     } else {
-                        Log.v(TAG, "done path");
+                        Log.v(TAG, "Done path");
                         cancel();
                     }
                 }

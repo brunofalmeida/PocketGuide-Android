@@ -17,7 +17,7 @@ public class Point {
     @Override
     public String toString() {
         return String.format(
-                "%s { x = %.1f, y = %.1f }",
+                "%s { x = %.0f, y = %.0f }",
                 getClass().getSimpleName(), x, y);
     }
 

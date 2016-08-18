@@ -9,53 +9,49 @@ import java.util.ArrayList;
 
 /**
  * <p>
- * Organizing class for mapping data.
- * Uses a rectangular grid system to define the locations of beacons and zones.
+ *     Organizing class for mapping data.
+ *     Uses a rectangular grid system to define the locations of beacons and zones.
  * </p>
  *
  * <p>
- * Anchor Beacons - Placed in key locations (e.g. ends of hallways, doors, entrances and exits, stairs, elevators).
+ *     Anchor Beacons - Placed in key locations (e.g. ends of hallways, doors, entrances and exits, stairs, elevators).
  * </p>
  *
  * <p>
- * Support Beacons - Placed in supporting locations to improve location estimates (e.g. along hallways, middle of rooms).
+ *     Support Beacons - Placed in supporting locations to improve location estimates (e.g. along hallways, middle of rooms).
  * </p>
  *
  * <p>
- * Zones - Key areas within a floor or building (e.g. hallways, rectangular spaces, stairs, elevators).
+ *     Zones - Key areas within a floor or building (e.g. hallways, rectangular spaces, stairs, elevators).
  * </p>
  */
 public class Map {
 
-    // TODO - add optional estimatedTravelTime property to Zone objects?
+    private static final String TAG = "Map";
 
     // Average speeds, in metres/second
     private static final double WALKING_TRAVEL_SPEED = 1.0;
     private static final double STAIRS_TRAVEL_SPEED = 0.5;
     private static final double ELEVATOR_TRAVEL_SPEED = 0.4;
 
-    private static final String TAG = "Map";
-
     private static final String DEFAULT_UUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
 
 
     public static ArrayList<Floor> floors = new ArrayList<>();
-
     public static ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
     public static ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
-
     public static ArrayList<Zone> zones = new ArrayList<>();
 
 
     /*
-    Grid properties.
-    The grid is defined with arbitrary units, which can be converted to real distances with the given ratio.
+        Grid properties.
+        The grid is defined with arbitrary units, which can be converted to real distances with the given ratio.
      */
     public static double gridWidth = 1;
     public static double gridHeight = 1;
     public static double metresPerGridUnit = 1;
 
-
+    // For interface testing
     public static Path testPath;
 
 
@@ -78,6 +74,7 @@ public class Map {
             }
         }
     }
+
 
     /**
      * Assumes that both beacons are part of the same zone and have a straight-line connection.
@@ -107,6 +104,9 @@ public class Map {
         }
     }
 
+    /**
+     * @return Angle of travel in standard position.
+     */
     public static double estimateTravelAngle(Beacon startBeacon, Beacon endBeacon) {
         return Math.toDegrees(Math.atan2(
                 endBeacon.getYPosition() - startBeacon.getYPosition(),
@@ -140,11 +140,11 @@ public class Map {
 
 
     /*
-    Define floors, beacons, and zones
+        Define floors, beacons, and zones
 
-    1. define floor
-    2. define beacons -> associate with floor
-    3. define zones -> associate with beacons
+        1. define floor
+        2. define beacons -> associate with floor
+        3. define zones -> add beacons
      */
     static {
         Log.v(TAG, "static {}");
@@ -162,14 +162,14 @@ public class Map {
 
         SupportBeacon white5 = addSupportBeacon(new SupportBeacon(
                 "white5 - F1",
-                floor1,white17,
-                -5, 8,
+                floor1,
+                white17, -5, 8,
                 DEFAULT_UUID, 33753, 28870));
 
         AnchorBeacon white10 = addAnchorBeacon(new AnchorBeacon(
                 "white10 - F1",
-                floor1, white5,
-                2,15,
+                floor1,
+                white5, 2, 15,
                 DEFAULT_UUID, 65261, 60647));
 
         // End floor 1
@@ -181,26 +181,26 @@ public class Map {
 
         AnchorBeacon white15 = addAnchorBeacon(new AnchorBeacon(
                 "white15 - F2",
-                floor2, white10,
-                0,0,
+                floor2,
+                white10, 0, 0,
                 DEFAULT_UUID, 2949, 35856));
 
         AnchorBeacon white1 = addAnchorBeacon(new AnchorBeacon(
                 "white1 - F2",
-                floor2, white15,
-                0, -8,
+                floor2,
+                white15, 0, -8,
                 DEFAULT_UUID, 6607, 59029));
 
         AnchorBeacon white25 = addAnchorBeacon(new AnchorBeacon(
                 "white25 - F2",
-                floor2, white1,
-                2, -3,
+                floor2,
+                white1, 2, -3,
                 DEFAULT_UUID, 27415, 8243));
 
         AnchorBeacon white9 = addAnchorBeacon(new AnchorBeacon(
                 "white9 - F2",
-                floor2, white1,
-                -3,-5,
+                floor2,
+                white1, -3, -5,
                 DEFAULT_UUID, 47609, 17713));
 
         // End floor 2
@@ -208,14 +208,14 @@ public class Map {
 
         // Zones
 
-        Zone z1 = addZone(new Zone("Main Hallway - Floor 1", Zone.ZoneType.ROOM));
+        Zone z1 = addZone(new Zone("Main Hallway - Floor 1", Zone.ZoneType.HALLWAY));
         z1.addAnchorBeacons(white17, white10);
         z1.addSupportBeacons(white5);
 
-        Zone z2 = addZone(new Zone("Stairs- Floor 1 to Floor 2", Zone.ZoneType.STAIRS));
+        Zone z2 = addZone(new Zone("Stairs - Floor 1 to Floor 2", Zone.ZoneType.STAIRS));
         z2.addAnchorBeacons(white10, white15);
 
-        Zone z3 = addZone(new Zone("Health Lab - Floor 2", Zone.ZoneType.ROOM));
+        Zone z3 = addZone(new Zone("Health Lab - Floor 2", Zone.ZoneType.HALLWAY));
         z3.addAnchorBeacons(white15, white1);
 
         Zone z4 = addZone(new Zone("Open Area - Floor 2", Zone.ZoneType.ROOM));
@@ -246,7 +246,7 @@ public class Map {
         }
 
         // Test path
-        testPath = Pathfinder.getShortestPath(white17, white1);
+        testPath = Pathfinder.getShortestPath(white17, white25);
 
 
 
