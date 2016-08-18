@@ -41,6 +41,7 @@ import java.util.TimerTask;
     TODO - show 3 steps at a time - arrows+text for show previous/current/next direction
     TODO - add debug text view in MainActivity
     TODO - stretch map preview in DebugActivity
+    TODO - add distance/time units in logs
     TODO - trilaterate position in 3D
     TODO - estimate current Zone - closest beacon -> how many zones? -> 1 zone (definite), 2 zones (whichever has the next closest beacon)
     TODO - account for not starting at a beacon? (go to nearest exit, close/far end of hallway, etc.) - can skip and assume starting beacon
