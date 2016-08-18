@@ -53,6 +53,8 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
                     } else {
                         Log.v(TAG, path.toString());
                     }
+
+                    assertNotNull("path = null: A path should exist", path);
                 }
             }
         }
