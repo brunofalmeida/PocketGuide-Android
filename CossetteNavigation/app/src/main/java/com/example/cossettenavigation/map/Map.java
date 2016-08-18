@@ -61,6 +61,13 @@ public class Map {
 
 
 
+    public static ArrayList<Beacon> getAllBeacons() {
+        ArrayList<Beacon> allBeacons = new ArrayList<>();
+        allBeacons.addAll(anchorBeacons);
+        allBeacons.addAll(supportBeacons);
+        return allBeacons;
+    }
+
     /**
      * Assumes that both beacons are part of the same zone and have a straight-line connection.
      * @return The estimated travel time (in seconds) between the two beacons.

@@ -118,7 +118,7 @@ public class Utilities {
     public static String getStepsString(ArrayList<Step> steps) {
         String string = "{";
         for (Step step : steps) {
-            string += String.format("\n%s,", step);
+            string += String.format("\n\t\t%s,", step);
         }
         if (string.endsWith(",")) {
             string = string.substring(0, string.length() - 1) + "\n";
