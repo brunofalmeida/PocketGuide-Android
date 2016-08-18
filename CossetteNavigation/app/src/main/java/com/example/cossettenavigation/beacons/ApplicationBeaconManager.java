@@ -210,6 +210,13 @@ public class ApplicationBeaconManager extends Application {
         trackedBeacons.remove(region);
     }
 
+    public BeaconTrackingData getBeaconTrackingData(com.example.cossettenavigation.map.Beacon beacon) {
+        return trackedBeacons.get(new Region(
+                beacon.getName(),
+                beacon.getUUID(),
+                beacon.getMajor(),
+                beacon.getMinor()));
+    }
 
 
 

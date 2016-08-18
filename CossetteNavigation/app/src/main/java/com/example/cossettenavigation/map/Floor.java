@@ -77,7 +77,6 @@ public class Floor {
         }
     }
 
-    // TODO - check for valid references
     public void addZone(Zone zone) {
         if (!this.zones.contains(zone)) {
             this.zones.add(zone);

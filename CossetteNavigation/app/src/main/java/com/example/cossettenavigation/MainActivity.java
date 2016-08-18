@@ -32,6 +32,19 @@ import com.example.cossettenavigation.pathfinding.Path;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/*
+    TODO - make all angles start up, rotate clockwise
+    TODO - add Path class - list of Step objects (2 beacons, zone, string description) - ADD STRING DESCRIPTION!!
+    TODO - use Zone type for string description
+    TODO - go through Path Step's - check beacon tracking data/time elapsed to determine when to switch steps
+    TODO - calculate angle for transitioning between steps - round to nearest 90 degree angle -> direction string?
+    TODO - show 3 steps at a time - arrows+text for show previous/current/next direction
+    TODO - add debug text view in MainActivity
+    TODO - stretch map preview in DebugActivity
+    TODO - trilaterate position in 3D
+    TODO - estimate current Zone - closest beacon -> how many zones? -> 1 zone (definite), 2 zones (whichever has the next closest beacon)
+    TODO - account for not starting at a beacon? (go to nearest exit, close/far end of hallway, etc.) - can skip and assume starting beacon
+*/
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 

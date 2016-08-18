@@ -16,12 +16,6 @@ import java.util.ArrayList;
  */
 public class Pathfinder {
 
-    // TODO - add Path class - list of Step objects (2 beacons, zone, string description)
-    // TODO - use Zone type for string description
-    // TODO - account for not starting at a beacon? (go to nearest exit, close/far end of hallway, etc.) - can skip and assume starting beacon
-    // TODO - estimate current Zone - closest beacon -> how many zones? -> 1 zone (definite), 2 zones (whichever has the next closest beacon)
-    // TODO - calculate angle for transitioning between steps - round to nearest 90 degree angle -> direction?
-
     private static final String TAG = "Pathfinder";
 
     static double INFINITY = Double.POSITIVE_INFINITY;
@@ -74,7 +68,6 @@ public class Pathfinder {
                     }
                 }
 
-                // TODO - calculate absolute and relative angles (replace 90 with calculation)
                 if (zone == null) {
                     Log.e(TAG, "getShortestPath(Beacon, Beacon): Zone for Step " + i + " not found");
                     return null;
