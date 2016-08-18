@@ -29,13 +29,20 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
         for (Beacon beacon1 : Map.getAllBeacons()) {
             for (Beacon beacon2 : Map.getAllBeacons()) {
-                Double travelAngle = Map.estimateTravelAngle(beacon1, beacon2);
+                if (beacon1 != beacon2) {
+                    Double travelAngle = Map.estimateTravelAngle(beacon1, beacon2);
 
-                Log.v(TAG, String.format(
-                        "test_estimateTravelAngle():\n%s\n%s\n%s degrees",
-                        beacon1,
-                        beacon2,
-                        (travelAngle != null) ? String.format("%.0f", travelAngle) : "null"));
+                    Log.v(TAG, String.format(
+                            "test_estimateTravelAngle():\n%s\n%s\n%s degrees",
+                            beacon1,
+                            beacon2,
+                            (travelAngle != null) ? String.format("%.0f", travelAngle) : "null"));
+
+                    assertNotNull(String.format(
+                            "A travel angle between any two unique beacons should exist (beacons should have unique x-y coordinates).\n%s\n%s",
+                            beacon1, beacon2),
+                            travelAngle);
+                }
             }
         }
     }

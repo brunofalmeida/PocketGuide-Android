@@ -193,7 +193,7 @@ public class Map {
         AnchorBeacon white15 = addAnchorBeacon(new AnchorBeacon(
                 "white15 - F2",
                 floor2,
-                white10, 0, 0,
+                white10, 2, 0,
                 DEFAULT_UUID, 2949, 35856));
 
         AnchorBeacon white1 = addAnchorBeacon(new AnchorBeacon(
