@@ -139,23 +139,7 @@ public class Map {
         Log.v(TAG, "static {}");
 
 
-
-
         // Start floor 1
-
-/*        gridWidth = 30;
-        gridHeight = 100;
-
-
-*//*        // TODO - make a support beacon
-        AnchorBeacon b4 = addAnchorBeacon(
-                "white5 - Kitchen",
-                b1, -5, 25,
-                DEFAULT_UUID, 33753, 28870);*//*
-
-        Zone z1 = addZone("Main Lower Hallway");
-        z1.addAnchorBeacons(b1, b2, b3);
-//        z1.addSupportBeacons(b4);*/
 
         Floor floor1 = addFloor(new Floor("Floor 1", 0));
 
@@ -180,15 +164,13 @@ public class Map {
         // End floor 1
 
 
-
-
         // Start floor 2
 
         gridWidth = 100;
         gridHeight = 100;
         metresPerGridUnit = 0.1;
 
-        Floor floor2 = addFloor(new Floor("Floor 2", 5));
+        Floor floor2 = addFloor(new Floor("Floor 2", floor1, 5));
 
         AnchorBeacon white15 = addAnchorBeacon(new AnchorBeacon(
                 "white15 - F2",
@@ -214,7 +196,50 @@ public class Map {
                 -3,-5,
                 DEFAULT_UUID, 47609, 17713));
 
-/*      BLUE BEACONS that were used previously for debugging.
+        // End floor 2
+
+
+        // Zones
+
+        Zone z1 = addZone(new Zone("Main Hallway - Floor 1", Zone.ZoneType.ROOM));
+        z1.addAnchorBeacons(white17, white10);
+        z1.addSupportBeacons(white5);
+
+        Zone z2 = addZone(new Zone("Stairs- Floor 1 to Floor 2", Zone.ZoneType.STAIRS));
+        z2.addAnchorBeacons(white10, white15);
+
+        Zone z3 = addZone(new Zone("Health Lab - Floor 2", Zone.ZoneType.ROOM));
+        z3.addAnchorBeacons(white15, white1);
+
+        Zone z4 = addZone(new Zone("Open Area - Floor 2", Zone.ZoneType.ROOM));
+        z4.addAnchorBeacons(white25, white9, white1);
+
+        // End Zones
+
+
+
+
+        // Log all mapping data
+        for (Floor floor : floors) {
+            Log.v(TAG, floor.toString());
+        }
+        for (AnchorBeacon anchorBeacon : anchorBeacons) {
+            Log.v(TAG, anchorBeacon.toString());
+        }
+        for (SupportBeacon supportBeacon : supportBeacons) {
+            Log.v(TAG, supportBeacon.toString());
+        }
+        for (Zone zone : zones) {
+            Log.v(TAG, zone.toString());
+        }
+
+        // Test path
+        testPath = Pathfinder.getShortestPath(white17, white1);
+
+
+
+
+/*        ICE BEACONS that were used previously for debugging.
         AnchorBeacon ice1 = addAnchorBeacon(new AnchorBeacon(
                 "ice1 - F2",
                 floor2,
@@ -244,66 +269,6 @@ public class Map {
         Zone z3 = addZone("3");
         Zone z4 = addZone("4");
         Zone z5 = addZone("5");*/
-
-        // End floor 2
-
-        //Zones
-        Zone z1 = addZone(new Zone("Main Hallway - Floor 1", Zone.ZoneType.ROOM));
-        z1.addAnchorBeacons(white17, white10);
-        z1.addSupportBeacons(white5);
-
-        Zone z2 = addZone(new Zone("Stairs- Floor 1 to Floor 2", Zone.ZoneType.STAIRS));
-        z2.addAnchorBeacons(white10, white15);
-
-        Zone z3 = addZone(new Zone("Health Lab - Floor 2", Zone.ZoneType.ROOM));
-        z3.addAnchorBeacons(white15, white1);
-
-        Zone z4 = addZone(new Zone("Open Area - Floor 2", Zone.ZoneType.ROOM));
-        z4.addAnchorBeacons(white25, white9, white1);
-
-        //End Zones
-
-
-        // Start other beacons
-
-/*        AnchorBeacon b1 = addAnchorBeacon(
-                "white1 - F1",
-                15, 40,
-                DEFAULT_UUID, 6607, 59029);
-        AnchorBeacon b2 = addAnchorBeacon(
-                "white2 - F1",
-                30, 20,
-                DEFAULT_UUID, 62315, 20156);
-
-        // End other beacons
-
-
-
-
-        // Test Pathfinder
-        Path result = Pathfinder.getShortestPath(ice4, ice2);
-        if (result != null) {
-            Log.v(TAG, "Pathfinder Test: " + result);
-        } else {
-            Log.e(TAG, "Pathfinder test failed");
-        }*/
-
-        testPath = Pathfinder.getShortestPath(white17, white1);
-
-
-        // Log all mapping data
-        for (Floor floor : floors) {
-            Log.v(TAG, floor.toString());
-        }
-        for (AnchorBeacon anchorBeacon : anchorBeacons) {
-            Log.v(TAG, anchorBeacon.toString());
-        }
-        for (SupportBeacon supportBeacon : supportBeacons) {
-            Log.v(TAG, supportBeacon.toString());
-        }
-        for (Zone zone : zones) {
-            Log.v(TAG, zone.toString());
-        }
     }
 
 }
