@@ -33,7 +33,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /*
-    TODO - make all angles start up, rotate clockwise
     TODO - add Path class - list of Step objects (2 beacons, zone, string description) - ADD STRING DESCRIPTION!!
     TODO - use Zone type for string description
     TODO - go through Path Step's - check beacon tracking data/time elapsed to determine when to switch steps
@@ -139,13 +138,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 @Override
                 public void run() {
                     if (testStepIndex < testPath.getSteps().size()) {
-                        final double relativeAngle = testPath.getSteps().get(testStepIndex).getRelativeAngle();
-                        Log.v(TAG, String.format("relativeAngle = %.0f degrees", relativeAngle));
+                        final double turnAngle = testPath.getSteps().get(testStepIndex).getTurnAngle();
+                        Log.v(TAG, String.format("turnAngle = %.0f degrees", turnAngle));
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                direction.setRotation((float) (90 - relativeAngle));
+                                direction.setRotation((float) turnAngle);
                             }
                         });
 

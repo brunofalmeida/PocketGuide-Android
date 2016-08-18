@@ -105,17 +105,20 @@ public class Map {
     }
 
     /**
-     * @return Angle of travel in standard position.
+     * @return Angle of travel (clockwise from up), or null if there is no angle in the x-y plane.
      */
-    public static double estimateTravelAngle(Beacon startBeacon, Beacon endBeacon) {
-        if (startBeacon == endBeacon) {
-            return 90;
-        } else if (startBeacon.getFloor().getZPosition() < endBeacon.getFloor().getZPosition()) {
-            return 90;
-        } else if (startBeacon.getFloor().getZPosition() > endBeacon.getFloor().getZPosition()){
-            return -90;
+    public static Double estimateTravelAngle(Beacon startBeacon, Beacon endBeacon) {
+        if (startBeacon.getXPosition() == endBeacon.getXPosition() &&
+                startBeacon.getYPosition() == endBeacon.getYPosition()) {
+
+            Log.e(TAG, String.format(
+                    "estimateTravelAngle(): Beacons have the same x-y position\n%s\n%s",
+                    startBeacon, endBeacon));
+            return null;
+
         } else {
-            return Math.toDegrees(Math.atan2(
+
+            return 90 - Math.toDegrees(Math.atan2(
                     endBeacon.getYPosition() - startBeacon.getYPosition(),
                     endBeacon.getXPosition() - startBeacon.getXPosition()));
         }

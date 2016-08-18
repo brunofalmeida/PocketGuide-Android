@@ -16,33 +16,33 @@ public class Step {
     private double travelTime;
 
     // In degrees
-    private double absoluteAngle;
-    private double relativeAngle;
+    private Double travelAngle;
+    private double turnAngle;
 
 
 
 
-    public Step(Beacon startBeacon, Beacon endBeacon, Zone zone, double absoluteAngle, double relativeAngle) {
+    public Step(Beacon startBeacon, Beacon endBeacon, Zone zone, Double travelAngle, double turnAngle) {
         this.startBeacon = startBeacon;
         this.endBeacon = endBeacon;
         this.zone = zone;
         this.travelTime = Map.estimateTravelTime(startBeacon, endBeacon, zone);
-        this.absoluteAngle = absoluteAngle;
-        this.relativeAngle = relativeAngle;
+        this.travelAngle = travelAngle;
+        this.turnAngle = turnAngle;
     }
 
 
     @Override
     public String toString() {
         return String.format(
-                "%s { startBeacon = \"%s\", endBeacon = \"%s\", zone = \"%s\", travelTime = %.1f, absoluteAngle = %.0f, relativeAngle = %.0f",
+                "%s { startBeacon = \"%s\", endBeacon = \"%s\", zone = \"%s\", travelTime = %.1f, travelAngle = %s, turnAngle = %.0f",
                 getClass().getSimpleName(),
                 startBeacon.getName(),
                 endBeacon.getName(),
                 zone.getName(),
                 travelTime,
-                absoluteAngle,
-                relativeAngle);
+                (travelAngle != null) ? String.format("%.0f", travelAngle) : "null",
+                turnAngle);
     }
 
 
@@ -62,12 +62,12 @@ public class Step {
         return travelTime;
     }
 
-    public double getAbsoluteAngle() {
-        return absoluteAngle;
+    public Double getTravelAngle() {
+        return travelAngle;
     }
 
-    public double getRelativeAngle() {
-        return relativeAngle;
+    public double getTurnAngle() {
+        return turnAngle;
     }
 
 }

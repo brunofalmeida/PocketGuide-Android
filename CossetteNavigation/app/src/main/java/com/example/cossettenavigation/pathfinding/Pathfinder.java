@@ -78,17 +78,18 @@ public class Pathfinder {
                     return null;
 
                 } else {
-                    Step step;
+                    Double travelAngle = Map.estimateTravelAngle(beaconOne, beaconTwo);
 
-                    double absoluteAngle = Map.estimateTravelAngle(beaconOne, beaconTwo);
-
-                    if (i == 0) {
-                        step = new Step(beaconOne, beaconTwo, zone, absoluteAngle, 90);
+                    double turnAngle;
+                    if (    (i > 0) &&
+                            (travelAngle != null) &&
+                            (steps.get(i - 1).getTravelAngle() != null) ) {
+                        turnAngle = travelAngle - steps.get(i - 1).getTravelAngle();
                     } else {
-                        step = new Step(beaconOne, beaconTwo, zone, absoluteAngle, 90 + (absoluteAngle - steps.get(i - 1).getAbsoluteAngle()));
+                        turnAngle = 0;
                     }
 
-                    steps.add(step);
+                    steps.add(new Step(beaconOne, beaconTwo, zone, travelAngle, turnAngle));
                 }
             }
 
