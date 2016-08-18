@@ -68,6 +68,17 @@ public class Map {
         return allBeacons;
     }
 
+    private static void setGridDimensions() {
+        for (Beacon beacon : getAllBeacons()) {
+            if (beacon.getXPosition() > gridWidth) {
+                gridWidth = beacon.getXPosition();
+            }
+            if (beacon.getYPosition() > gridHeight) {
+                gridHeight = beacon.getYPosition();
+            }
+        }
+    }
+
     /**
      * Assumes that both beacons are part of the same zone and have a straight-line connection.
      * @return The estimated travel time (in seconds) between the two beacons.
@@ -166,10 +177,6 @@ public class Map {
 
         // Start floor 2
 
-        gridWidth = 100;
-        gridHeight = 100;
-        metresPerGridUnit = 0.1;
-
         Floor floor2 = addFloor(new Floor("Floor 2", floor1, 5));
 
         AnchorBeacon white15 = addAnchorBeacon(new AnchorBeacon(
@@ -217,9 +224,14 @@ public class Map {
         // End Zones
 
 
+        // Grid dimensions
+        setGridDimensions();
+
+
 
 
         // Log all mapping data
+        Log.v(TAG, String.format("Grid: %.0f x %.0f", gridWidth, gridHeight));
         for (Floor floor : floors) {
             Log.v(TAG, floor.toString());
         }
