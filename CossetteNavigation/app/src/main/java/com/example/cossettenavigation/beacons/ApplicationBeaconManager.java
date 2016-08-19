@@ -218,6 +218,26 @@ public class ApplicationBeaconManager extends Application {
                 beacon.getMinor()));
     }
 
+    public com.example.cossettenavigation.map.Beacon getNearestBeacon() {
+        if (trackedBeacons.size() > 0) {
+            double minAccuracy = Double.POSITIVE_INFINITY;
+            com.example.cossettenavigation.map.Beacon minBeacon = null;
+
+            for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()) {
+                if (trackedBeacon.getValue().getEstimatedAccuracy() < minAccuracy) {
+                    minAccuracy = trackedBeacon.getValue().getEstimatedAccuracy();
+                    minBeacon = trackedBeacon.getValue().getBeacon();
+                }
+            }
+
+            return minBeacon;
+        }
+
+        else {
+            return null;
+        }
+    }
+
 
 
     /**
