@@ -8,14 +8,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -187,12 +185,12 @@ public class SearchActivity extends AppCompatActivity {
 
             // Check if an existing view is being reused, otherwise inflate the view
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_2, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.two_line_list_item, parent, false);
             }
 
             // Lookup view for data
-            TextView text1 = (TextView) convertView.findViewById(android.R.id.text1);
-            TextView text2 = (TextView) convertView.findViewById(android.R.id.text2);
+            TextView text1 = (TextView) convertView.findViewById(R.id.text1);
+            TextView text2 = (TextView) convertView.findViewById(R.id.text2);
 
             // Populate the data into the template view using the data object
             text1.setText(zone.getName());

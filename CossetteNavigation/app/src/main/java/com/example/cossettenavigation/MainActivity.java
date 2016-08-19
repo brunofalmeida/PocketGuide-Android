@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         instruction=new TextView(this);
         instruction.setTextColor(getResources().getColor(android.R.color.white));
-        instruction.setTextSize(TypedValue.COMPLEX_UNIT_DIP,55);
+        instruction.setTextSize(TypedValue.COMPLEX_UNIT_DIP,32);
 
         int arrowWidth=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
         int arrowHeight=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
@@ -133,8 +133,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         instructionParams.gravity=Gravity.BOTTOM;
 
         //instruction.setText("a a a a a a a a a a a");
-        instructionParams.setMarginStart(32);
-        instructionParams.setMarginEnd(200);
+        instructionParams.setMargins(32, 0, 200, 32);
 
         direction.setLayoutParams(arrowParams);
         instruction.setLayoutParams(instructionParams);
