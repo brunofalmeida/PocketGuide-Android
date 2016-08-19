@@ -66,7 +66,7 @@ public class SearchActivity extends AppCompatActivity {
                 intent.putExtra(MainActivity.INTENT_KEY_PATH, Map.testPath);
                 startActivity(intent);
             }
-        }, 5000);
+        }, 60000);
     }
 
     @Override

@@ -254,11 +254,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private void startStep(final Step step) {
         Log.v(TAG, "startStep()");
 
-        direction.setVisibility(View.VISIBLE);
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                direction.setVisibility(View.VISIBLE);
+
                 // Show turn
                 direction.setRotation((float) step.getTurnAngle());
                 instruction.setText(step.getTurnDescription());
