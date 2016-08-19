@@ -12,10 +12,11 @@ import java.util.ArrayList;
 public class Zone implements Serializable {
 
     public enum ZoneType {
-        HALLWAY("hallway"),
-        ROOM("room"),
-        STAIRS("stairs"),
-        ELEVATOR("elevator");
+        HALLWAY("Hallway"),
+        ROOM("Room"),
+        STAIRS("Stairs"),
+        ELEVATOR("Elevator"),
+        ENTRANCE("Entrance");
 
         public final String lowercaseDescription;
 

@@ -98,6 +98,8 @@ public class Map {
                 return metres / STAIRS_TRAVEL_SPEED;
             case ELEVATOR:
                 return metres / ELEVATOR_TRAVEL_SPEED;
+            case ENTRANCE:
+                return metres / WALKING_TRAVEL_SPEED;
             default:
                 Log.e(TAG, "estimateTravelTime(): ZoneType not found");
                 return metres / WALKING_TRAVEL_SPEED;
@@ -183,6 +185,18 @@ public class Map {
                 white5, 2, 15,
                 DEFAULT_UUID, 65261, 60647));
 
+        AnchorBeacon white3 = addAnchorBeacon(new AnchorBeacon(
+                "white3 - F1",
+                floor1,
+                white10, -2,20,
+                DEFAULT_UUID, 9953, 12088));
+
+        AnchorBeacon white11 = addAnchorBeacon(new AnchorBeacon(
+                "white11 - F1",
+                floor1,
+                white10, -5, 0,
+                DEFAULT_UUID, 18120, 25600));
+
         // End floor 1
 
 
@@ -208,19 +222,37 @@ public class Map {
                 white1, 2, -3,
                 DEFAULT_UUID, 27415, 8243));
 
-        AnchorBeacon white9 = addAnchorBeacon(new AnchorBeacon(
-                "white9 - F2",
+        AnchorBeacon white19 = addAnchorBeacon(new AnchorBeacon(
+                "white19 - F2",
                 floor2,
                 white1, -3, -5,
                 DEFAULT_UUID, 47609, 17713));
 
+        AnchorBeacon white18 = addAnchorBeacon(new AnchorBeacon(
+                "white18 - F2",
+                floor2,
+                white15,-12,0,
+                DEFAULT_UUID, 3531, 48649));
+
         // End floor 2
+
+        // Start floor 3
+
+        Floor floor3 = addFloor(new Floor("Floor 3", floor2, 2));
+
+        AnchorBeacon white12 = addAnchorBeacon(new AnchorBeacon(
+                "white12 - F3",
+                floor3,
+                white15, 5, 0,
+                DEFAULT_UUID, 64248, 32245));
+
+        // End floor 3
 
 
         // Zones
 
         Zone z1 = addZone(new Zone("Main Hallway - Floor 1", Zone.ZoneType.HALLWAY));
-        z1.addAnchorBeacons(white17, white10);
+        z1.addAnchorBeacons(white17, white10, white3);
         z1.addSupportBeacons(white5);
 
         Zone z2 = addZone(new Zone("Stairs - Floor 1 to Floor 2", Zone.ZoneType.STAIRS));
@@ -230,7 +262,22 @@ public class Map {
         z3.addAnchorBeacons(white15, white1);
 
         Zone z4 = addZone(new Zone("Open Area - Floor 2", Zone.ZoneType.ROOM));
-        z4.addAnchorBeacons(white25, white9, white1);
+        z4.addAnchorBeacons(white25, white19, white1);
+
+        Zone z5 = addZone(new Zone("Front Entrance - Floor 1",Zone.ZoneType.ENTRANCE));
+        z5.addAnchorBeacons(white17);
+
+        Zone z6 = addZone(new Zone("Main Intersection - Floor 1", Zone.ZoneType.HALLWAY));
+        z6.addAnchorBeacons(white10, white11);
+
+        Zone z7 = addZone(new Zone("Stairs - Floor 2 to Floor 3", Zone.ZoneType.STAIRS));
+        z7.addAnchorBeacons(white15, white12);
+
+        Zone z8 = addZone(new Zone("Elevator - Floor 1 to Floor 2,", Zone.ZoneType.ELEVATOR));
+        z8.addAnchorBeacons(white18, white11);
+
+        Zone z9 = addZone(new Zone("Games Room - Floor 2", Zone.ZoneType.HALLWAY));
+        z9.addAnchorBeacons(white15,white18);
 
         // End Zones
 
