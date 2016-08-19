@@ -13,7 +13,6 @@ public class Path {
     private ArrayList<Step> steps;
 
 
-
     public Path(double travelTime, ArrayList<Step> steps) {
         this.travelTime = travelTime;
         this.steps = steps;

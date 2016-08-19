@@ -11,10 +11,16 @@ import java.util.ArrayList;
 public class Zone {
 
     public static enum ZoneType {
-        HALLWAY,
-        ROOM,
-        STAIRS,
-        ELEVATOR
+        HALLWAY("hallway"),
+        ROOM("room"),
+        STAIRS("stairs"),
+        ELEVATOR("elevator");
+
+        public final String lowercaseDescription;
+
+        ZoneType(String lowercaseDescription) {
+            this.lowercaseDescription = lowercaseDescription;
+        }
     }
 
     private String name;

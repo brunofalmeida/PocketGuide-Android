@@ -15,7 +15,7 @@ public class Step {
     private Zone zone;
     private double travelTime;
 
-    // In degrees
+    // In degrees (clockwise from up)
     private Double travelAngle;
     private double turnAngle;
 
@@ -29,20 +29,31 @@ public class Step {
         this.travelTime = Map.estimateTravelTime(startBeacon, endBeacon, zone);
         this.travelAngle = travelAngle;
         this.turnAngle = turnAngle;
+
+        if (this.travelAngle != null) {
+            while (this.travelAngle < 0) {
+                this.travelAngle += 360;
+            }
+        }
+        while (this.turnAngle < 0) {
+            this.turnAngle += 360;
+        }
     }
 
 
     @Override
     public String toString() {
         return String.format(
-                "%s { startBeacon = \"%s\", endBeacon = \"%s\", zone = \"%s\", travelTime = %.1f, travelAngle = %s, turnAngle = %.0f",
+                "%s { startBeacon = \"%s\", endBeacon = \"%s\", zone = \"%s\", travelTime = %.1f, travelAngle = %s, turnAngle = %.0f, getTurnDescription() = \"%s\", getTravelDescription() = \"%s\"",
                 getClass().getSimpleName(),
                 startBeacon.getName(),
                 endBeacon.getName(),
                 zone.getName(),
                 travelTime,
                 (travelAngle != null) ? String.format("%.0f", travelAngle) : "null",
-                turnAngle);
+                turnAngle,
+                getTurnDescription(),
+                getTravelDescription());
     }
 
 
@@ -68,6 +79,57 @@ public class Step {
 
     public double getTurnAngle() {
         return turnAngle;
+    }
+
+    private String getTurnAngleDescription() {
+        if (turnAngle == 0) {
+            return "forward";
+        } else if (0 < turnAngle && turnAngle <= 45) {
+            return "slightly right";
+        } else if (45 < turnAngle && turnAngle <= 135) {
+            return "right";
+        } else if (135 < turnAngle && turnAngle <= 225) {
+            return "backward";
+        } else if (225 < turnAngle && turnAngle <= 315) {
+            return "left";
+        } else if (315 < turnAngle && turnAngle < 360) {
+            return "slightly left";
+        } else {
+            return "";
+        }
+    }
+
+    public String getTurnDescription() {
+        if (turnAngle == 0) {
+            return "";
+        }
+
+        else {
+            switch (zone.getZoneType()) {
+                case HALLWAY:
+                case ROOM:
+                    return "Turn " + getTurnAngleDescription();
+                case STAIRS:
+                case ELEVATOR:
+                    return "Turn " + getTurnAngleDescription() + " towards the " +
+                            zone.getZoneType().lowercaseDescription;
+                default:
+                    return "";
+            }
+        }
+    }
+
+    public String getTravelDescription() {
+        switch (zone.getZoneType()) {
+            case HALLWAY:
+            case ROOM:
+                return String.format("Walk %.0f metres ahead", Map.estimateTravelTime(startBeacon, endBeacon, zone));
+            case STAIRS:
+            case ELEVATOR:
+                return "Take the " + zone.getZoneType().lowercaseDescription + " to " + endBeacon.getFloor().getName();
+            default:
+                return "";
+        }
     }
 
 }
