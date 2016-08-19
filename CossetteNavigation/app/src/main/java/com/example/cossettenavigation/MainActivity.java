@@ -144,6 +144,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         beaconManager = (ApplicationBeaconManager) getApplication();
 
+        final TextView debugView = (TextView) findViewById(R.id.debug_view);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        debugView.setText(beaconManager.getTrackedBeaconsDescription());
+                    }
+                });
+            }
+        }, 1, 100);
+
+
         direction.setVisibility(View.INVISIBLE);
 
         // Set up navigation if a Path is provided
