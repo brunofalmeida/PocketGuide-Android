@@ -2,12 +2,13 @@ package com.example.cossettenavigation.map;
 
 import com.example.cossettenavigation.Utilities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  */
-public class Floor {
+public class Floor implements Serializable {
 
     private String name;
 

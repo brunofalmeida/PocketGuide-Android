@@ -2,12 +2,13 @@ package com.example.cossettenavigation.pathfinding;
 
 import com.example.cossettenavigation.Utilities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  */
-public class Path {
+public class Path implements Serializable {
 
     private double travelTime;
     private ArrayList<Step> steps;

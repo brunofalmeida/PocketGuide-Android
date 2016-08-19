@@ -2,15 +2,16 @@ package com.example.cossettenavigation.map;
 
 import com.example.cossettenavigation.Utilities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * A key area within a floor or building.
  * @see Map
  */
-public class Zone {
+public class Zone implements Serializable {
 
-    public static enum ZoneType {
+    public enum ZoneType {
         HALLWAY("hallway"),
         ROOM("room"),
         STAIRS("stairs"),

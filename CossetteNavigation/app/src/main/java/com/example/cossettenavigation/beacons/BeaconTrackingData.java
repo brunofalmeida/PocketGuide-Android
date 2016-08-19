@@ -54,6 +54,8 @@ public class BeaconTrackingData {
         proximityMeasurements.add(Utils.computeProximity(beacon));
     }
 
+    // TODO - fix bug - weight is an int, *= 1.5 always rounds down
+    // TODO - require minimum number of measurements?
     public double getEstimatedAccuracy() {
         double numerator = 0;
         double denominator = 0;

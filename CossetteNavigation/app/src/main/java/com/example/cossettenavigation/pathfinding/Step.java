@@ -4,10 +4,12 @@ import com.example.cossettenavigation.map.Beacon;
 import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.Zone;
 
+import java.io.Serializable;
+
 /**
  *
  */
-public class Step {
+public class Step implements Serializable {
 
     private Beacon startBeacon;
     private Beacon endBeacon;
