@@ -11,6 +11,10 @@ import android.view.Menu;
 import android.widget.Toast;
 
 import com.example.cossettenavigation.map.DatabaseHelper;
+import com.example.cossettenavigation.map.Map;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class SearchActivity extends AppCompatActivity {
@@ -52,6 +56,17 @@ public class SearchActivity extends AppCompatActivity {
             if (location[i].toLowerCase().contains(query.toLowerCase()))
                 searchResults.add(location[i]);*/
 
+
+        // TODO - remove test navigation (automatic switch to MainActivity)
+        final SearchActivity activity = this;
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(activity, MainActivity.class);
+                intent.putExtra(MainActivity.INTENT_KEY_PATH, Map.testPath);
+                startActivity(intent);
+            }
+        }, 60000);
     }
 
     @Override

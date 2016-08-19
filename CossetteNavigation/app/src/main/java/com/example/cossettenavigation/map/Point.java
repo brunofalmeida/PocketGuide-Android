@@ -1,9 +1,11 @@
 package com.example.cossettenavigation.map;
 
+import java.io.Serializable;
+
 /**
  * A 2-dimensional point with double precision.
  */
-public class Point {
+public class Point implements Serializable {
 
     public double x;
     public double y;
@@ -17,7 +19,7 @@ public class Point {
     @Override
     public String toString() {
         return String.format(
-                "%s { x = %.1f, y = %.1f }",
+                "%s { x = %.0f, y = %.0f }",
                 getClass().getSimpleName(), x, y);
     }
 

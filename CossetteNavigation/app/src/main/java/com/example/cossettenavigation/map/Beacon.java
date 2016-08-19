@@ -1,12 +1,13 @@
 package com.example.cossettenavigation.map;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
 /**
  * A beacon on the map, defined with a name, grid position, and identifiers.
  */
-public abstract class Beacon {
+public abstract class Beacon implements Serializable {
 
     private static final String TAG = "Beacon";
 

@@ -2,19 +2,26 @@ package com.example.cossettenavigation.map;
 
 import com.example.cossettenavigation.Utilities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * A key area within a floor or building.
  * @see Map
  */
-public class Zone {
+public class Zone implements Serializable {
 
-    public static enum ZoneType {
-        HALLWAY,
-        ROOM,
-        STAIRS,
-        ELEVATOR
+    public enum ZoneType {
+        HALLWAY("hallway"),
+        ROOM("room"),
+        STAIRS("stairs"),
+        ELEVATOR("elevator");
+
+        public final String lowercaseDescription;
+
+        ZoneType(String lowercaseDescription) {
+            this.lowercaseDescription = lowercaseDescription;
+        }
     }
 
     private String name;
@@ -37,7 +44,7 @@ public class Zone {
     @Override
     public String toString() {
         return String.format(
-                "%s { name = %s, zoneType = %s, anchorBeacons = %s, supportBeacons = %s, floors = %s }",
+                "%s { name = \"%s\", zoneType = %s, anchorBeacons = %s, supportBeacons = %s, floors = %s }",
                 getClass().getSimpleName(),
                 name,
                 zoneType.name(),

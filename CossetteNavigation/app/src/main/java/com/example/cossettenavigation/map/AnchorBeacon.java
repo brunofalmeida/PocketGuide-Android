@@ -2,13 +2,14 @@ package com.example.cossettenavigation.map;
 
 import com.example.cossettenavigation.Utilities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * A beacon placed in a key location and used to define zones.
  * @see Map
  */
-public class AnchorBeacon extends Beacon implements Comparable {
+public class AnchorBeacon extends Beacon implements Comparable, Serializable {
 
     private ArrayList<Zone> zones = new ArrayList<>();
 
