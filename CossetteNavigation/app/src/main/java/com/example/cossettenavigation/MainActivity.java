@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }, 1, 100);
 
 
-        direction.setVisibility(View.INVISIBLE);
+        //direction.setVisibility(View.INVISIBLE);
 
         // Set up navigation if a Path is provided
         Bundle extras = getIntent().getExtras();
