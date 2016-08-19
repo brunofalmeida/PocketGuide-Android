@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
@@ -23,6 +24,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.estimote.sdk.SystemRequirementsChecker;
@@ -61,10 +64,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private boolean cVisible;
     private boolean cGranted;
     private FrameLayout m_camera_view = null;
+    private LinearLayout bottomBar;
     private CameraView mCameraView = null;
 
     private ImageView direction;
     private TextView instruction;
+    private ListView nextStep;
 
     private ApplicationBeaconManager beaconManager;
 
@@ -91,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         setSupportActionBar(toolbar);
 
         m_camera_view = (FrameLayout) findViewById(R.id.camera_view);
+        bottomBar=(LinearLayout) findViewById(R.id.bottomBar);
 
         mVisible = true;
 
@@ -124,6 +130,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         instruction.setTextColor(getResources().getColor(R.color.colorAccent));
         instruction.setTextSize(TypedValue.COMPLEX_UNIT_DIP,55);
 
+        nextStep=(ListView) findViewById(R.id.nextStep);
+
         int arrowWidth=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
         int arrowHeight=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
 
@@ -137,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         instruction.setLayoutParams(instructionParams);
 
         m_camera_view.addView(direction);
-        m_camera_view.addView(instruction);
+        bottomBar.addView(instruction);
 
         beaconManager = (ApplicationBeaconManager) getApplication();
 
