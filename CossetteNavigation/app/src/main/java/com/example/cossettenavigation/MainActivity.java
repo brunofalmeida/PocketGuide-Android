@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         direction.setImageResource(R.drawable.ic_arrow);
 
         instruction=new TextView(this);
-        instruction.setTextColor(getResources().getColor(R.color.colorAccent));
+        instruction.setTextColor(getResources().getColor(android.R.color.white));
         instruction.setTextSize(TypedValue.COMPLEX_UNIT_DIP,55);
 
         int arrowWidth=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
@@ -131,6 +131,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         arrowParams.gravity=Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
         instructionParams.gravity=Gravity.BOTTOM;
+
+        //instruction.setText("a a a a a a a a a a a");
+        instructionParams.setMarginStart(32);
+        instructionParams.setMarginEnd(200);
 
         direction.setLayoutParams(arrowParams);
         instruction.setLayoutParams(instructionParams);
