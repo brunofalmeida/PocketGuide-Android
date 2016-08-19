@@ -38,7 +38,6 @@ import java.util.TimerTask;
 /*
     TODO - go through Path Step's - check beacon tracking data/time elapsed to determine when to switch steps
     TODO - show 3 steps at a time - arrows+text for show previous/current/next direction
-    TODO - add debug text view in MainActivity
     TODO - stretch map preview in DebugActivity
     TODO - add distance/time units in logs
     TODO - trilaterate position in 3D

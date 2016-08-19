@@ -82,6 +82,8 @@ public class ApplicationBeaconManager extends Application {
         }, 1, 1000);
 
         beaconManager = new BeaconManager(this);
+        //setNormalForegroundScan();
+        setResponsiveForegroundScan();
 
         // Callback when the beacon manager has connected to the beacon service
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
@@ -95,6 +97,14 @@ public class ApplicationBeaconManager extends Application {
                 startScanning();
             }
         });
+    }
+
+    private void setNormalForegroundScan() {
+        beaconManager.setForegroundScanPeriod(1000, 0);
+    }
+
+    private void setResponsiveForegroundScan() {
+        beaconManager.setForegroundScanPeriod(250, 0);
     }
 
 
