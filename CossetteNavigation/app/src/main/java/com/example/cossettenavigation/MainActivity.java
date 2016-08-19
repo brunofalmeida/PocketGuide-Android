@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public static final String INTENT_KEY_PATH = "path";
 
-    private static double MAX_BEACON_DISTANCE_FOR_SWITCHING_STEPS = 5;
+    private static double MAX_BEACON_DISTANCE_FOR_SWITCHING_STEPS = 2;
 
     private boolean mVisible;
     private boolean cVisible;
