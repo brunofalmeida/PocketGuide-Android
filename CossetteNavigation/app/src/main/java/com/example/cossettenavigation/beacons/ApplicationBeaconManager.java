@@ -92,7 +92,7 @@ public class ApplicationBeaconManager extends Application {
                 setMonitoringListener();
                 setRangingListener();
 
-                startMonitoring();
+                startScanning();
             }
         });
     }
@@ -105,28 +105,22 @@ public class ApplicationBeaconManager extends Application {
             @Override
             public void onEnteredRegion(Region region, List<Beacon> list) {
                 Log.v(TAG, "BeaconManager.MonitoringListener.onEnteredRegion()");
-                Log.v(TAG, "Region: " + region);
+                Log.v(TAG, region.toString());
                 for (Beacon beacon : list) {
-                    Log.v(TAG, "Beacon: " + beacon);
+                    Log.v(TAG, beacon.toString());
                 }
 
-                // Start ranging region
-                beaconManager.startRanging(region);
-
-                if (list.size() == 1) {
+                if (list.size() > 0) {
                     updateTrackedBeacon(region, list.get(0));
                 } else {
-                    Log.e(TAG, "Unexpected number of beacons in region: " + list.size());
+                    //Log.v(TAG, "setMonitoringListener(): No beacons in region");
                 }
             }
 
             @Override
             public void onExitedRegion(Region region) {
                 Log.v(TAG, "BeaconManager.MonitoringListener.onExitedRegion()");
-                Log.v(TAG, "Region: " + region);
-
-                // Stop ranging region
-                beaconManager.stopRanging(region);
+                Log.v(TAG, region.toString());
 
                 removeTrackedBeacon(region);
             }
@@ -138,17 +132,17 @@ public class ApplicationBeaconManager extends Application {
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
-/*                Log.v(TAG, "BeaconManager.RangingListener onBeaconsDiscovered()");
+                //Log.v(TAG, "BeaconManager.RangingListener.onBeaconsDiscovered()");
 
-                Log.v(TAG, "Region: " + region);
+/*                Log.v(TAG, region.toString());
                 for (Beacon beacon : list) {
-                    Log.v(TAG, "Beacon: " + beacon);
+                    Log.v(TAG, beacon.toString());
                 }*/
 
-                if (list.size() == 1) {
+                if (list.size() > 0) {
                     updateTrackedBeacon(region, list.get(0));
                 } else {
-                    Log.e(TAG, "Unexpected number of beacons in region: " + list.size());
+                    //Log.v(TAG, "setRangingListener(): No beacons in region");
                 }
             }
         });
@@ -157,14 +151,16 @@ public class ApplicationBeaconManager extends Application {
 
 
 
-    private void startMonitoring() {
+    private void startScanning() {
         // Monitor all beacons
         for (com.example.cossettenavigation.map.Beacon beacon : Map.getAllBeacons()) {
-            beaconManager.startMonitoring(new Region(
+            Region region = new Region(
                     beacon.getName(),
                     beacon.getUUID(),
                     beacon.getMajor(),
-                    beacon.getMinor()));
+                    beacon.getMinor());
+            beaconManager.startMonitoring(region);
+            beaconManager.startRanging(region);
         }
     }
 
@@ -288,14 +284,14 @@ public class ApplicationBeaconManager extends Application {
 
             Point estimatedLocation = new Point(centroid[0] / Map.metresPerGridUnit, centroid[1] / Map.metresPerGridUnit);
 
-            Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
+            //Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
 
             return estimatedLocation;
 
         } else {
-            Log.i(TAG, String.format(
+/*            Log.i(TAG, String.format(
                     "getEstimatedLocation(): Not enough beacons within %.1fm to trilaterate location",
-                    MAX_BEACON_DISTANCE_FOR_TRILATERATION));
+                    MAX_BEACON_DISTANCE_FOR_TRILATERATION));*/
 
             return null;
         }

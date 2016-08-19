@@ -188,7 +188,7 @@ public class Map {
 
         // Start floor 2
 
-        Floor floor2 = addFloor(new Floor("Floor 2", floor1, 5));
+        Floor floor2 = addFloor(new Floor("Floor 2", floor1, 3));
 
         AnchorBeacon white15 = addAnchorBeacon(new AnchorBeacon(
                 "white15 - F2",
