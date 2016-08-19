@@ -139,9 +139,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         m_camera_view.addView(direction);
         m_camera_view.addView(instruction);
 
-
-
-
         beaconManager = (ApplicationBeaconManager) getApplication();
 
         final TextView debugView = (TextView) findViewById(R.id.debug_view);

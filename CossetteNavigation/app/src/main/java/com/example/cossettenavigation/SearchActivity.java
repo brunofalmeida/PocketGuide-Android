@@ -45,7 +45,11 @@ public class SearchActivity extends AppCompatActivity {
 
     private ApplicationBeaconManager beaconManager;
 
-    private String previousText = "Hello World";
+
+    private SearchActivity activity=this;
+    private SearchView searchView;
+
+    private ListView searchSuggestions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +85,6 @@ public class SearchActivity extends AppCompatActivity {
 
 
         // TODO - remove test navigation (automatic switch to MainActivity)
-        final SearchActivity activity = this;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -92,10 +95,14 @@ public class SearchActivity extends AppCompatActivity {
 
         beaconManager = (ApplicationBeaconManager) getApplication();
 
-        final EditText secondarySearch = (EditText) findViewById(R.id.secondary_search);
-        final ListView secondarySearchSuggestions = (ListView) findViewById(R.id.secondary_search_suggestions);
+        ArrayList<Zone> filteredZones = new ArrayList<>();
+        for (Zone zone : Map.zones) {
+            filteredZones.add(zone);
+        }
+        searchSuggestions=(ListView) findViewById(R.id.search_suggestions);
+        searchSuggestions.setAdapter(new ZoneArrayAdapter(activity,filteredZones));
 
-        secondarySearchSuggestions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        searchSuggestions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Zone zone = (Zone) parent.getItemAtPosition(position);
@@ -127,31 +134,6 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
-
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!secondarySearch.getText().toString().equals(previousText)) {
-                            Log.v(TAG, "secondarySearch text changed");
-
-                            ArrayList<Zone> filteredZones = new ArrayList<>();
-                            for (Zone zone : Map.zones) {
-                                if (zone.getName().toLowerCase().contains(secondarySearch.getText().toString().toLowerCase())) {
-                                    filteredZones.add(zone);
-                                }
-                            }
-
-                            previousText = secondarySearch.getText().toString();
-                            secondarySearchSuggestions.setAdapter(new ZoneArrayAdapter(activity, filteredZones));
-                        }
-                    }
-                });
-
-            }
-        }, 1, 100);
     }
 
     @Override
@@ -159,9 +141,26 @@ public class SearchActivity extends AppCompatActivity {
     {
         getMenuInflater().inflate(R.menu.menu_search, menu);
 
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ArrayList<Zone> filteredZones = new ArrayList<>();
+                for (Zone zone : Map.zones) {
+                    if (zone.getName().toLowerCase().contains(newText.toString().toLowerCase())) {
+                        filteredZones.add(zone);
+                    }
+                }
+                searchSuggestions.setAdapter(new ZoneArrayAdapter(activity,filteredZones));
+                return true;
+            }
+        });
 
         return super.onCreateOptionsMenu(menu);
     }
