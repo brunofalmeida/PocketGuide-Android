@@ -7,12 +7,19 @@
     tools:showIn="@layout/activity_main">
 
     <FrameLayout
+        android:id="@+id/camera_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:gravity="center"
-        android:foregroundGravity="center"
-        android:id="@+id/camera_view">
+        android:layout_height="match_parent">
+
     </FrameLayout>
+
+    <TextView
+        android:id="@+id/debug_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="hello"
+        android:translationY="75dp"
+        android:translationX="16dp"
+        android:textColor="@android:color/white"/>
 
 </RelativeLayout>

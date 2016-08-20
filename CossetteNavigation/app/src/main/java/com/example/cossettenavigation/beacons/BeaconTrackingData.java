@@ -17,11 +17,10 @@ public class BeaconTrackingData {
     private ArrayList<Utils.Proximity> proximityMeasurements = new ArrayList<>();
 
 
-
-
     public BeaconTrackingData(com.example.cossettenavigation.map.Beacon beacon) {
         this.beacon = beacon;
     }
+
 
     @Override
     public String toString() {
@@ -37,6 +36,7 @@ public class BeaconTrackingData {
 
         return string;
     }
+
 
     public com.example.cossettenavigation.map.Beacon getBeacon() {
         return beacon;
@@ -54,20 +54,21 @@ public class BeaconTrackingData {
         proximityMeasurements.add(Utils.computeProximity(beacon));
     }
 
+    // TODO - require minimum number of measurements?
     public double getEstimatedAccuracy() {
         double numerator = 0;
         double denominator = 0;
 
-        for (int i = 0, weight = 1;
-             i < accuracyMeasurements.size();
-             i++,       weight *= 2) {
-
-            numerator += weight * accuracyMeasurements.get(i);
+        double weight = 1;
+        for (int i = 0; i < accuracyMeasurements.size(); i++) {
+            numerator += (accuracyMeasurements.get(i) * weight);
             denominator += weight;
+
+            weight *= 1.5;
         }
 
         if (denominator == 0) {
-            return -1;
+            return Double.POSITIVE_INFINITY;
         } else {
             return numerator / denominator;
         }

@@ -6,6 +6,7 @@ import com.example.cossettenavigation.map.Beacon;
 import com.example.cossettenavigation.map.Floor;
 import com.example.cossettenavigation.map.SupportBeacon;
 import com.example.cossettenavigation.map.Zone;
+import com.example.cossettenavigation.pathfinding.Step;
 
 import java.util.ArrayList;
 
@@ -111,6 +112,18 @@ public class Utilities {
             string = string.substring(0, string.length() - 2);
         }
         string += " }";
+        return string;
+    }
+
+    public static String getStepsString(ArrayList<Step> steps) {
+        String string = "{";
+        for (Step step : steps) {
+            string += String.format("\n\t\t%s,", step);
+        }
+        if (string.endsWith(",")) {
+            string = string.substring(0, string.length() - 1) + "\n";
+        }
+        string += "}";
         return string;
     }
 

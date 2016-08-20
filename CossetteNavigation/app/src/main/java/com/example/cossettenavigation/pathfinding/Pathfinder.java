@@ -7,11 +7,12 @@ import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Beacon;
 import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.SupportBeacon;
+import com.example.cossettenavigation.map.Zone;
 
 import java.util.ArrayList;
 
 /**
- * Client code interface for the pathfinding algorithm.
+ * Interface for the pathfinding algorithm.
  */
 public class Pathfinder {
 
@@ -27,18 +28,72 @@ public class Pathfinder {
      * @return The shortest travel time (in seconds); a list of beacons representing the shortest path,
      * beginning with startBeacon and ending with endBeacon. Returns null if no path is found.
      */
-    public static Pair<Double, ArrayList<Beacon>> getShortestPath(Beacon startBeacon, Beacon endBeacon) {
+    public static Path getShortestPath(Beacon startBeacon, Beacon endBeacon) {
+        if (startBeacon == endBeacon) {
+            return new Path(0, new ArrayList<Step>());
+        }
+
+
+        Pair<Double, ArrayList<Beacon>> result = null;
+
         if (startBeacon instanceof SupportBeacon) {
-            return getShortestPath((SupportBeacon) startBeacon, endBeacon);
+            result = getShortestPath((SupportBeacon) startBeacon, endBeacon);
         }
 
         else if (startBeacon instanceof AnchorBeacon) {
-            return getShortestPath((AnchorBeacon) startBeacon, endBeacon);
+            result = getShortestPath((AnchorBeacon) startBeacon, endBeacon);
         }
 
         else {
             Log.e(TAG, "getShortestPath(Beacon, Beacon): Invalid startBeacon type");
             return null;
+        }
+
+
+        if (result == null) {
+            return null;
+
+        } else {
+            // Decompose results
+            double travelTime = result.first;
+            ArrayList<Beacon> beacons = result.second;
+
+            ArrayList<Step> steps = new ArrayList<>();
+
+            // Generate each step
+            for (int i = 0; i < beacons.size() - 1; i++) {
+                Beacon beaconOne = beacons.get(i);
+                Beacon beaconTwo = beacons.get(i + 1);
+
+                // Find the common zone
+                Zone zone = null;
+                for (Zone beaconOneZone : beaconOne.getZones()) {
+                    if (beaconTwo.getZones().contains(beaconOneZone)) {
+                        zone = beaconOneZone;
+                    }
+                }
+
+                if (zone == null) {
+                    Log.e(TAG, "getShortestPath(Beacon, Beacon): Zone for Step " + i + " not found");
+                    return null;
+
+                } else {
+                    Double travelAngle = Map.estimateTravelAngle(beaconOne, beaconTwo);
+
+                    double turnAngle;
+                    if (    (i > 0) &&
+                            (travelAngle != null) &&
+                            (steps.get(i - 1).getTravelAngle() != null) ) {
+                        turnAngle = travelAngle - steps.get(i - 1).getTravelAngle();
+                    } else {
+                        turnAngle = 0;
+                    }
+
+                    steps.add(new Step(beaconOne, beaconTwo, zone, travelAngle, turnAngle));
+                }
+            }
+
+            return new Path(travelTime, steps);
         }
     }
 
@@ -50,12 +105,15 @@ public class Pathfinder {
         for (AnchorBeacon anchorBeacon : startBeacon.getZone().getAnchorBeacons()) {
 
             Pair<Double, ArrayList<Beacon>> testPath = getShortestPath(anchorBeacon, endBeacon);
-            double testTime = Map.estimateTravelTime(startBeacon, anchorBeacon) + testPath.first;
 
-            if (testTime < minimumTime) {
-                minimumTime = testTime;
-                shortestPath = testPath.second;
-                shortestPath.add(0, startBeacon);
+            if (testPath != null) {
+                double testTime = Map.estimateTravelTime(startBeacon, anchorBeacon, startBeacon.getZone()) + testPath.first;
+
+                if (testTime < minimumTime) {
+                    minimumTime = testTime;
+                    shortestPath = testPath.second;
+                    shortestPath.add(0, startBeacon);
+                }
             }
         }
 
@@ -90,12 +148,15 @@ public class Pathfinder {
 
         for (AnchorBeacon anchorBeacon : endBeacon.getZone().getAnchorBeacons()) {
             Pair<Double, ArrayList<Beacon>> testPath = getShortestPath(startBeacon, anchorBeacon);
-            double testTime = testPath.first + Map.estimateTravelTime(anchorBeacon, endBeacon);
 
-            if (testTime < minimumTime) {
-                minimumTime = testTime;
-                shortestPath = testPath.second;
-                shortestPath.add(endBeacon);
+            if (testPath != null) {
+                double testTime = testPath.first + Map.estimateTravelTime(anchorBeacon, endBeacon, endBeacon.getZone());
+
+                if (testTime < minimumTime) {
+                    minimumTime = testTime;
+                    shortestPath = testPath.second;
+                    shortestPath.add(endBeacon);
+                }
             }
         }
 

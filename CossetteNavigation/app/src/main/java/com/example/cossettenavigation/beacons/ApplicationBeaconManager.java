@@ -8,11 +8,8 @@ import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.EstimoteSDK;
 import com.estimote.sdk.Region;
 import com.example.cossettenavigation.Utilities;
-import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.Point;
-import com.example.cossettenavigation.map.SupportBeacon;
-import com.example.cossettenavigation.map.Zone;
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver;
 import com.lemmingapex.trilateration.TrilaterationFunction;
 
@@ -40,7 +37,6 @@ import java.util.TimerTask;
  */
 public class ApplicationBeaconManager extends Application {
 
-
     private final String TAG = "AppBeaconManager";
 
     private final Region ALL_BEACONS_REGION = new Region("All Beacons", null, null, null);
@@ -49,7 +45,7 @@ public class ApplicationBeaconManager extends Application {
      * The maximum distance a beacon can be from the device while being used in the position
      * trilateration algorithm (in metres).
      */
-    private static double MAX_BEACON_TRILATERATION_DISTANCE = 5;
+    private static double MAX_BEACON_DISTANCE_FOR_TRILATERATION = 5;
 
     private BeaconManager beaconManager;
 
@@ -86,19 +82,29 @@ public class ApplicationBeaconManager extends Application {
         }, 1, 1000);
 
         beaconManager = new BeaconManager(this);
+        //setNormalForegroundScan();
+        setResponsiveForegroundScan();
 
         // Callback when the beacon manager has connected to the beacon service
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             @Override
             public void onServiceReady() {
-                Log.v(TAG, "BeaconManager.ServiceReadyCallback onServiceReady()");
+                Log.v(TAG, "BeaconManager.ServiceReadyCallback.onServiceReady()");
 
                 setMonitoringListener();
                 setRangingListener();
 
-                startMonitoring();
+                startScanning();
             }
         });
+    }
+
+    private void setNormalForegroundScan() {
+        beaconManager.setForegroundScanPeriod(1000, 0);
+    }
+
+    private void setResponsiveForegroundScan() {
+        beaconManager.setForegroundScanPeriod(250, 0);
     }
 
 
@@ -108,29 +114,23 @@ public class ApplicationBeaconManager extends Application {
         beaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
             @Override
             public void onEnteredRegion(Region region, List<Beacon> list) {
-                Log.v(TAG, "BeaconManager.MonitoringListener onEnteredRegion()");
-
-                Log.v(TAG, "Region: " + region);
+                Log.v(TAG, "BeaconManager.MonitoringListener.onEnteredRegion()");
+                Log.v(TAG, region.toString());
                 for (Beacon beacon : list) {
-                    Log.v(TAG, "Beacon: " + beacon);
+                    Log.v(TAG, beacon.toString());
                 }
 
-                beaconManager.startRanging(region);
-
-                if (list.size() == 1) {
+                if (list.size() > 0) {
                     updateTrackedBeacon(region, list.get(0));
                 } else {
-                    Log.w(TAG, "Unexpected number of beacons in region: " + list.size());
+                    //Log.v(TAG, "setMonitoringListener(): No beacons in region");
                 }
             }
 
             @Override
             public void onExitedRegion(Region region) {
-                Log.v(TAG, "BeaconManager.MonitoringListener onExitedRegion()");
-
-                Log.v(TAG, "Region: " + region);
-
-                beaconManager.stopRanging(region);
+                Log.v(TAG, "BeaconManager.MonitoringListener.onExitedRegion()");
+                Log.v(TAG, region.toString());
 
                 removeTrackedBeacon(region);
             }
@@ -142,33 +142,35 @@ public class ApplicationBeaconManager extends Application {
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
-/*                Log.v(TAG, "BeaconManager.RangingListener onBeaconsDiscovered()");
+                //Log.v(TAG, "BeaconManager.RangingListener.onBeaconsDiscovered()");
 
-                Log.v(TAG, "Region: " + region);
+/*                Log.v(TAG, region.toString());
                 for (Beacon beacon : list) {
-                    Log.v(TAG, "Beacon: " + beacon);
+                    Log.v(TAG, beacon.toString());
                 }*/
 
-                if (list.size() == 1) {
+                if (list.size() > 0) {
                     updateTrackedBeacon(region, list.get(0));
                 } else {
-                    Log.w(TAG, "Unexpected number of beacons in region: " + list.size());
+                    //Log.v(TAG, "setRangingListener(): No beacons in region");
                 }
             }
         });
     }
 
 
-    private void startMonitoring() {
-//        beaconManager.startMonitoring(ALL_BEACONS_REGION);
 
-        // Monitor all anchor beacons
-        for (AnchorBeacon anchorBeacon : Map.anchorBeacons) {
-            beaconManager.startMonitoring(new Region(
-                    anchorBeacon.getName(),
-                    anchorBeacon.getUUID(),
-                    anchorBeacon.getMajor(),
-                    anchorBeacon.getMinor()));
+
+    private void startScanning() {
+        // Monitor all beacons
+        for (com.example.cossettenavigation.map.Beacon beacon : Map.getAllBeacons()) {
+            Region region = new Region(
+                    beacon.getName(),
+                    beacon.getUUID(),
+                    beacon.getMajor(),
+                    beacon.getMinor());
+            beaconManager.startMonitoring(region);
+            beaconManager.startRanging(region);
         }
     }
 
@@ -188,17 +190,9 @@ public class ApplicationBeaconManager extends Application {
             // Try to find the beacon in the map
             com.example.cossettenavigation.map.Beacon mapBeacon = null;
 
-            for (AnchorBeacon anchorBeacon : Map.anchorBeacons) {
-                if (Utilities.areEqual(region, anchorBeacon)) {
-                    mapBeacon = anchorBeacon;
-                }
-            }
-
-            for (Zone zone : Map.zones) {
-                for (SupportBeacon supportBeacon : zone.getSupportBeacons()) {
-                    if (Utilities.areEqual(region, supportBeacon)) {
-                        mapBeacon = supportBeacon;
-                    }
+            for (com.example.cossettenavigation.map.Beacon testBeacon : Map.getAllBeacons()) {
+                if (Utilities.areEqual(region, testBeacon)) {
+                    mapBeacon = testBeacon;
                 }
             }
 
@@ -206,6 +200,7 @@ public class ApplicationBeaconManager extends Application {
                 Log.e(TAG, String.format(
                         "updateTrackedBeacon(): Tracked beacon not found in map\nregion = %s\nbeacon = %s",
                         region, beacon));
+                return;
             } else {
                 trackedBeacons.put(region, new BeaconTrackingData(mapBeacon));
             }
@@ -221,6 +216,36 @@ public class ApplicationBeaconManager extends Application {
         trackedBeacons.remove(region);
     }
 
+    public BeaconTrackingData getBeaconTrackingData(com.example.cossettenavigation.map.Beacon beacon) {
+        return trackedBeacons.get(new Region(
+                beacon.getName(),
+                beacon.getUUID(),
+                beacon.getMajor(),
+                beacon.getMinor()));
+    }
+
+    public com.example.cossettenavigation.map.Beacon getNearestBeacon() {
+        if (trackedBeacons.size() > 0) {
+            double minAccuracy = Double.POSITIVE_INFINITY;
+            com.example.cossettenavigation.map.Beacon minBeacon = null;
+
+            for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()) {
+                if (trackedBeacon.getValue().getEstimatedAccuracy() < minAccuracy) {
+                    minAccuracy = trackedBeacon.getValue().getEstimatedAccuracy();
+                    minBeacon = trackedBeacon.getValue().getBeacon();
+                }
+            }
+
+            return minBeacon;
+        }
+
+        else {
+            return null;
+        }
+    }
+
+
+
     /**
      * @see <a href="https://github.com/lemmingapex/Trilateration">Trilateration example</a>
      * @return Estimated location (on map grid), or null if not found
@@ -234,11 +259,11 @@ public class ApplicationBeaconManager extends Application {
 
         // Loop through tracked beacons
         for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()) {
-            if (trackedBeacon.getValue().getEstimatedAccuracy() <= MAX_BEACON_TRILATERATION_DISTANCE) {
+            if (trackedBeacon.getValue().getEstimatedAccuracy() <= MAX_BEACON_DISTANCE_FOR_TRILATERATION) {
                 // Add position and distance (in metres)
-                positions.add(new double[]{
+                positions.add(new double[] {
                         trackedBeacon.getValue().getBeacon().getXPosition() * Map.metresPerGridUnit,
-                        trackedBeacon.getValue().getBeacon().getYPosition() * Map.metresPerGridUnit});
+                        trackedBeacon.getValue().getBeacon().getYPosition() * Map.metresPerGridUnit });
                 distances.add(trackedBeacon.getValue().getEstimatedAccuracy());
             }
         }
@@ -269,14 +294,14 @@ public class ApplicationBeaconManager extends Application {
 
             Point estimatedLocation = new Point(centroid[0] / Map.metresPerGridUnit, centroid[1] / Map.metresPerGridUnit);
 
-            Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
+            //Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
 
             return estimatedLocation;
 
         } else {
-            Log.i(TAG, String.format(
+/*            Log.i(TAG, String.format(
                     "getEstimatedLocation(): Not enough beacons within %.1fm to trilaterate location",
-                    MAX_BEACON_TRILATERATION_DISTANCE));
+                    MAX_BEACON_DISTANCE_FOR_TRILATERATION));*/
 
             return null;
         }
@@ -304,7 +329,7 @@ public class ApplicationBeaconManager extends Application {
 
         for (java.util.Map.Entry<Region, BeaconTrackingData> entry : trackedBeacons.entrySet()) {
             string += String.format(
-                    "%s : %.3f m\n",
+                    "%s : %.2f m\n",
                     entry.getKey().getIdentifier(), entry.getValue().getEstimatedAccuracy());
         }
 
@@ -313,7 +338,7 @@ public class ApplicationBeaconManager extends Application {
             string += "Location Unavailable";
         } else {
             string += String.format(
-                    "(%f, %f)",
+                    "(%.2f, %.2f)",
                     estimatedLocation.x, estimatedLocation.y);
         }
 

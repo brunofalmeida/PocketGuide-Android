@@ -2,34 +2,53 @@ package com.example.cossettenavigation.map;
 
 import com.example.cossettenavigation.Utilities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * A key area within a floor or building.
  * @see Map
  */
-public class Zone {
+public class Zone implements Serializable {
+
+    public enum ZoneType {
+        HALLWAY("Hallway"),
+        ROOM("Room"),
+        STAIRS("Stairs"),
+        ELEVATOR("Elevator"),
+        ENTRANCE("Entrance");
+
+        public final String lowercaseDescription;
+
+        ZoneType(String lowercaseDescription) {
+            this.lowercaseDescription = lowercaseDescription;
+        }
+    }
 
     private String name;
+
+    private ZoneType zoneType;
+
+    private ArrayList<Floor> floors = new ArrayList<>();
 
     private ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
     private ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
 
-    private ArrayList<Floor> floors = new ArrayList<>();
 
 
 
-
-    public Zone(String name) {
+    public Zone(String name, ZoneType zoneType) {
         this.name = name;
+        this.zoneType = zoneType;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "%s { name = %s, anchorBeacons = %s, supportBeacons = %s, floors = %s }",
+                "%s { name = \"%s\", zoneType = %s, anchorBeacons = %s, supportBeacons = %s, floors = %s }",
                 getClass().getSimpleName(),
                 name,
+                zoneType.name(),
                 Utilities.getAnchorBeaconNamesString(anchorBeacons),
                 Utilities.getSupportBeaconNamesString(supportBeacons),
                 Utilities.getFloorNamesString(floors));
@@ -37,6 +56,14 @@ public class Zone {
 
     public String getName() {
         return name;
+    }
+
+    public ZoneType getZoneType() {
+        return zoneType;
+    }
+
+    public ArrayList<Floor> getFloors() {
+        return floors;
     }
 
     public ArrayList<AnchorBeacon> getAnchorBeacons() {

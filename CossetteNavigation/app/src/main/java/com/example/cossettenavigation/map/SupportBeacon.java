@@ -2,11 +2,14 @@ package com.example.cossettenavigation.map;
 
 import android.util.Log;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 /**
  * A beacon placed in a supporting location and used to improve location estimates.
  * @see Map
  */
-public class SupportBeacon extends Beacon {
+public class SupportBeacon extends Beacon implements Serializable {
 
     private static final String TAG = "SupportBeacon";
 
@@ -22,19 +25,22 @@ public class SupportBeacon extends Beacon {
      * Constructor using an absolute position.
      */
     public SupportBeacon(String name,
+                         Floor floor,
                          double xPosition,
                          double yPosition,
                          String uuid,
                          int major,
                          int minor) {
 
-        super(name, xPosition, yPosition, uuid, major, minor);
+        super(name, floor, xPosition, yPosition, uuid, major, minor);
+        floor.addSupportBeacon(this);
     }
 
     /**
      * Constructor using a position relative to another beacon.
      */
     public SupportBeacon(String name,
+                         Floor floor,
                          Beacon referenceBeacon,
                          double xPositionOffset,
                          double yPositionOffset,
@@ -42,19 +48,30 @@ public class SupportBeacon extends Beacon {
                          int major,
                          int minor) {
 
-        super(name, referenceBeacon, xPositionOffset, yPositionOffset, uuid, major, minor);
+        super(name, floor, referenceBeacon, xPositionOffset, yPositionOffset, uuid, major, minor);
+        floor.addSupportBeacon(this);
     }
+
 
     @Override
     public String toString() {
         return String.format(
-                "%s { name = \"%s\", position = %s, uuid = %s, major = %d, minor = %d, floor = \"%s\", zone = \"%s\" }",
-                getClass().getSimpleName(), name, position, uuid, major, minor, floor.getName(),
-                zone.getName());
+                "%s { name = \"%s\", floor = \"%s\", position = %s, uuid = %s, major = %d, minor = %d, zone = \"%s\" }",
+                getClass().getSimpleName(),
+                name, floor.getName(), position, uuid, major, minor,
+                (zone != null) ? zone.getName() : "null");
     }
+
 
     public Zone getZone() {
         return zone;
+    }
+
+    @Override
+    public ArrayList<Zone> getZones() {
+        ArrayList<Zone> zones = new ArrayList<>();
+        zones.add(zone);
+        return zones;
     }
 
     public void setZone(Zone zone) {
