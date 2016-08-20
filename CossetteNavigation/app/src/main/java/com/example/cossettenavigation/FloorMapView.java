@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
 import com.example.cossettenavigation.map.Beacon;
+import com.example.cossettenavigation.map.Floor;
 import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.Point;
 
@@ -40,14 +41,13 @@ public class FloorMapView extends View {
         rectanglePaint.setStrokeWidth(25);
 
         anchorBeaconPaint = new Paint();
-        anchorBeaconPaint.setColor(Color.WHITE);
         anchorBeaconPaint.setStyle(Paint.Style.FILL);
         anchorBeaconPaint.setStrokeWidth(75);
 
         anchorBeaconLabelPaint = new Paint();
         anchorBeaconLabelPaint.setColor(Color.GRAY);
         anchorBeaconLabelPaint.setTypeface(Typeface.DEFAULT);
-        anchorBeaconLabelPaint.setTextSize(48);
+        anchorBeaconLabelPaint.setTextSize(36);
         anchorBeaconLabelPaint.setTextAlign(Paint.Align.CENTER);
 
         locationPaint = new Paint();
@@ -76,6 +76,7 @@ public class FloorMapView extends View {
         double mapWidth = Map.gridWidth;
         double mapHeight = Map.gridHeight;
 
+
         // Draw grid outline
         canvas.drawRect(
                 rectangleMargin,
@@ -84,22 +85,36 @@ public class FloorMapView extends View {
                 canvasHeight - rectangleMargin,
                 rectanglePaint);
 
+
         // Draw beacons
-        for (Beacon beacon : Map.getAllBeacons()) {
-            double x = rectangleMargin + (beacon.getXPosition() / mapWidth * rectangleWidth);
-            double y = canvasHeight - (rectangleMargin + (beacon.getYPosition() / mapHeight * rectangleHeight));
+        int floorsUp = 0;
+
+        for (Floor floor : Map.floors) {
+            int colorValue = 255 - (75 * floorsUp);
+            if (colorValue < 100) {
+                colorValue = 100;
+            }
+            anchorBeaconPaint.setColor(Color.argb(255, colorValue, colorValue, colorValue));
+
+            for (Beacon beacon : floor.getAllBeacons()) {
+                double x = rectangleMargin + (beacon.getXPosition() / mapWidth * rectangleWidth);
+                double y = canvasHeight - (rectangleMargin + (beacon.getYPosition() / mapHeight * rectangleHeight));
 
 /*            Log.v(TAG, String.format(
                     "onDraw(): x = %f, y = %f, canvasWidth = %d, canvasHeight = %d",
                     x, y, canvasWidth, canvasHeight));*/
 
-            // Draw location
-            //Log.v(TAG, String.format("onDraw(): x = %.0f, y = %.0f\n%s", x, y, beacon));
-            canvas.drawPoint((float) x, (float) y, anchorBeaconPaint);
+                // Draw location
+                //Log.v(TAG, String.format("onDraw(): x = %.0f, y = %.0f\n%s", x, y, beacon));
+                canvas.drawPoint((float) x, (float) y, anchorBeaconPaint);
 
-            // Draw name
-            canvas.drawText(beacon.getName(), (float) x, (float) y - 60, anchorBeaconLabelPaint);
+                // Draw name
+                canvas.drawText(beacon.getName(), (float) x, (float) y - 60, anchorBeaconLabelPaint);
+            }
+
+            floorsUp++;
         }
+
 
         // Draw estimated location
         Point estimatedLocation = beaconManager.getEstimatedLocation();

@@ -61,6 +61,13 @@ public class Floor implements Serializable {
         return supportBeacons;
     }
 
+    public ArrayList<Beacon> getAllBeacons() {
+        ArrayList<Beacon> beacons = new ArrayList<>();
+        beacons.addAll(anchorBeacons);
+        beacons.addAll(supportBeacons);
+        return beacons;
+    }
+
     public ArrayList<Zone> getZones() {
         return zones;
     }
