@@ -28,8 +28,6 @@ import com.example.cossettenavigation.pathfinding.Path;
 import com.example.cossettenavigation.pathfinding.Pathfinder;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class SearchActivity extends AppCompatActivity {
@@ -82,23 +80,10 @@ public class SearchActivity extends AppCompatActivity {
                 searchResults.add(location[i]);*/
 
 
-        // TODO - remove test navigation (automatic switch to MainActivity)
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                startMainActivityNavigation(Map.testPath);
-            }
-        }, 1000000000);
-
-
         beaconManager = (ApplicationBeaconManager) getApplication();
 
-        ArrayList<Zone> filteredZones = new ArrayList<>();
-        for (Zone zone : Map.zones) {
-            filteredZones.add(zone);
-        }
         searchSuggestions=(ListView) findViewById(R.id.search_suggestions);
-        searchSuggestions.setAdapter(new ZoneArrayAdapter(activity,filteredZones));
+        updateSearchSuggestions("");
 
         searchSuggestions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -134,6 +119,16 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    private void updateSearchSuggestions(String searchText) {
+        ArrayList<Zone> filteredZones = new ArrayList<>();
+        for (Zone zone : Map.zones) {
+            if (zone.getName().toLowerCase().contains(searchText.toLowerCase()) && zone.getIsDestination()) {
+                filteredZones.add(zone);
+            }
+        }
+        searchSuggestions.setAdapter(new ZoneArrayAdapter(activity, filteredZones));
+    }
+
     @Override
     public boolean onCreateOptionsMenu (Menu menu)
     {
@@ -149,13 +144,7 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                ArrayList<Zone> filteredZones = new ArrayList<>();
-                for (Zone zone : Map.zones) {
-                    if (zone.getName().toLowerCase().contains(newText.toString().toLowerCase())) {
-                        filteredZones.add(zone);
-                    }
-                }
-                searchSuggestions.setAdapter(new ZoneArrayAdapter(activity,filteredZones));
+                updateSearchSuggestions(newText);
                 return true;
             }
         });

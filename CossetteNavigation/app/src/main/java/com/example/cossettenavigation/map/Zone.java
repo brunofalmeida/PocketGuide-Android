@@ -26,8 +26,8 @@ public class Zone implements Serializable {
     }
 
     private String name;
-
     private ZoneType zoneType;
+    private boolean isDestination;
 
     private ArrayList<Floor> floors = new ArrayList<>();
 
@@ -37,18 +37,20 @@ public class Zone implements Serializable {
 
 
 
-    public Zone(String name, ZoneType zoneType) {
+    public Zone(String name, ZoneType zoneType, boolean isDestination) {
         this.name = name;
         this.zoneType = zoneType;
+        this.isDestination = isDestination;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "%s { name = \"%s\", zoneType = %s, anchorBeacons = %s, supportBeacons = %s, floors = %s }",
+                "%s { name = \"%s\", zoneType = %s, isDestination = %b, anchorBeacons = %s, supportBeacons = %s, floors = %s }",
                 getClass().getSimpleName(),
                 name,
                 zoneType.name(),
+                isDestination,
                 Utilities.getAnchorBeaconNamesString(anchorBeacons),
                 Utilities.getSupportBeaconNamesString(supportBeacons),
                 Utilities.getFloorNamesString(floors));
@@ -60,6 +62,10 @@ public class Zone implements Serializable {
 
     public ZoneType getZoneType() {
         return zoneType;
+    }
+
+    public boolean getIsDestination() {
+        return isDestination;
     }
 
     public ArrayList<Floor> getFloors() {

@@ -251,32 +251,32 @@ public class Map {
 
         // Zones
 
-        Zone z1 = addZone(new Zone("Main Hallway - Floor 1", Zone.ZoneType.HALLWAY));
+        Zone z1 = addZone(new Zone("Main Hallway - Floor 1", Zone.ZoneType.HALLWAY, true));
         z1.addAnchorBeacons(white17, white10, white3);
         z1.addSupportBeacons(white5);
 
-        Zone z2 = addZone(new Zone("Stairs - Floor 1 to Floor 2", Zone.ZoneType.STAIRS));
+        Zone z2 = addZone(new Zone("Stairs - Floor 1 to Floor 2", Zone.ZoneType.STAIRS, false));
         z2.addAnchorBeacons(white10, white15);
 
-        Zone z3 = addZone(new Zone("Health Lab - Floor 2", Zone.ZoneType.HALLWAY));
+        Zone z3 = addZone(new Zone("Health Lab - Floor 2", Zone.ZoneType.HALLWAY, true));
         z3.addAnchorBeacons(white15, white1);
 
-        Zone z4 = addZone(new Zone("Open Area - Floor 2", Zone.ZoneType.ROOM));
+        Zone z4 = addZone(new Zone("Open Area - Floor 2", Zone.ZoneType.ROOM, true));
         z4.addAnchorBeacons(white25, white19, white1);
 
-        Zone z5 = addZone(new Zone("Front Entrance - Floor 1",Zone.ZoneType.ENTRANCE));
+        Zone z5 = addZone(new Zone("Front Entrance - Floor 1",Zone.ZoneType.ENTRANCE, true));
         z5.addAnchorBeacons(white17);
 
-        Zone z6 = addZone(new Zone("Main Intersection - Floor 1", Zone.ZoneType.HALLWAY));
+        Zone z6 = addZone(new Zone("Main Intersection - Floor 1", Zone.ZoneType.HALLWAY, true));
         z6.addAnchorBeacons(white10, white11);
 
-        Zone z7 = addZone(new Zone("Stairs - Floor 2 to Floor 3", Zone.ZoneType.STAIRS));
+        Zone z7 = addZone(new Zone("Stairs - Floor 2 to Floor 3", Zone.ZoneType.STAIRS, false));
         z7.addAnchorBeacons(white15, white12);
 
-        Zone z8 = addZone(new Zone("Elevator - Floor 1 to Floor 2,", Zone.ZoneType.ELEVATOR));
+        Zone z8 = addZone(new Zone("Elevator - Floor 1 to Floor 2", Zone.ZoneType.ELEVATOR, false));
         z8.addAnchorBeacons(white18, white11);
 
-        Zone z9 = addZone(new Zone("Games Room - Floor 2", Zone.ZoneType.HALLWAY));
+        Zone z9 = addZone(new Zone("Games Room - Floor 2", Zone.ZoneType.HALLWAY, true));
         z9.addAnchorBeacons(white15,white18);
 
         // End Zones
