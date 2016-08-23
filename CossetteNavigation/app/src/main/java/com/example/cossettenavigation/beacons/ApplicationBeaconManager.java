@@ -9,7 +9,7 @@ import com.estimote.sdk.EstimoteSDK;
 import com.estimote.sdk.Region;
 import com.example.cossettenavigation.Utilities;
 import com.example.cossettenavigation.map.Map;
-import com.example.cossettenavigation.map.Point;
+import com.example.cossettenavigation.map.Point2D;
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver;
 import com.lemmingapex.trilateration.TrilaterationFunction;
 
@@ -250,7 +250,7 @@ public class ApplicationBeaconManager extends Application {
      * @see <a href="https://github.com/lemmingapex/Trilateration">Trilateration example</a>
      * @return Estimated location (on map grid), or null if not found
      */
-    public Point getEstimatedLocation() {
+    public Point2D getEstimatedLocation() {
         // Get beacon positions and distances
         // Convert positions to metres
         // { { x, y }, { x, y }, ... }
@@ -292,7 +292,7 @@ public class ApplicationBeaconManager extends Application {
 
 
 
-            Point estimatedLocation = new Point(centroid[0] / Map.metresPerGridUnit, centroid[1] / Map.metresPerGridUnit);
+            Point2D estimatedLocation = new Point2D(centroid[0] / Map.metresPerGridUnit, centroid[1] / Map.metresPerGridUnit);
 
             //Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
 
@@ -333,7 +333,7 @@ public class ApplicationBeaconManager extends Application {
                     entry.getKey().getIdentifier(), entry.getValue().getEstimatedAccuracy());
         }
 
-        Point estimatedLocation = getEstimatedLocation();
+        Point2D estimatedLocation = getEstimatedLocation();
         if (estimatedLocation == null) {
             string += "Location Unavailable";
         } else {
