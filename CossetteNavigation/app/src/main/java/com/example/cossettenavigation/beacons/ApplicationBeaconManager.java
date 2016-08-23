@@ -8,6 +8,7 @@ import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.EstimoteSDK;
 import com.estimote.sdk.Region;
 import com.example.cossettenavigation.Utilities;
+import com.example.cossettenavigation.map.Floor;
 import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.Point3D;
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver;
@@ -310,6 +311,32 @@ public class ApplicationBeaconManager extends Application {
         }
     }
 
+    /**
+     * @return Estimated floor or null.
+     */
+    public Floor getEstimatedFloor() {
+        Point3D estimatedLocation = getEstimatedLocation();
+
+        if (estimatedLocation != null) {
+            double minDistance = Double.POSITIVE_INFINITY;
+            Floor closestFloor = null;
+
+            for (Floor floor : Map.floors) {
+                double distance = Math.abs(estimatedLocation.z - floor.getZPosition());
+
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestFloor = floor;
+                }
+            }
+
+            if (closestFloor != null) {
+                return closestFloor;
+            }
+        }
+
+        return null;
+    }
 
 
 

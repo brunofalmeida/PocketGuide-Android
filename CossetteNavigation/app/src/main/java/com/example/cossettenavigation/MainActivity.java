@@ -36,14 +36,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /*
-    TODO - trilaterate position in 3D - estimate floor/distance/time remaining, help to switch steps
-    TODO - in navigation mode, check time elapsed to help determine when to switch steps
+    TODO - navigation mode - check trilateration/floor/distance/time to help determine when to switch steps
     TODO - show multiple steps at a time - arrows+text for show previous/current/next direction
-    TODO - show current floor/nearby destinations in discovery mode
-    TODO - show current floor/destination in navigation mode
-    TODO - estimate current Zone - closest beacon -> how many zones? -> 1 zone (definite), 2 zones (whichever has the next closest beacon)
+    TODO - discovery mode - show current floor/nearby destinations (using nearby beacons/zones in specified range)
+    TODO - navigation mode - show current floor/destination
     TODO - check that pathfinding only uses 1 step for an elevator/stairs over multiple floors - merge consecutive steps in the same zone?
 
+    TODO - add notifications when within range of beacons of a specific zone - tap to enter navigation?
     TODO - change enable/disable camera icon when toggled
     TODO - add voice directions
     TODO - add voice dictation to search
