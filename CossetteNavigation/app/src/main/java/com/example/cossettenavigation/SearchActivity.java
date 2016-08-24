@@ -41,8 +41,6 @@ public class SearchActivity extends AppCompatActivity {
 
     private ApplicationBeaconManager beaconManager;
 
-
-    private SearchActivity activity=this;
     private SearchView searchView;
 
     private ListView searchSuggestions;
@@ -122,12 +120,15 @@ public class SearchActivity extends AppCompatActivity {
 
     private void updateSearchSuggestions(String searchText) {
         ArrayList<Zone> filteredZones = new ArrayList<>();
+        searchText=searchText.toLowerCase();
         for (Zone zone : Map.zones) {
-            if (zone.getName().toLowerCase().contains(searchText.toLowerCase()) && zone.getIsDestination()) {
+            String zoneName=zone.getName().toLowerCase();
+            String zoneType=zone.getZoneType().toString().toLowerCase();
+            if ((zoneName.contains(searchText)||zoneType.contains(searchText)) && zone.getIsDestination()) {
                 filteredZones.add(zone);
             }
         }
-        searchSuggestions.setAdapter(new ZoneArrayAdapter(activity, filteredZones));
+        searchSuggestions.setAdapter(new ZoneArrayAdapter(SearchActivity.this, filteredZones));
     }
 
     @Override
