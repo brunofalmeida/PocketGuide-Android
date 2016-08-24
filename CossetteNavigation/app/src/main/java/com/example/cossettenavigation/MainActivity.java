@@ -44,6 +44,8 @@ import java.util.TimerTask;
     TODO - show multiple steps at a time - arrows+text for show previous/current/next direction
     TODO - check that pathfinding only uses 1 step for an elevator/stairs over multiple floors - merge consecutive steps in the same zone?
 
+    TODO - fix camera stretch
+
     TODO - add notifications when within range of beacons of a specific zone - tap to enter navigation?
     TODO - change enable/disable camera icon when toggled
     TODO - add voice directions
@@ -133,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         instruction=new TextView(this);
         instruction.setTextColor(getResources().getColor(android.R.color.white));
-        instruction.setTextSize(TypedValue.COMPLEX_UNIT_DIP,32);
+        instruction.setTextSize(TypedValue.COMPLEX_UNIT_DIP,24);
 
         nextStep=(ListView) findViewById(R.id.nextStep);
 
