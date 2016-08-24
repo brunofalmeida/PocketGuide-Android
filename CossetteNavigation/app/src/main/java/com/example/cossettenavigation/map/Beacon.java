@@ -1,19 +1,20 @@
 package com.example.cossettenavigation.map;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
 /**
  * A beacon on the map, defined with a name, grid position, and identifiers.
  */
-public abstract class Beacon {
+public abstract class Beacon implements Serializable {
 
     private static final String TAG = "Beacon";
 
     protected String name;
 
     protected Floor floor;
-    protected Point position;
+    protected Point2D position;
 
     protected UUID uuid;
     protected int major;
@@ -25,7 +26,7 @@ public abstract class Beacon {
     /**
      * Standard constructor.
      */
-    private Beacon(String name, Floor floor, Point position, UUID uuid, int major, int minor) {
+    private Beacon(String name, Floor floor, Point2D position, UUID uuid, int major, int minor) {
         this.name = name;
         this.floor = floor;
         this.position = position;
@@ -45,7 +46,7 @@ public abstract class Beacon {
                   int major,
                   int minor) {
 
-        this(name, floor, new Point(xPosition, yPosition), UUID.fromString(uuid), major, minor);
+        this(name, floor, new Point2D(xPosition, yPosition), UUID.fromString(uuid), major, minor);
     }
 
     /**
@@ -97,7 +98,7 @@ public abstract class Beacon {
         return floor;
     }
 
-    public Point getPosition() {
+    public Point2D getPosition() {
         return position;
     }
 

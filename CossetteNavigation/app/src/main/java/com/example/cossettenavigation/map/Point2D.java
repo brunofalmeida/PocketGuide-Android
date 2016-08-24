@@ -1,15 +1,17 @@
 package com.example.cossettenavigation.map;
 
+import java.io.Serializable;
+
 /**
  * A 2-dimensional point with double precision.
  */
-public class Point {
+public class Point2D implements Serializable {
 
     public double x;
     public double y;
 
 
-    public Point(double x, double y) {
+    public Point2D(double x, double y) {
         this.x = x;
         this.y = y;
     }

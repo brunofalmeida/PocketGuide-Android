@@ -4,10 +4,12 @@ import com.example.cossettenavigation.map.Beacon;
 import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.Zone;
 
+import java.io.Serializable;
+
 /**
  *
  */
-public class Step {
+public class Step implements Serializable {
 
     private Beacon startBeacon;
     private Beacon endBeacon;
@@ -15,34 +17,45 @@ public class Step {
     private Zone zone;
     private double travelTime;
 
-    // In degrees
-    private double absoluteAngle;
-    private double relativeAngle;
+    // In degrees (clockwise from up)
+    private Double travelAngle;
+    private double turnAngle;
 
 
 
 
-    public Step(Beacon startBeacon, Beacon endBeacon, Zone zone, double absoluteAngle, double relativeAngle) {
+    public Step(Beacon startBeacon, Beacon endBeacon, Zone zone, Double travelAngle, double turnAngle) {
         this.startBeacon = startBeacon;
         this.endBeacon = endBeacon;
         this.zone = zone;
         this.travelTime = Map.estimateTravelTime(startBeacon, endBeacon, zone);
-        this.absoluteAngle = absoluteAngle;
-        this.relativeAngle = relativeAngle;
+        this.travelAngle = travelAngle;
+        this.turnAngle = turnAngle;
+
+        if (this.travelAngle != null) {
+            while (this.travelAngle < 0) {
+                this.travelAngle += 360;
+            }
+        }
+        while (this.turnAngle < 0) {
+            this.turnAngle += 360;
+        }
     }
 
 
     @Override
     public String toString() {
         return String.format(
-                "%s { startBeacon = \"%s\", endBeacon = \"%s\", zone = \"%s\", travelTime = %.1f, absoluteAngle = %.0f, relativeAngle = %.0f",
+                "%s { startBeacon = \"%s\", endBeacon = \"%s\", zone = \"%s\", travelTime = %.1f, travelAngle = %s, turnAngle = %.0f, getTurnDescription() = \"%s\", getTravelDescription() = \"%s\"",
                 getClass().getSimpleName(),
                 startBeacon.getName(),
                 endBeacon.getName(),
                 zone.getName(),
                 travelTime,
-                absoluteAngle,
-                relativeAngle);
+                (travelAngle != null) ? String.format("%.0f", travelAngle) : "null",
+                turnAngle,
+                getTurnDescription(),
+                getTravelDescription());
     }
 
 
@@ -62,12 +75,63 @@ public class Step {
         return travelTime;
     }
 
-    public double getAbsoluteAngle() {
-        return absoluteAngle;
+    public Double getTravelAngle() {
+        return travelAngle;
     }
 
-    public double getRelativeAngle() {
-        return relativeAngle;
+    public double getTurnAngle() {
+        return turnAngle;
+    }
+
+    private String getTurnAngleDescription() {
+        if (turnAngle == 0) {
+            return "forward";
+        } else if (0 < turnAngle && turnAngle <= 45) {
+            return "slightly right";
+        } else if (45 < turnAngle && turnAngle <= 135) {
+            return "right";
+        } else if (135 < turnAngle && turnAngle <= 225) {
+            return "backward";
+        } else if (225 < turnAngle && turnAngle <= 315) {
+            return "left";
+        } else if (315 < turnAngle && turnAngle < 360) {
+            return "slightly left";
+        } else {
+            return "";
+        }
+    }
+
+    public String getTurnDescription() {
+        if (turnAngle == 0) {
+            return "";
+        }
+
+        else {
+            switch (zone.getZoneType()) {
+                case HALLWAY:
+                case ROOM:
+                    return "Turn " + getTurnAngleDescription();
+                case STAIRS:
+                case ELEVATOR:
+                    return "Turn " + getTurnAngleDescription() + " towards the " +
+                            zone.getZoneType().lowercaseDescription;
+                default:
+                    return "";
+            }
+        }
+    }
+
+    public String getTravelDescription() {
+        switch (zone.getZoneType()) {
+            case HALLWAY:
+            case ROOM:
+                return String.format("Walk %.0f metres ahead", Map.estimateTravelTime(startBeacon, endBeacon, zone));
+            case STAIRS:
+            case ELEVATOR:
+                return "Take the " + zone.getZoneType().lowercaseDescription + " to " + endBeacon.getFloor().getName();
+            default:
+                return "";
+        }
     }
 
 }

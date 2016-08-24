@@ -2,12 +2,13 @@ package com.example.cossettenavigation.map;
 
 import com.example.cossettenavigation.Utilities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  */
-public class Floor {
+public class Floor implements Serializable {
 
     private String name;
 
@@ -60,6 +61,13 @@ public class Floor {
         return supportBeacons;
     }
 
+    public ArrayList<Beacon> getAllBeacons() {
+        ArrayList<Beacon> beacons = new ArrayList<>();
+        beacons.addAll(anchorBeacons);
+        beacons.addAll(supportBeacons);
+        return beacons;
+    }
+
     public ArrayList<Zone> getZones() {
         return zones;
     }
@@ -77,7 +85,6 @@ public class Floor {
         }
     }
 
-    // TODO - check for valid references
     public void addZone(Zone zone) {
         if (!this.zones.contains(zone)) {
             this.zones.add(zone);

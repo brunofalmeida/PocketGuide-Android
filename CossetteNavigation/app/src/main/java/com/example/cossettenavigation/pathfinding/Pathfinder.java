@@ -16,14 +16,6 @@ import java.util.ArrayList;
  */
 public class Pathfinder {
 
-    // TODO - add Path class - list of Step objects (2 beacons, zone, string description)
-    // TODO - add ZoneType enum - hallway, open room, stairs, elevator
-    // TODO - use Zone type for string description
-    // TODO - account for not starting at a beacon? (go to nearest exit, close/far end of hallway, etc.) - can skip and assume starting beacon
-    // TODO - estimate current Zone - closest beacon -> how many zones? -> 1 zone (definite), 2 zones (whichever has the next closest beacon)
-    // TODO - add constants for average speed by stairs/elevator - calculate estimated distance based on Zone type
-    // TODO - calculate angle for transitioning between steps - round to nearest 90 degree angle -> direction?
-
     private static final String TAG = "Pathfinder";
 
     static double INFINITY = Double.POSITIVE_INFINITY;
@@ -37,6 +29,11 @@ public class Pathfinder {
      * beginning with startBeacon and ending with endBeacon. Returns null if no path is found.
      */
     public static Path getShortestPath(Beacon startBeacon, Beacon endBeacon) {
+        if (startBeacon == endBeacon) {
+            return new Path(0, new ArrayList<Step>());
+        }
+
+
         Pair<Double, ArrayList<Beacon>> result = null;
 
         if (startBeacon instanceof SupportBeacon) {
@@ -76,23 +73,23 @@ public class Pathfinder {
                     }
                 }
 
-                // TODO - calculate absolute and relative angles (replace 90 with calculation)
                 if (zone == null) {
                     Log.e(TAG, "getShortestPath(Beacon, Beacon): Zone for Step " + i + " not found");
                     return null;
 
                 } else {
-                    Step step;
+                    Double travelAngle = Map.estimateTravelAngle(beaconOne, beaconTwo);
 
-                    double absoluteAngle = Map.estimateTravelAngle(beaconOne, beaconTwo);
-
-                    if (i == 0) {
-                        step = new Step(beaconOne, beaconTwo, zone, absoluteAngle, 90);
+                    double turnAngle;
+                    if (    (i > 0) &&
+                            (travelAngle != null) &&
+                            (steps.get(i - 1).getTravelAngle() != null) ) {
+                        turnAngle = travelAngle - steps.get(i - 1).getTravelAngle();
                     } else {
-                        step = new Step(beaconOne, beaconTwo, zone, absoluteAngle, 90 + (absoluteAngle - steps.get(i - 1).getAbsoluteAngle()));
+                        turnAngle = 0;
                     }
 
-                    steps.add(step);
+                    steps.add(new Step(beaconOne, beaconTwo, zone, travelAngle, turnAngle));
                 }
             }
 

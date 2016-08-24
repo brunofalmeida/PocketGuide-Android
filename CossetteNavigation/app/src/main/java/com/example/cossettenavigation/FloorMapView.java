@@ -7,10 +7,11 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.view.View;
 
-import com.example.cossettenavigation.map.AnchorBeacon;
-import com.example.cossettenavigation.map.Map;
-import com.example.cossettenavigation.map.Point;
 import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
+import com.example.cossettenavigation.map.Beacon;
+import com.example.cossettenavigation.map.Floor;
+import com.example.cossettenavigation.map.Map;
+import com.example.cossettenavigation.map.Point3D;
 
 /**
  * Created by Bruno on 2016-08-04.
@@ -40,14 +41,13 @@ public class FloorMapView extends View {
         rectanglePaint.setStrokeWidth(25);
 
         anchorBeaconPaint = new Paint();
-        anchorBeaconPaint.setColor(Color.WHITE);
         anchorBeaconPaint.setStyle(Paint.Style.FILL);
-        anchorBeaconPaint.setStrokeWidth(100);
+        anchorBeaconPaint.setStrokeWidth(75);
 
         anchorBeaconLabelPaint = new Paint();
         anchorBeaconLabelPaint.setColor(Color.GRAY);
         anchorBeaconLabelPaint.setTypeface(Typeface.DEFAULT);
-        anchorBeaconLabelPaint.setTextSize(48);
+        anchorBeaconLabelPaint.setTextSize(36);
         anchorBeaconLabelPaint.setTextAlign(Paint.Align.CENTER);
 
         locationPaint = new Paint();
@@ -68,82 +68,61 @@ public class FloorMapView extends View {
 
         int canvasWidth = canvas.getWidth();
         int canvasHeight = canvas.getHeight();
-        int rectangleMargin = 100;
 
-        int availableCanvasWidth = canvasWidth - (2 * rectangleMargin);
-        int availableCanvasHeight = canvasHeight - (2 * rectangleMargin);
+        int rectangleMargin = 125;
+        int rectangleWidth = canvasWidth - (2 * rectangleMargin);
+        int rectangleHeight = canvasHeight - (2 * rectangleMargin);
 
         double mapWidth = Map.gridWidth;
         double mapHeight = Map.gridHeight;
 
-        double availableCanvasWidthToHeight = (double) availableCanvasWidth / availableCanvasHeight;
-        double mapWidthToHeight = mapWidth / mapHeight;
 
-        int rectangleWidth;
-        int rectangleHeight;
-        double pixelsPerMapUnit;
-
-        // Map is wider than available canvas
-        if (mapWidthToHeight > availableCanvasWidthToHeight) {
-            rectangleWidth = availableCanvasWidth;
-            rectangleHeight = (int)(rectangleWidth / mapWidthToHeight);
-            pixelsPerMapUnit = rectangleWidth / mapWidth;
-        }
-
-        // Map is taller than available canvas
-        else if (mapWidthToHeight < availableCanvasWidthToHeight) {
-            rectangleHeight = availableCanvasHeight;
-            rectangleWidth = (int)(rectangleHeight * mapWidthToHeight);
-            pixelsPerMapUnit = rectangleHeight / mapHeight;
-        }
-
-        // Map and canvas have same dimension ratio
-        else {
-            rectangleWidth = availableCanvasWidth;
-            rectangleHeight = availableCanvasHeight;
-            pixelsPerMapUnit = rectangleWidth / mapWidth;
-        }
-
-        int xMargin = (canvasWidth - rectangleWidth) / 2;
-        int yMargin = (canvasHeight - rectangleHeight) / 2;
-
+        // Draw grid outline
         canvas.drawRect(
-                xMargin,
-                yMargin,
-                canvasWidth - xMargin,
-                canvasHeight - yMargin,
+                rectangleMargin,
+                rectangleMargin,
+                canvasWidth - rectangleMargin,
+                canvasHeight - rectangleMargin,
                 rectanglePaint);
 
 
+        // Draw beacons
+        int floorsUp = 0;
 
+        for (Floor floor : Map.floors) {
+            int colorValue = 255 - (75 * floorsUp);
+            if (colorValue < 100) {
+                colorValue = 100;
+            }
+            anchorBeaconPaint.setColor(Color.argb(255, colorValue, colorValue, colorValue));
 
-        // Test drawPoint
-//        canvas.drawPoint(canvasWidth / 2, canvasHeight / 2, anchorBeaconPaint);
-
-        // Test drawText
-        //canvas.drawText("Test", canvasWidth / 2, canvasHeight / 2, anchorBeaconLabelPaint);
-
-        for (AnchorBeacon anchorBeacon : Map.anchorBeacons) {
-            float x = (float)(anchorBeacon.getXPosition() * pixelsPerMapUnit) + xMargin;
-            float y = (float)(anchorBeacon.getYPosition() * pixelsPerMapUnit) + yMargin;
+            for (Beacon beacon : floor.getAllBeacons()) {
+                double x = rectangleMargin + (beacon.getXPosition() / mapWidth * rectangleWidth);
+                double y = canvasHeight - (rectangleMargin + (beacon.getYPosition() / mapHeight * rectangleHeight));
 
 /*            Log.v(TAG, String.format(
                     "onDraw(): x = %f, y = %f, canvasWidth = %d, canvasHeight = %d",
                     x, y, canvasWidth, canvasHeight));*/
 
-            canvas.drawPoint(x, y, anchorBeaconPaint);
+                // Draw location
+                //Log.v(TAG, String.format("onDraw(): x = %.0f, y = %.0f\n%s", x, y, beacon));
+                canvas.drawPoint((float) x, (float) y, anchorBeaconPaint);
 
-            canvas.drawText(anchorBeacon.getName(), x, y - 100, anchorBeaconLabelPaint);
+                // Draw name
+                canvas.drawText(beacon.getName(), (float) x, (float) y - 60, anchorBeaconLabelPaint);
+            }
+
+            floorsUp++;
         }
 
-        Point estimatedLocation = beaconManager.getEstimatedLocation();
 
+        // Draw estimated location
+        Point3D estimatedLocation = beaconManager.getEstimatedLocation();
         if (estimatedLocation != null) {
-            float x = (float) (estimatedLocation.x * pixelsPerMapUnit) + xMargin;
-            float y = (float) (estimatedLocation.y * pixelsPerMapUnit) + yMargin;
+            double x = rectangleMargin + (estimatedLocation.x / mapWidth * rectangleWidth);
+            double y = canvasHeight - (rectangleMargin + (estimatedLocation.y / mapHeight * rectangleHeight));
 
-            canvas.drawCircle(x, y, 50, locationPaint);
-//            canvas.drawPoint(x, y, locationPaint);
+            canvas.drawCircle((float) x, (float) y, 50, locationPaint);
         }
     }
 

@@ -26,18 +26,44 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.estimote.sdk.SystemRequirementsChecker;
-import com.example.cossettenavigation.map.Map;
+import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
+import com.example.cossettenavigation.beacons.BeaconTrackingData;
+import com.example.cossettenavigation.map.Beacon;
+import com.example.cossettenavigation.map.Floor;
+import com.example.cossettenavigation.map.Zone;
 import com.example.cossettenavigation.pathfinding.Path;
+import com.example.cossettenavigation.pathfinding.Step;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+/*
+    TODO - navigation mode - check trilateration/floor/distance/time to help determine when to switch steps
+    TODO - show multiple steps at a time - arrows+text for show previous/current/next direction
+    TODO - navigation mode - show current floor/destination
+    TODO - check that pathfinding only uses 1 step for an elevator/stairs over multiple floors - merge consecutive steps in the same zone?
+
+    TODO - add notifications when within range of beacons of a specific zone - tap to enter navigation?
+    TODO - change enable/disable camera icon when toggled
+    TODO - add voice directions
+    TODO - add voice dictation to search
+    TODO - add enable/disable audio button
+
+    TODO - add distance/time units in logs
+    TODO - convert all logs from verbose to info
+
+    TODO - account for not starting at a beacon? (go to nearest exit, close/far end of hallway, etc.) - can skip and assume starting beacon
+*/
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String TAG = "MainActivity";
 
     private static int PERMISSION_REQUEST_CODE_CAMERA = 1;
+
+    public static final String INTENT_KEY_PATH = "path";
+
+    private static double MAX_BEACON_DISTANCE_FOR_SWITCHING_STEPS = 2;
 
     private boolean mVisible;
     private boolean cVisible;
@@ -48,13 +74,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private ImageView direction;
     private TextView instruction;
 
-    Path testPath = Map.testPath;
-    int testStepIndex = 0;
+    private ApplicationBeaconManager beaconManager;
+
+    private Path path = null;
+    private int stepIndex = -1;
+    private Timer navigationUpdateTimer = new Timer();
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //Log.v(TAG, "onCreate()");
+        Log.v(TAG, "onCreate()");
 
         super.onCreate(savedInstanceState);
 
@@ -84,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             // Request the write permission on Android 6.0+
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA},
+                    new String[] { Manifest.permission.CAMERA },
                     PERMISSION_REQUEST_CODE_CAMERA);
         } else {
             cameraPermissionGranted();
@@ -96,8 +127,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         direction.setImageResource(R.drawable.ic_arrow);
 
         instruction=new TextView(this);
-        instruction.setTextColor(getResources().getColor(R.color.colorAccent));
-        instruction.setTextSize(TypedValue.COMPLEX_UNIT_DIP,55);
+        instruction.setTextColor(getResources().getColor(android.R.color.white));
+        instruction.setTextSize(TypedValue.COMPLEX_UNIT_DIP,32);
 
         int arrowWidth=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
         int arrowHeight=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
@@ -108,34 +139,171 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         arrowParams.gravity=Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
         instructionParams.gravity=Gravity.BOTTOM;
 
+        //instruction.setText("a a a a a a a a a a a");
+        instructionParams.setMargins(32, 0, 200, 32);
+
         direction.setLayoutParams(arrowParams);
         instruction.setLayoutParams(instructionParams);
 
         m_camera_view.addView(direction);
         m_camera_view.addView(instruction);
 
+        beaconManager = (ApplicationBeaconManager) getApplication();
 
-        if (testPath == null) {
-            Log.e(TAG, "onCreate(): testPath == null");
-        } else {
-            Log.v(TAG, testPath.toString());
+        final TextView debugView = (TextView) findViewById(R.id.debug_view);
 
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (testStepIndex < testPath.getSteps().size()) {
-                        double relativeAngle = testPath.getSteps().get(testStepIndex).getRelativeAngle();
-                        Log.v(TAG, relativeAngle + "");
-                        direction.setRotation((float) (90 - relativeAngle));
-                        testStepIndex++;
-                    } else {
-                        Log.v(TAG, "done path");
-                        cancel();
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Show debug info
+                        debugView.setText(beaconManager.getTrackedBeaconsDescription());
+
+                        // Show floor and nearby destinations
+                        if (path == null) {
+                            String nearbyZones = "";
+
+                            Floor floor = beaconManager.getEstimatedFloor();
+                            if (floor != null) {
+                                nearbyZones += floor.getName() + " - ";
+                            }
+
+                            nearbyZones += "Nearby:";
+
+                            for (Zone zone : beaconManager.getNearbyZones()) {
+                                nearbyZones += "\n" + zone.getName();
+                            }
+                            instruction.setText(nearbyZones);
+                        }
                     }
+                });
+            }
+        }, 1, 100);
+
+
+        //direction.setVisibility(View.INVISIBLE);
+
+        // Set up navigation if a Path is provided
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            path = (Path) extras.getSerializable(INTENT_KEY_PATH);
+
+            if (path != null) {
+                if (path.getSteps().size() > 0) {
+                    startNavigation();
+                } else {
+                    stopNavigation();
+                    instruction.setText("You are already there!");
                 }
-            }, 5000, 5000);
+            }
         }
     }
+
+
+
+
+    /* Navigation */
+
+    private void startNavigation() {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Log.v(TAG, "startNavigation() timer");
+
+                // Steps are left
+                if (stepIndex < path.getSteps().size()) {
+                    boolean isLastStep;
+                    if (stepIndex + 1 < path.getSteps().size()) {
+                        isLastStep = false;
+                    } else {
+                        isLastStep = true;
+                    }
+
+                    Beacon nextBeacon;
+                    if (!isLastStep) {
+                        nextBeacon = path.getSteps().get(stepIndex + 1).getStartBeacon();
+                    } else {
+                        nextBeacon = path.getSteps().get(stepIndex).getEndBeacon();
+                    }
+
+                    // If the next beacon is in range
+                    BeaconTrackingData nextBeaconTrackingData = beaconManager.getBeaconTrackingData(nextBeacon);
+                    if (    nextBeaconTrackingData != null &&
+                            nextBeaconTrackingData.getEstimatedAccuracy() <= MAX_BEACON_DISTANCE_FOR_SWITCHING_STEPS) {
+
+                        stepIndex++;
+                        if (!isLastStep) {
+                            startStep(path.getSteps().get(stepIndex));
+                        }
+                    }
+                }
+
+                // No steps left
+                else {
+                    stopNavigation();
+                    cancel();
+                }
+            }
+        }, 1, 100);
+    }
+
+    private void startStep(final Step step) {
+        Log.v(TAG, "startStep()");
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                direction.setVisibility(View.VISIBLE);
+
+                // Show turn
+                direction.setRotation((float) step.getTurnAngle());
+                instruction.setText(step.getTurnDescription());
+
+                // In 5 seconds, show travel
+                resetNavigationUpdateTimer();
+                navigationUpdateTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.v(TAG, "startStep(): travel timer");
+                                direction.setRotation(0);
+                                instruction.setText(step.getTravelDescription());
+                            }
+                        });
+                    }
+                }, 5000);
+            }
+        });
+    }
+
+    private void stopNavigation() {
+        Log.v(TAG, "stopNavigation()");
+
+        path = null;
+        stepIndex = -1;
+        resetNavigationUpdateTimer();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                direction.setVisibility(View.INVISIBLE);
+                instruction.setText("You have arrived!");
+            }
+        });
+    }
+
+    private void resetNavigationUpdateTimer() {
+        navigationUpdateTimer.cancel();
+        navigationUpdateTimer.purge();
+        navigationUpdateTimer = new Timer();
+    }
+
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
