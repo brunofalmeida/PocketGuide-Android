@@ -29,5 +29,28 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_action_search2"
         android:onClick="onSearchFABClick"/>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="bottom">
+        <LinearLayout
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/red"
+            android:layout_gravity="bottom">
+            <ListView
+                android:id="@+id/nextStep"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </ListView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="hello there"/>
+        </LinearLayout>
+    </FrameLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>
