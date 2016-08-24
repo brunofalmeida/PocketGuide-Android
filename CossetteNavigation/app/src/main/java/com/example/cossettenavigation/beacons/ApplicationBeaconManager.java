@@ -10,7 +10,7 @@ import com.estimote.sdk.Region;
 import com.example.cossettenavigation.Utilities;
 import com.example.cossettenavigation.map.Floor;
 import com.example.cossettenavigation.map.Map;
-import com.example.cossettenavigation.map.Point3D;
+import com.example.cossettenavigation.map.Point2D;
 import com.example.cossettenavigation.map.Zone;
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver;
 import com.lemmingapex.trilateration.TrilaterationFunction;
@@ -269,7 +269,7 @@ public class ApplicationBeaconManager extends Application {
      * @see <a href="https://github.com/lemmingapex/Trilateration">Trilateration example</a>
      * @return Estimated location (on map grid), or null if not found
      */
-    public Point3D getEstimatedLocation() {
+    public Point2D getEstimatedLocation() {
         // Get beacon positions and distances
         // Convert positions to metres
         // { { x, y }, { x, y }, ... }
@@ -281,9 +281,8 @@ public class ApplicationBeaconManager extends Application {
             if (trackedBeacon.getValue().getEstimatedAccuracy() <= MAX_BEACON_DISTANCE_FOR_TRILATERATION) {
                 // Add position and distance (in metres)
                 positions.add(new double[] {
-                        trackedBeacon.getValue().getBeacon().getXPosition()             * Map.metresPerGridUnit,
-                        trackedBeacon.getValue().getBeacon().getYPosition()             * Map.metresPerGridUnit,
-                        trackedBeacon.getValue().getBeacon().getFloor().getZPosition()  * Map.metresPerGridUnit });
+                        trackedBeacon.getValue().getBeacon().getXPosition() * Map.metresPerGridUnit,
+                        trackedBeacon.getValue().getBeacon().getYPosition() * Map.metresPerGridUnit });
                 distances.add(trackedBeacon.getValue().getEstimatedAccuracy());
             }
         }
@@ -291,9 +290,8 @@ public class ApplicationBeaconManager extends Application {
 
         // Trilaterate position
 
-        // If there are 4 or more beacons (required for 3D triangulation)
-        if (positions.size() >= 4) {
-
+        // If there are 3 or more beacons (required for 2D triangulation)
+        if (positions.size() >= 3) {
 /*            double[][] positions = new double[][] { { 5.0, -6.0 }, { 13.0, -15.0 }, { 21.0, -3.0 }, { 12.4, -21.2 } };
             double[] distances = new double[] { 8.06, 13.97, 23.32, 15.31 };*/
 
@@ -310,11 +308,8 @@ public class ApplicationBeaconManager extends Application {
             /*RealVector standardDeviation = optimum.getSigma(0);
             RealMatrix covarianceMatrix = optimum.getCovariances(0);*/
 
-
-
-            Point3D estimatedLocation = new Point3D(centroid[0] / Map.metresPerGridUnit,
-                                                    centroid[1] / Map.metresPerGridUnit,
-                                                    centroid[2] / Map.metresPerGridUnit);
+            Point2D estimatedLocation = new Point2D(centroid[0] / Map.metresPerGridUnit,
+                                                    centroid[1] / Map.metresPerGridUnit);
 
             //Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
 
@@ -333,26 +328,6 @@ public class ApplicationBeaconManager extends Application {
      * @return Estimated floor or null.
      */
     public Floor getEstimatedFloor() {
-        Point3D estimatedLocation = getEstimatedLocation();
-
-        if (estimatedLocation != null) {
-            double minDistance = Double.POSITIVE_INFINITY;
-            Floor closestFloor = null;
-
-            for (Floor floor : Map.floors) {
-                double distance = Math.abs(estimatedLocation.z - floor.getZPosition());
-
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestFloor = floor;
-                }
-            }
-
-            if (closestFloor != null) {
-                return closestFloor;
-            }
-        }
-
         com.example.cossettenavigation.map.Beacon nearestBeacon = getNearestBeacon();
         if (nearestBeacon != null) {
             return nearestBeacon.getFloor();
@@ -386,13 +361,13 @@ public class ApplicationBeaconManager extends Application {
                     entry.getKey().getIdentifier(), entry.getValue().getEstimatedAccuracy());
         }
 
-        Point3D estimatedLocation = getEstimatedLocation();
+        Point2D estimatedLocation = getEstimatedLocation();
         if (estimatedLocation == null) {
             string += "Location Unavailable";
         } else {
             string += String.format(
-                    "(%.1f, %.1f, %.1f)",
-                    estimatedLocation.x, estimatedLocation.y, estimatedLocation.z);
+                    "(%.1f, %.1f)",
+                    estimatedLocation.x, estimatedLocation.y);
         }
 
         return string;
