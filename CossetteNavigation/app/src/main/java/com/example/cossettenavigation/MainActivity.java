@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         //set up arrow and direction description
 
         direction = new ImageView(this);
-        direction.setImageResource(R.drawable.ic_arrow);
+        direction.setImageResource(R.drawable.arrow);
 
         instruction=new TextView(this);
         instruction.setTextColor(getResources().getColor(android.R.color.white));
@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         nextStep=(ListView) findViewById(R.id.nextStep);
 
+        //WIDTH AND HEIGHT SHOULD MATCH THOSE IN ARROW.XML VECTOR FILE, OTHERWISE DRAWABLE WILL BE PIXELATED
         int arrowWidth=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
         int arrowHeight=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
 
