@@ -71,16 +71,28 @@ public class Map {
     }
 
 
+    public static double distanceBetweenPoints(Point3D point1, Point3D point2) {
+        return Math.sqrt(
+                Math.pow(point2.x - point1.x, 2) +
+                Math.pow(point2.y - point1.y, 2) +
+                Math.pow(point2.z - point1.z, 2));
+    }
+
     /**
      * Assumes that both beacons are part of the same zone and have a straight-line connection.
      * @return The estimated travel time (in seconds) between the two beacons.
      */
     public static double estimateTravelTime(Beacon startBeacon, Beacon endBeacon, Zone zone) {
         // Calculate straight line distance
-        double distance = Math.sqrt(
-                Math.pow(endBeacon.getXPosition() - startBeacon.getXPosition(), 2) +
-                Math.pow(endBeacon.getYPosition() - startBeacon.getYPosition(), 2) +
-                Math.pow(endBeacon.getFloor().getZPosition() - startBeacon.getFloor().getZPosition(), 2));
+        double distance = distanceBetweenPoints(
+                new Point3D(
+                        startBeacon.getXPosition(),
+                        startBeacon.getYPosition(),
+                        startBeacon.getFloor().getZPosition()),
+                new Point3D(
+                        endBeacon.getXPosition(),
+                        endBeacon.getYPosition(),
+                        endBeacon.getFloor().getZPosition()) );
 
         double metres = distance * metresPerGridUnit;
 
@@ -217,11 +229,12 @@ public class Map {
                 white1, 2, -3,
                 DEFAULT_UUID, 27415, 8243));
 
-        AnchorBeacon white19 = addAnchorBeacon(new AnchorBeacon(
+        // TODO - fix IDs
+/*        AnchorBeacon white19 = addAnchorBeacon(new AnchorBeacon(
                 "white19 - F2",
                 floor2,
                 white1, -3, -5,
-                DEFAULT_UUID, 47609, 17713));
+                DEFAULT_UUID, 47609, 17713));*/
 
         AnchorBeacon white18 = addAnchorBeacon(new AnchorBeacon(
                 "white18 - F2",
@@ -257,7 +270,7 @@ public class Map {
         z3.addAnchorBeacons(white15, white1);
 
         Zone z4 = addZone(new Zone("Open Area - Floor 2", Zone.ZoneType.ROOM, true));
-        z4.addAnchorBeacons(white25, white19, white1);
+        z4.addAnchorBeacons(white25, /*white19,*/ white1);
 
         Zone z5 = addZone(new Zone("Front Entrance - Floor 1",Zone.ZoneType.ENTRANCE, true));
         z5.addAnchorBeacons(white17);

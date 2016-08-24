@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -25,6 +24,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.estimote.sdk.SystemRequirementsChecker;
@@ -32,6 +32,7 @@ import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
 import com.example.cossettenavigation.beacons.BeaconTrackingData;
 import com.example.cossettenavigation.map.Beacon;
 import com.example.cossettenavigation.map.Floor;
+import com.example.cossettenavigation.map.Point2D;
 import com.example.cossettenavigation.map.Zone;
 import com.example.cossettenavigation.pathfinding.Path;
 import com.example.cossettenavigation.pathfinding.Step;
@@ -40,8 +41,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /*
-    TODO - navigation mode - check trilateration/floor/distance/time to help determine when to switch steps
-    TODO - show multiple steps at a time - arrows+text for show previous/current/next direction
+    TODO - navigation mode - check distance/time to help determine when to switch steps
+    TODO - show multiple steps at a time - arrows+text for show current/next direction
     TODO - check that pathfinding only uses 1 step for an elevator/stairs over multiple floors - merge consecutive steps in the same zone?
 
     TODO - fix camera stretch
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public static final String INTENT_KEY_PATH = "path";
 
-    private static double MAX_BEACON_DISTANCE_FOR_SWITCHING_STEPS = 2;
+    private static double BEACON_RANGE_FOR_SWITCHING_STEPS = 2;
 
     private boolean mVisible;
     private boolean cVisible;
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                         // Navigation mode - Show floor and destination
                         if (path != null) {
-                            String status = "";
+/*                            String status = "";
 
                             Floor floor = beaconManager.getEstimatedFloor();
                             if (floor != null) {
@@ -187,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 status = status.substring(0, status.length() - 1);
                             }
 
-                            instruction.setText(status);
+                            instruction.setText(status);*/
                         }
 
                         // Discovery mode - Show floor and nearby destinations
@@ -220,6 +221,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             path = (Path) extras.getSerializable(INTENT_KEY_PATH);
 
             if (path != null) {
+                Log.i(TAG, path.toString());
+
                 if (path.getSteps().size() > 0) {
                     startNavigation();
                 } else {
@@ -258,11 +261,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     }
 
                     // If the next beacon is in range
-                    BeaconTrackingData nextBeaconTrackingData = beaconManager.getBeaconTrackingData(nextBeacon);
-                    if (    nextBeaconTrackingData != null &&
-                            nextBeaconTrackingData.getEstimatedAccuracy() <= MAX_BEACON_DISTANCE_FOR_SWITCHING_STEPS) {
-
+                    if (shouldSwitchSteps(nextBeacon) || stepIndex == -1) {
                         stepIndex++;
+
                         if (!isLastStep) {
                             startStep(path.getSteps().get(stepIndex));
                         }
@@ -288,7 +289,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                 // Show turn
                 direction.setRotation((float) step.getTurnAngle());
-                instruction.setText(step.getTurnDescription());
+                if (stepIndex == 0) {
+                    instruction.setText("Start at " + step.getStartBeacon().getName());
+                } else {
+                    instruction.setText(step.getTurnDescription());
+                }
 
                 // In 5 seconds, show travel
                 resetNavigationUpdateTimer();
@@ -329,6 +334,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         navigationUpdateTimer.cancel();
         navigationUpdateTimer.purge();
         navigationUpdateTimer = new Timer();
+    }
+
+    private boolean shouldSwitchSteps(Beacon beacon) {
+        Point2D location = beaconManager.getEstimatedLocation();
+        BeaconTrackingData beaconTrackingData = beaconManager.getBeaconTrackingData(beacon);
+
+/*        if (location != null) {
+            if (Map.distanceBetweenPoints(
+                    new Point3D(location.x, location.y, 0),
+                    new Point3D(beacon.getXPosition(), beacon.getYPosition(), 0))
+                        <= BEACON_RANGE_FOR_SWITCHING_STEPS) {
+                return true;
+            }
+        }*/
+
+        if (beaconTrackingData != null) {
+            if (beaconTrackingData.getEstimatedAccuracy() <= BEACON_RANGE_FOR_SWITCHING_STEPS) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -430,7 +457,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         View decorView = getWindow().getDecorView();
-        CoordinatorLayout rootView=(CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+        RelativeLayout rootView = (RelativeLayout) findViewById(R.id.coordinatorLayout);
 
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -458,7 +485,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         View decorView = getWindow().getDecorView();
-        CoordinatorLayout rootView=(CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+        RelativeLayout rootView = (RelativeLayout) findViewById(R.id.coordinatorLayout);
 
         //getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
