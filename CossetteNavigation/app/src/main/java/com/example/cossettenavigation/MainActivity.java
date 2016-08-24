@@ -32,7 +32,6 @@ import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
 import com.example.cossettenavigation.beacons.BeaconTrackingData;
 import com.example.cossettenavigation.map.Beacon;
 import com.example.cossettenavigation.map.Floor;
-import com.example.cossettenavigation.map.Point2D;
 import com.example.cossettenavigation.map.Zone;
 import com.example.cossettenavigation.pathfinding.Path;
 import com.example.cossettenavigation.pathfinding.Step;
@@ -83,9 +82,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private ApplicationBeaconManager beaconManager;
 
+    private Timer discoveryModeTimer = new Timer();
+
+    private Timer navigationTimer = new Timer();
+    private Timer navigationStepUpdateTimer = new Timer();
     private Path path = null;
     private int stepIndex = -1;
-    private Timer navigationUpdateTimer = new Timer();
+
+
 
 
 
@@ -159,10 +163,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         m_camera_view.addView(direction);
         bottomBar.addView(instruction);
 
+
         beaconManager = (ApplicationBeaconManager) getApplication();
+
 
         final TextView debugView = (TextView) findViewById(R.id.debug_view);
 
+        // Periodic general UI update
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -171,65 +178,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     public void run() {
                         // Show debug info
                         debugView.setText(beaconManager.getTrackedBeaconsDescription());
-
-                        // Navigation mode - Show floor and destination
-                        if (path != null) {
-/*                            String status = "";
-
-                            Floor floor = beaconManager.getEstimatedFloor();
-                            if (floor != null) {
-                                status += "On " + floor.getName() + "\n";
-                            }
-
-                            if (path.getDestination() != null) {
-                                status += "Going to " + path.getDestination().getName();
-                            }
-
-                            if (status.endsWith("\n")) {
-                                status = status.substring(0, status.length() - 1);
-                            }
-
-                            instruction.setText(status);*/
-                        }
-
-                        // Discovery mode - Show floor and nearby destinations
-                        else {
-                            String nearbyZones = "";
-
-                            Floor floor = beaconManager.getEstimatedFloor();
-                            if (floor != null) {
-                                nearbyZones += floor.getName() + " - ";
-                            }
-
-                            nearbyZones += "Nearby:";
-
-                            for (Zone zone : beaconManager.getNearbyZones()) {
-                                nearbyZones += "\n" + zone.getName();
-                            }
-                            instruction.setText(nearbyZones);
-                        }
                     }
                 });
             }
         }, 1, 100);
 
 
-        //direction.setVisibility(View.INVISIBLE);
-
-        // Set up navigation if a Path is provided
+        // Check intent for a Path object - discovery or navigation mode
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             path = (Path) extras.getSerializable(INTENT_KEY_PATH);
 
-            if (path != null) {
-                Log.i(TAG, path.toString());
-
-                if (path.getSteps().size() > 0) {
-                    startNavigation();
-                } else {
-                    stopNavigation();
-                    instruction.setText("You are already there!");
-                }
+            if (path == null) {
+                enterDiscoveryMode();
+            } else {
+                enterNavigationMode();
             }
         }
     }
@@ -237,16 +200,110 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 
 
+    /* Discovery */
+
+    private void enterDiscoveryMode() {
+        Log.i(TAG, "enterDiscoveryMode()");
+
+        exitNavigationMode();
+
+        // TODO - set up discovery-specific UI
+
+        // Discovery UI updating
+        discoveryModeTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String nearbyZones = "";
+
+                        Floor floor = beaconManager.getEstimatedFloor();
+                        if (floor != null) {
+                            nearbyZones += floor.getName() + " - ";
+                        }
+
+                        nearbyZones += "Nearby:";
+
+                        for (Zone zone : beaconManager.getNearbyZones()) {
+                            nearbyZones += "\n" + zone.getName();
+                        }
+                        instruction.setText(nearbyZones);
+                    }
+                });
+            }
+        }, 1, 100);
+    }
+
+    private void exitDiscoveryMode() {
+        Log.i(TAG, "exitDiscoveryMode()");
+
+        resetDiscoveryModeTimer();
+    }
+
+
+
+
     /* Navigation */
 
+    private void enterNavigationMode() {
+        Log.i(TAG, "enterNavigationMode(): " + path.toString());
+
+        exitDiscoveryMode();
+
+        if (path.getSteps().size() > 0) {
+            startNavigation();
+        } else {
+            stopNavigation();
+            instruction.setText("You are already there!");
+        }
+    }
+
+    private void exitNavigationMode() {
+        Log.i(TAG, "exitNavigationMode()");
+    }
+
     private void startNavigation() {
-        new Timer().schedule(new TimerTask() {
+        stepIndex = -1;
+
+        // Navigation UI update
+        navigationTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+/*                        String status = "";
+
+                        Floor floor = beaconManager.getEstimatedFloor();
+                        if (floor != null) {
+                            status += "On " + floor.getName() + "\n";
+                        }
+
+                        if (path.getDestination() != null) {
+                            status += "Going to " + path.getDestination().getName();
+                        }
+
+                        if (status.endsWith("\n")) {
+                            status = status.substring(0, status.length() - 1);
+                        }
+
+                        instruction.setText(status);*/
+                    }
+                });
+            }
+        }, 1, 100);
+
+        // Navigation location tracking
+        navigationTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 Log.v(TAG, "startNavigation() timer");
 
-                // Steps are left
+                // If there are steps left
                 if (stepIndex < path.getSteps().size()) {
+
+                    // Check if this is the last step
                     boolean isLastStep;
                     if (stepIndex + 1 < path.getSteps().size()) {
                         isLastStep = false;
@@ -254,6 +311,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         isLastStep = true;
                     }
 
+                    // Get the next beacon to be in range of
                     Beacon nextBeacon;
                     if (!isLastStep) {
                         nextBeacon = path.getSteps().get(stepIndex + 1).getStartBeacon();
@@ -266,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         stepIndex++;
 
                         if (!isLastStep) {
-                            startStep(path.getSteps().get(stepIndex));
+                            startStep();
                         }
                     }
                 }
@@ -274,14 +332,34 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 // No steps left
                 else {
                     stopNavigation();
-                    cancel();
                 }
             }
         }, 1, 100);
     }
 
-    private void startStep(final Step step) {
+    private void stopNavigation() {
+        Log.v(TAG, "stopNavigation()");
+
+        path = null;
+        stepIndex = -1;
+
+        resetNavigationTimer();
+        resetNavigationStepUpdateTimer();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                direction.setVisibility(View.INVISIBLE);
+                instruction.setText("You have arrived!");
+            }
+        });
+    }
+
+    private void startStep() {
         Log.v(TAG, "startStep()");
+
+        final Step step = path.getSteps().get(stepIndex);
+        resetNavigationStepUpdateTimer();
 
         runOnUiThread(new Runnable() {
             @Override
@@ -297,8 +375,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
 
                 // In 5 seconds, show travel
-                resetNavigationUpdateTimer();
-                navigationUpdateTimer.schedule(new TimerTask() {
+                navigationStepUpdateTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
                         runOnUiThread(new Runnable() {
@@ -315,33 +392,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         });
     }
 
-    private void stopNavigation() {
-        Log.v(TAG, "stopNavigation()");
-
-        path = null;
-        stepIndex = -1;
-        resetNavigationUpdateTimer();
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                direction.setVisibility(View.INVISIBLE);
-                instruction.setText("You have arrived!");
-            }
-        });
-    }
-
-    private void resetNavigationUpdateTimer() {
-        navigationUpdateTimer.cancel();
-        navigationUpdateTimer.purge();
-        navigationUpdateTimer = new Timer();
-    }
-
     private boolean shouldSwitchSteps(Beacon beacon) {
-        Point2D location = beaconManager.getEstimatedLocation();
-        BeaconTrackingData beaconTrackingData = beaconManager.getBeaconTrackingData(beacon);
-
-/*        if (location != null) {
+/*        Point2D location = beaconManager.getEstimatedLocation();
+        if (location != null) {
             if (Map.distanceBetweenPoints(
                     new Point3D(location.x, location.y, 0),
                     new Point3D(beacon.getXPosition(), beacon.getYPosition(), 0))
@@ -350,6 +403,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         }*/
 
+        BeaconTrackingData beaconTrackingData = beaconManager.getBeaconTrackingData(beacon);
         if (beaconTrackingData != null) {
             if (beaconTrackingData.getEstimatedAccuracy() <= BEACON_RANGE_FOR_SWITCHING_STEPS) {
                 return true;
@@ -357,6 +411,27 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         return false;
+    }
+
+
+
+
+    private void resetDiscoveryModeTimer() {
+        discoveryModeTimer.cancel();
+        discoveryModeTimer.purge();
+        discoveryModeTimer = new Timer();
+    }
+
+    private void resetNavigationTimer() {
+        navigationTimer.cancel();
+        navigationTimer.purge();
+        navigationTimer = new Timer();
+    }
+
+    private void resetNavigationStepUpdateTimer() {
+        navigationStepUpdateTimer.cancel();
+        navigationStepUpdateTimer.purge();
+        navigationStepUpdateTimer = new Timer();
     }
 
 
