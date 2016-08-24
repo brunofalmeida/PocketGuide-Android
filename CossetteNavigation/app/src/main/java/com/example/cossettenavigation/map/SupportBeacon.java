@@ -18,9 +18,6 @@ public class SupportBeacon extends Beacon implements Serializable {
      */
     private Zone zone = null;
 
-
-
-
     /**
      * Constructor using an absolute position.
      */

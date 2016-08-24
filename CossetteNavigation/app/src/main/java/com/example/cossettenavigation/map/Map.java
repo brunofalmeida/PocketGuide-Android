@@ -36,12 +36,10 @@ public class Map {
 
     private static final String DEFAULT_UUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
 
-
     public static ArrayList<Floor> floors = new ArrayList<>();
     public static ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
     public static ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
     public static ArrayList<Zone> zones = new ArrayList<>();
-
 
     /*
         Grid properties.
@@ -53,9 +51,6 @@ public class Map {
 
     // For interface testing
     public static Path testPath;
-
-
-
 
     public static ArrayList<Beacon> getAllBeacons() {
         ArrayList<Beacon> allBeacons = new ArrayList<>();

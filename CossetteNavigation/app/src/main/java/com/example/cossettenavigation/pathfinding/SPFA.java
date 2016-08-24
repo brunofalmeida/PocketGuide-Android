@@ -29,7 +29,6 @@ class SPFA {
 
     private static final String TAG = "SPFA";
 
-
     /**
      * <h1>Graph (adjacency list)</h1>
      * <p>each AnchorBeacon -> { (connected beacon, travel time), ... }</p>
@@ -40,7 +39,6 @@ class SPFA {
      */
     private static HashMap<AnchorBeacon, ArrayList<Pair<AnchorBeacon, Double>>> graph = null;
 
-
     private AnchorBeacon startBeacon;
     private AnchorBeacon endBeacon;
 
@@ -48,8 +46,6 @@ class SPFA {
      * each AnchorBeacon -> (shortest travel time from root, previous beacon in shortest path)
      */
     private HashMap<AnchorBeacon, Pair<Double, AnchorBeacon>> shortestTravelTimes;
-
-
 
 
     SPFA(AnchorBeacon startBeacon, AnchorBeacon endBeacon) {
@@ -83,8 +79,7 @@ class SPFA {
                 graph.put(beacon, beaconConnections);
             }
         }
-
-
+        
         this.startBeacon = startBeacon;
         this.endBeacon = endBeacon;
 

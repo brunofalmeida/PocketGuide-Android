@@ -19,9 +19,6 @@ public class Floor implements Serializable {
 
     private ArrayList<Zone> zones = new ArrayList<>();
 
-
-
-
     public Floor(String name, double zPosition) {
         this.name = name;
         this.zPosition = zPosition;
