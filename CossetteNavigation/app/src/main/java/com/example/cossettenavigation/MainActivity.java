@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -77,9 +78,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private LinearLayout bottomBar;
     private CameraView mCameraView = null;
 
+    //navigation UI elements
     private ImageView direction;
     private TextView instruction;
-    private ListView nextStep;
+    private TextView distance;
+    private TextView description;
+
     private FloatingActionButton FAB;
 
     private ApplicationBeaconManager beaconManager;
@@ -130,39 +134,56 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             cameraPermissionGranted();
         }
 
-        //get FAB
-        FAB=(FloatingActionButton) findViewById(R.id.FAB);
-
-        //set up arrow and direction description
-
-        direction = new ImageView(this);
+        direction=new ImageView(this);
         direction.setImageResource(R.drawable.arrow);
-        direction.setVisibility(View.INVISIBLE);
-
-        instruction=new TextView(this);
-        instruction.setTextColor(getResources().getColor(android.R.color.white));
-        instruction.setTextSize(TypedValue.COMPLEX_UNIT_DIP,24);
-
-        nextStep=(ListView) findViewById(R.id.nextStep);
 
         //WIDTH AND HEIGHT SHOULD MATCH THOSE IN ARROW.XML VECTOR FILE, OTHERWISE DRAWABLE WILL BE PIXELATED
         int arrowWidth=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
         int arrowHeight=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
 
         FrameLayout.LayoutParams arrowParams=new FrameLayout.LayoutParams(arrowWidth,arrowHeight);
-        FrameLayout.LayoutParams instructionParams=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
         arrowParams.gravity=Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
-        instructionParams.gravity=Gravity.BOTTOM;
-
-        //instruction.setText("a a a a a a a a a a a");
-        instructionParams.setMargins(32, 0, 200, 32);
 
         direction.setLayoutParams(arrowParams);
+
+        instruction=new TextView(this);
+        distance=new TextView(this);
+        description=new TextView(this);
+
+        instruction.setTextColor(getResources().getColor(android.R.color.white));
+        distance.setTextColor(getResources().getColor(android.R.color.white));
+        description.setTextColor(getResources().getColor(android.R.color.white));
+
+        instruction.setTextSize(TypedValue.COMPLEX_UNIT_DIP,24);
+        distance.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
+        description.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
+
+        RelativeLayout.LayoutParams instructionParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams descriptionParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        instructionParams.setMargins(36,36,0,0);
+        descriptionParams.setMargins(36,36,0,0);
+
+
         instruction.setLayoutParams(instructionParams);
+        distance.setLayoutParams(instructionParams);
+        description.setLayoutParams(descriptionParams);
+
+        direction.setVisibility(View.INVISIBLE);
+        instruction.setVisibility(View.INVISIBLE);
+        distance.setVisibility(View.INVISIBLE);
+        description.setVisibility(View.INVISIBLE);
+
+        RelativeLayout topHalf=(RelativeLayout) findViewById(R.id.topHalf);
+        RelativeLayout bottomHalf=(RelativeLayout) findViewById(R.id.bottomHalf);
 
         m_camera_view.addView(direction);
-        bottomBar.addView(instruction);
+        topHalf.addView(instruction);
+        //bottomBar.addView(distance);
+        bottomHalf.addView(description);
+
+        //get FAB
+        FAB=(FloatingActionButton) findViewById(R.id.FAB);
 
         beaconManager = (ApplicationBeaconManager) getApplication();
 
@@ -271,6 +292,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         });
 
         // TODO - set up navigation-specific UI
+
+        direction.setVisibility(View.VISIBLE);
+        instruction.setVisibility(View.VISIBLE);
+        //distance.setVisibility(View.VISIBLE);
+        description.setVisibility(View.VISIBLE);
+
+        description.setText("Bottom of North Stairwell");
+
 
         if (path.getSteps().size() > 0) {
             startNavigation();

@@ -24,16 +24,22 @@
     <LinearLayout
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="78dp"
         android:orientation="vertical"
-        android:padding="16dp"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary">
-        <ListView
-            android:id="@+id/nextStep"
+        <RelativeLayout
+            android:id="@+id/topHalf"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </ListView>
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/bottomHalf"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+        </RelativeLayout>
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
@@ -43,6 +49,7 @@
         android:layout_gravity="bottom|end"
         android:layout_alignParentRight="true"
         android:layout_above="@id/bottomBar"
-        android:layout_margin="@dimen/fab_margin" />
+        android:layout_margin="@dimen/fab_margin"
+        android:padding="60dp"/>
 
 </RelativeLayout>
