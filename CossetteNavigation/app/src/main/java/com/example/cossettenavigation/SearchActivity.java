@@ -106,6 +106,7 @@ public class SearchActivity extends AppCompatActivity {
                     }
 
                     if (minPath != null) {
+                        minPath.setDestination(zone);
                         startMainActivityNavigation(minPath);
                     } else {
                         Toast.makeText(SearchActivity.this, "Path not found", Toast.LENGTH_LONG).show();

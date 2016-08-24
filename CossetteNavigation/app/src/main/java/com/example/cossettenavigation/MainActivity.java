@@ -43,7 +43,6 @@ import java.util.TimerTask;
 /*
     TODO - navigation mode - check trilateration/floor/distance/time to help determine when to switch steps
     TODO - show multiple steps at a time - arrows+text for show previous/current/next direction
-    TODO - navigation mode - show current floor/destination
     TODO - check that pathfinding only uses 1 step for an elevator/stairs over multiple floors - merge consecutive steps in the same zone?
 
     TODO - add notifications when within range of beacons of a specific zone - tap to enter navigation?
@@ -52,6 +51,7 @@ import java.util.TimerTask;
     TODO - add voice dictation to search
     TODO - add enable/disable audio button
 
+    TODO - modify beacons, floors, and zones to have an identifier (for code) and a description (for users)
     TODO - add distance/time units in logs
     TODO - convert all logs from verbose to info
 
@@ -169,8 +169,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         // Show debug info
                         debugView.setText(beaconManager.getTrackedBeaconsDescription());
 
-                        // Show floor and nearby destinations
-                        if (path == null) {
+                        // Navigation mode - Show floor and destination
+                        if (path != null) {
+                            String status = "";
+
+                            Floor floor = beaconManager.getEstimatedFloor();
+                            if (floor != null) {
+                                status += "On " + floor.getName() + "\n";
+                            }
+
+                            if (path.getDestination() != null) {
+                                status += "Going to " + path.getDestination().getName();
+                            }
+
+                            if (status.endsWith("\n")) {
+                                status = status.substring(0, status.length() - 1);
+                            }
+
+                            instruction.setText(status);
+                        }
+
+                        // Discovery mode - Show floor and nearby destinations
+                        else {
                             String nearbyZones = "";
 
                             Floor floor = beaconManager.getEstimatedFloor();
