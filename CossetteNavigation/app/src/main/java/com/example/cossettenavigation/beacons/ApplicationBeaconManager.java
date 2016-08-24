@@ -293,7 +293,7 @@ public class ApplicationBeaconManager extends Application {
 
         // Trilaterate position
 
-        // If there are 3 or more beacons (required for 2D triangulation)
+        // If there are 4 or more beacons (required for 3D triangulation)
         if (positions.size() >= 4) {
 
 /*            double[][] positions = new double[][] { { 5.0, -6.0 }, { 13.0, -15.0 }, { 21.0, -3.0 }, { 12.4, -21.2 } };

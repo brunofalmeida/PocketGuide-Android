@@ -20,9 +20,6 @@ public class Pathfinder {
 
     static double INFINITY = Double.POSITIVE_INFINITY;
 
-
-
-
     /**
      * Determines the shortest path between two beacons in the map.
      * @return The shortest travel time (in seconds); a list of beacons representing the shortest path,
@@ -51,6 +48,7 @@ public class Pathfinder {
 
 
         if (result == null) {
+            // TODO what will UI show if path is null
             return null;
 
         } else {
