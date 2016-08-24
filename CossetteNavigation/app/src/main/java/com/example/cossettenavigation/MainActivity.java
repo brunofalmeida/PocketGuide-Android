@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private ImageView direction;
     private TextView instruction;
     private ListView nextStep;
+    private FloatingActionButton FAB;
 
     private ApplicationBeaconManager beaconManager;
 
@@ -88,11 +90,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private Timer navigationStepUpdateTimer = new Timer();
     private Path path = null;
     private int stepIndex = -1;
-
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,10 +130,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             cameraPermissionGranted();
         }
 
+        //get FAB
+        FAB=(FloatingActionButton) findViewById(R.id.FAB);
+
         //set up arrow and direction description
 
         direction = new ImageView(this);
         direction.setImageResource(R.drawable.arrow);
+        direction.setVisibility(View.INVISIBLE);
 
         instruction=new TextView(this);
         instruction.setTextColor(getResources().getColor(android.R.color.white));
@@ -163,9 +164,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         m_camera_view.addView(direction);
         bottomBar.addView(instruction);
 
-
         beaconManager = (ApplicationBeaconManager) getApplication();
-
 
         final TextView debugView = (TextView) findViewById(R.id.debug_view);
 
@@ -195,6 +194,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 enterNavigationMode();
             }
         }
+        else{
+            enterDiscoveryMode();
+        }
     }
 
 
@@ -206,6 +208,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Log.i(TAG, "enterDiscoveryMode()");
 
         exitNavigationMode();
+
+        FAB.setImageResource(R.drawable.search);
+        FAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,SearchActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // TODO - set up discovery-specific UI
 
@@ -251,6 +262,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         exitDiscoveryMode();
 
+        FAB.setImageResource(R.drawable.close);
+        FAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterDiscoveryMode();
+            }
+        });
+
+        // TODO - set up navigation-specific UI
+
         if (path.getSteps().size() > 0) {
             startNavigation();
         } else {
@@ -261,6 +282,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private void exitNavigationMode() {
         Log.i(TAG, "exitNavigationMode()");
+        stopNavigation();
+        instruction.setText("");
     }
 
     private void startNavigation() {
@@ -579,10 +602,4 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onConfigurationChanged(newConfig);
         mCameraView.activityOnConfigurationChanged();
         }
-
-    public void onSearchFABClick(View view) {
-        Intent intent = new Intent(this,SearchActivity.class);
-        startActivity(intent);
-    }
-
 }
