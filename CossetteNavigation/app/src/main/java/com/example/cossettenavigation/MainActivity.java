@@ -75,13 +75,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private ApplicationBeaconManager beaconManager;
 
-    private boolean isNavigationMode = false;
     private Path path = null;
     private int stepIndex = -1;
-    private Timer navigationUIUpdateTimer = new Timer();
+    private Timer navigationUpdateTimer = new Timer();
 
-/*    private Path testPath = Map.testPath;
-    private int testStepIndex = 0;*/
+
 
 
     @Override
@@ -173,45 +171,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (extras != null) {
             path = (Path) extras.getSerializable(INTENT_KEY_PATH);
 
-            if ((path != null) && (path.getSteps().size() > 0)) {
-                isNavigationMode = true;
-                startNavigation();
+            if (path != null) {
+                if (path.getSteps().size() > 0) {
+                    startNavigation();
+                } else {
+                    stopNavigation();
+                    instruction.setText("You are already there!");
+                }
             }
         }
-
-
-
-
-/*        // Test navigation UI
-        if (testPath == null) {
-            Log.e(TAG, "onCreate(): testPath == null");
-        } else {
-            Log.v(TAG, testPath.toString());
-
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (testStepIndex < testPath.getSteps().size()) {
-                        final double turnAngle = testPath.getSteps().get(testStepIndex).getTurnAngle();
-                        Log.v(TAG, String.format("turnAngle = %.0f degrees", turnAngle));
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                direction.setRotation((float) turnAngle);
-                            }
-                        });
-
-                        testStepIndex++;
-
-                    } else {
-                        Log.v(TAG, "Done path");
-                        cancel();
-                    }
-                }
-            }, 5000, 5000);
-        }*/
     }
+
+
+
+
+    /* Navigation */
 
     private void startNavigation() {
         new Timer().schedule(new TimerTask() {
@@ -249,13 +223,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                 // No steps left
                 else {
-                    path = null;
-                    isNavigationMode = false;
                     stopNavigation();
                     cancel();
                 }
             }
-        }, 1, 1000);
+        }, 1, 100);
     }
 
     private void startStep(final Step step) {
@@ -271,9 +243,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 instruction.setText(step.getTurnDescription());
 
                 // In 5 seconds, show travel
-                navigationUIUpdateTimer.cancel();
-                navigationUIUpdateTimer = new Timer();
-                navigationUIUpdateTimer.schedule(new TimerTask() {
+                resetNavigationUpdateTimer();
+                navigationUpdateTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
                         runOnUiThread(new Runnable() {
@@ -293,17 +264,27 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private void stopNavigation() {
         Log.v(TAG, "stopNavigation()");
 
+        path = null;
+        stepIndex = -1;
+        resetNavigationUpdateTimer();
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                navigationUIUpdateTimer.cancel();
-                navigationUIUpdateTimer = new Timer();
-
                 direction.setVisibility(View.INVISIBLE);
                 instruction.setText("You have arrived!");
             }
         });
     }
+
+    private void resetNavigationUpdateTimer() {
+        navigationUpdateTimer.cancel();
+        navigationUpdateTimer.purge();
+        navigationUpdateTimer = new Timer();
+    }
+
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
