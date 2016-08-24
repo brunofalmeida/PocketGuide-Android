@@ -17,8 +17,6 @@ import com.lemmingapex.trilateration.TrilaterationFunction;
 
 import org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer;
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
-import org.apache.commons.math3.linear.RealMatrix;
-import org.apache.commons.math3.linear.RealVector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -309,8 +307,8 @@ public class ApplicationBeaconManager extends Application {
             double[] centroid = optimum.getPoint().toArray();
 
             // error and geometry information; may throw SingularMatrixException depending the threshold argument provided
-            RealVector standardDeviation = optimum.getSigma(0);
-            RealMatrix covarianceMatrix = optimum.getCovariances(0);
+            /*RealVector standardDeviation = optimum.getSigma(0);
+            RealMatrix covarianceMatrix = optimum.getCovariances(0);*/
 
 
 
