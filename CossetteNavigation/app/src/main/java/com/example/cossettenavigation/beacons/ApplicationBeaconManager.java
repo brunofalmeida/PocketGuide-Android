@@ -11,6 +11,7 @@ import com.example.cossettenavigation.Utilities;
 import com.example.cossettenavigation.map.Floor;
 import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.Point3D;
+import com.example.cossettenavigation.map.Zone;
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver;
 import com.lemmingapex.trilateration.TrilaterationFunction;
 
@@ -47,6 +48,7 @@ public class ApplicationBeaconManager extends Application {
      * trilateration algorithm (in metres).
      */
     private static double MAX_BEACON_DISTANCE_FOR_TRILATERATION = 5;
+    private static double BEACON_RANGE_FOR_NEARBY_ZONE = 10;
 
     private BeaconManager beaconManager;
 
@@ -245,6 +247,24 @@ public class ApplicationBeaconManager extends Application {
         }
     }
 
+    public ArrayList<Zone> getNearbyZones() {
+        ArrayList<Zone> nearbyZones = new ArrayList<>();
+
+        for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()) {
+            if (trackedBeacon.getValue().getEstimatedAccuracy() <= BEACON_RANGE_FOR_NEARBY_ZONE) {
+                ArrayList<Zone> zones = trackedBeacon.getValue().getBeacon().getZones();
+
+                for (Zone zone : zones) {
+                    if (!nearbyZones.contains(zone) && zone.getIsDestination()) {
+                        nearbyZones.add(zone);
+                    }
+                }
+            }
+        }
+
+        return nearbyZones;
+    }
+
 
 
     /**
@@ -333,6 +353,11 @@ public class ApplicationBeaconManager extends Application {
             if (closestFloor != null) {
                 return closestFloor;
             }
+        }
+
+        com.example.cossettenavigation.map.Beacon nearestBeacon = getNearestBeacon();
+        if (nearestBeacon != null) {
+            return nearestBeacon.getFloor();
         }
 
         return null;

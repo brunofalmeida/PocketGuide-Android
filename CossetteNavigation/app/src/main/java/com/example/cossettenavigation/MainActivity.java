@@ -29,6 +29,8 @@ import com.estimote.sdk.SystemRequirementsChecker;
 import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
 import com.example.cossettenavigation.beacons.BeaconTrackingData;
 import com.example.cossettenavigation.map.Beacon;
+import com.example.cossettenavigation.map.Floor;
+import com.example.cossettenavigation.map.Zone;
 import com.example.cossettenavigation.pathfinding.Path;
 import com.example.cossettenavigation.pathfinding.Step;
 
@@ -38,7 +40,6 @@ import java.util.TimerTask;
 /*
     TODO - navigation mode - check trilateration/floor/distance/time to help determine when to switch steps
     TODO - show multiple steps at a time - arrows+text for show previous/current/next direction
-    TODO - discovery mode - show current floor/nearby destinations (using nearby beacons/zones in specified range)
     TODO - navigation mode - show current floor/destination
     TODO - check that pathfinding only uses 1 step for an elevator/stairs over multiple floors - merge consecutive steps in the same zone?
 
@@ -157,7 +158,25 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        // Show debug info
                         debugView.setText(beaconManager.getTrackedBeaconsDescription());
+
+                        // Show floor and nearby destinations
+                        if (path == null) {
+                            String nearbyZones = "";
+
+                            Floor floor = beaconManager.getEstimatedFloor();
+                            if (floor != null) {
+                                nearbyZones += floor.getName() + " - ";
+                            }
+
+                            nearbyZones += "Nearby:";
+
+                            for (Zone zone : beaconManager.getNearbyZones()) {
+                                nearbyZones += "\n" + zone.getName();
+                            }
+                            instruction.setText(nearbyZones);
+                        }
                     }
                 });
             }
