@@ -2,9 +2,6 @@ package com.example.cossettenavigation.map;
 
 import android.util.Log;
 
-import com.example.cossettenavigation.pathfinding.Path;
-import com.example.cossettenavigation.pathfinding.Pathfinder;
-
 import java.util.ArrayList;
 
 /**
@@ -49,8 +46,8 @@ public class Map {
     public static double gridHeight = 1;
     public static double metresPerGridUnit = 1;
 
-    // For interface testing
-    public static Path testPath;
+
+
 
     public static ArrayList<Beacon> getAllBeacons() {
         ArrayList<Beacon> allBeacons = new ArrayList<>();
@@ -167,7 +164,7 @@ public class Map {
         3. define zones -> add beacons
      */
     static {
-        Log.v(TAG, "static {}");
+        //Log.v(TAG, "static {}");
 
 
         // Start floor 1
@@ -297,7 +294,7 @@ public class Map {
 
 
         // Log all mapping data
-        Log.v(TAG, String.format("Grid: %.0f x %.0f", gridWidth, gridHeight));
+/*        Log.v(TAG, String.format("Grid: %.0f x %.0f", gridWidth, gridHeight));
         for (Floor floor : floors) {
             Log.v(TAG, floor.toString());
         }
@@ -309,10 +306,7 @@ public class Map {
         }
         for (Zone zone : zones) {
             Log.v(TAG, zone.toString());
-        }
-
-        // Test path
-        testPath = Pathfinder.getShortestPath(white17, white25);
+        }*/
 
 
 

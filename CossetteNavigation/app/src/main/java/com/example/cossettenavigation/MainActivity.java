@@ -44,20 +44,21 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /*
-    TODO - navigation mode - check distance/time to help determine when to switch steps
+    TODO - navigation mode - check time to help determine when to switch steps
     TODO - show multiple steps at a time - arrows+text for show current/next direction
+
+    TODO - start/stop ranging beacons only after monitoring them (enter/exit region handlers)
+    TODO - cleanup ranging intervals/beacon tracking data measurement storage (remove constants)
+    TODO - shorten background monitoring interval (5/10s?)
 
     TODO - fix camera stretch
 
     TODO - add notifications when within range of beacons of a specific zone - tap to enter navigation?
     TODO - change enable/disable camera icon when toggled
-    TODO - add voice directions
-    TODO - add voice dictation to search
     TODO - add enable/disable audio button
 
     TODO - modify beacons, floors, and zones to have an identifier (for code) and a description (for users)
     TODO - add distance/time units in logs
-    TODO - convert all logs from verbose to info
 
     TODO - check that pathfinding only uses 1 step for an elevator/stairs over multiple floors - merge consecutive steps in the same zone?
     TODO - account for not starting at a beacon? (go to nearest exit, close/far end of hallway, etc.) - can skip and assume starting beacon

@@ -46,7 +46,7 @@ public class Step implements Serializable {
     @Override
     public String toString() {
         return String.format(
-                "%s { startBeacon = \"%s\", endBeacon = \"%s\", zone = \"%s\", travelTime = %.1f, travelAngle = %s, turnAngle = %.0f, getTurnDescription() = \"%s\", getTravelDescription() = \"%s\"",
+                "%s { startBeacon = \"%s\", endBeacon = \"%s\", zone = \"%s\", travelTime = %.1f s, travelAngle = %s deg, turnAngle = %.0f deg, getTurnDescription() = \"%s\", getTravelDescription() = \"%s\"",
                 getClass().getSimpleName(),
                 startBeacon.getName(),
                 endBeacon.getName(),

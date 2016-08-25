@@ -21,7 +21,7 @@ public class Point3D implements Serializable {
     @Override
     public String toString() {
         return String.format(
-                "%s { x = %.1f, y = %.1f, z = %.1f }",
+                "%s { x = %.1f units, y = %.1f units, z = %.1f units }",
                 getClass().getSimpleName(), x, y, z);
     }
 
