@@ -5,7 +5,10 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -15,7 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,7 +27,6 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,13 +39,13 @@ import com.example.cossettenavigation.map.Zone;
 import com.example.cossettenavigation.pathfinding.Path;
 import com.example.cossettenavigation.pathfinding.Step;
 
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 /*
     TODO - navigation mode - check distance/time to help determine when to switch steps
     TODO - show multiple steps at a time - arrows+text for show current/next direction
-    TODO - check that pathfinding only uses 1 step for an elevator/stairs over multiple floors - merge consecutive steps in the same zone?
 
     TODO - fix camera stretch
 
@@ -58,6 +59,7 @@ import java.util.TimerTask;
     TODO - add distance/time units in logs
     TODO - convert all logs from verbose to info
 
+    TODO - check that pathfinding only uses 1 step for an elevator/stairs over multiple floors - merge consecutive steps in the same zone?
     TODO - account for not starting at a beacon? (go to nearest exit, close/far end of hallway, etc.) - can skip and assume starting beacon
 */
 
@@ -90,16 +92,56 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private Timer discoveryModeTimer = new Timer();
 
-    private Timer navigationTimer = new Timer();
-    private Timer navigationStepUpdateTimer = new Timer();
     private Path path = null;
     private int stepIndex = -1;
+    private Timer navigationTimer = new Timer();
+    private Timer navigationStepUpdateTimer = new Timer();
+
+    private TextToSpeech textToSpeech = null;
+    private boolean isTextToSpeechAvailable = false;
+    /**
+     * True to enable, false to disable
+     */
+    private final boolean isTextToSpeechEnabled = true;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate()");
 
         super.onCreate(savedInstanceState);
+
+
+
+
+        // Initialize text to speech
+        textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    isTextToSpeechAvailable = true;
+                    textToSpeech.setLanguage(Locale.CANADA);
+
+                    Log.i(TAG, "textToSpeech: init success");
+
+                    //speakText("Hello World");
+                }
+
+                else {
+                    isTextToSpeechAvailable = false;
+
+                    Log.i(TAG, "textToSpeech: init error");
+                }
+            }
+        });
+
+        // Make the volume buttons control the text to speech volume (music stream)
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+
+
 
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
@@ -161,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         RelativeLayout.LayoutParams instructionParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         RelativeLayout.LayoutParams descriptionParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        instructionParams.setMargins(36,36,0,0);
+        instructionParams.setMargins(36,18,0,0);
         descriptionParams.setMargins(36,36,0,0);
 
 
@@ -260,6 +302,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         for (Zone zone : beaconManager.getNearbyZones()) {
                             nearbyZones += "\n" + zone.getName();
                         }
+
                         instruction.setText(nearbyZones);
                     }
                 });
@@ -305,7 +348,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             startNavigation();
         } else {
             stopNavigation();
-            instruction.setText("You are already there!");
+
+            String text = "You are already there!";
+            instruction.setText(text);
+            speakText(text);
         }
     }
 
@@ -383,10 +429,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                 // No steps left
                 else {
+                    finishNavigation();
                     stopNavigation();
                 }
             }
         }, 1, 100);
+    }
+
+    private void finishNavigation() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String text = "You have arrived!";
+                instruction.setText(text);
+                speakText(text);
+            }
+        });
     }
 
     private void stopNavigation() {
@@ -394,7 +452,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         path = null;
         stepIndex = -1;
-
         resetNavigationTimer();
         resetNavigationStepUpdateTimer();
 
@@ -402,7 +459,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public void run() {
                 direction.setVisibility(View.INVISIBLE);
-                instruction.setText("You have arrived!");
             }
         });
     }
@@ -420,11 +476,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                 // Show turn
                 direction.setRotation((float) step.getTurnAngle());
+                String text;
                 if (stepIndex == 0) {
-                    instruction.setText("Start at " + step.getStartBeacon().getName());
+                    text = "Start at " + step.getStartBeacon().getName();
                 } else {
-                    instruction.setText(step.getTurnDescription());
+                    text = step.getTurnDescription();
                 }
+                instruction.setText(text);
+                speakText(text);
 
                 // In 5 seconds, show travel
                 navigationStepUpdateTimer.schedule(new TimerTask() {
@@ -436,6 +495,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 Log.v(TAG, "startStep(): travel timer");
                                 direction.setRotation(0);
                                 instruction.setText(step.getTravelDescription());
+                                speakText(step.getTravelDescription());
                             }
                         });
                     }
@@ -484,6 +544,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         navigationStepUpdateTimer.cancel();
         navigationStepUpdateTimer.purge();
         navigationStepUpdateTimer = new Timer();
+    }
+
+
+
+
+    private void speakText(String text) {
+        if (isTextToSpeechAvailable && isTextToSpeechEnabled && Build.VERSION.SDK_INT >= 21) {
+            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
+        }
     }
 
 
