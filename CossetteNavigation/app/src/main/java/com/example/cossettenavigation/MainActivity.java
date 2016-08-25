@@ -47,6 +47,10 @@ import java.util.TimerTask;
     TODO - navigation mode - check time to help determine when to switch steps
     TODO - show multiple steps at a time - arrows+text for show current/next direction
 
+    TODO - start/stop ranging beacons only after monitoring them (enter/exit region handlers)
+    TODO - cleanup ranging intervals/beacon tracking data measurement storage (remove constants)
+    TODO - shorten background monitoring interval (5/10s?)
+
     TODO - fix camera stretch
 
     TODO - add notifications when within range of beacons of a specific zone - tap to enter navigation?
