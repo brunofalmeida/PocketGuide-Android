@@ -83,8 +83,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     //navigation UI elements
     private ImageView direction;
     private TextView instruction;
-    private TextView distance;
+    private TextView time;
     private TextView description;
+    private TextView nextStep;
 
     private FloatingActionButton FAB;
 
@@ -140,9 +141,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // Make the volume buttons control the text to speech volume (music stream)
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-
-
-
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
         setContentView(R.layout.activity_main);
@@ -189,40 +187,51 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         direction.setLayoutParams(arrowParams);
 
         instruction=new TextView(this);
-        distance=new TextView(this);
+        time=new TextView(this);
         description=new TextView(this);
+        nextStep=new TextView(this);
 
         instruction.setTextColor(getResources().getColor(android.R.color.white));
-        distance.setTextColor(getResources().getColor(android.R.color.white));
+        time.setTextColor(getResources().getColor(android.R.color.white));
         description.setTextColor(getResources().getColor(android.R.color.white));
+        nextStep.setTextColor(getResources().getColor(android.R.color.darker_gray));
 
         instruction.setTextSize(TypedValue.COMPLEX_UNIT_DIP,24);
-        distance.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
+        time.setTextSize(TypedValue.COMPLEX_UNIT_DIP,24);
         description.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
+        nextStep.setTextSize(TypedValue.COMPLEX_UNIT_DIP,18);
 
         RelativeLayout.LayoutParams instructionParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams timeParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         RelativeLayout.LayoutParams descriptionParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
 
+        instructionParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
+        timeParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
+
         instructionParams.setMargins(36,18,0,0);
-        descriptionParams.setMargins(36,36,0,0);
+        timeParams.setMargins(0,18,36,0);
+        descriptionParams.setMargins(36,-12,0,0);
 
 
         instruction.setLayoutParams(instructionParams);
-        distance.setLayoutParams(instructionParams);
+        time.setLayoutParams(timeParams);
         description.setLayoutParams(descriptionParams);
+        nextStep.setLayoutParams(descriptionParams);
 
         direction.setVisibility(View.INVISIBLE);
         instruction.setVisibility(View.INVISIBLE);
-        distance.setVisibility(View.INVISIBLE);
+        time.setVisibility(View.INVISIBLE);
         description.setVisibility(View.INVISIBLE);
+        nextStep.setVisibility(View.INVISIBLE);
 
         RelativeLayout topHalf=(RelativeLayout) findViewById(R.id.topHalf);
         RelativeLayout bottomHalf=(RelativeLayout) findViewById(R.id.bottomHalf);
 
         m_camera_view.addView(direction);
         topHalf.addView(instruction);
-        //bottomBar.addView(distance);
+        topHalf.addView(time);
         bottomHalf.addView(description);
+        bottomHalf.addView(nextStep);
 
         //get FAB
         FAB=(FloatingActionButton) findViewById(R.id.FAB);
@@ -338,10 +347,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         direction.setVisibility(View.VISIBLE);
         instruction.setVisibility(View.VISIBLE);
-        //distance.setVisibility(View.VISIBLE);
+        time.setVisibility(View.VISIBLE);
         description.setVisibility(View.VISIBLE);
+        nextStep.setVisibility(View.VISIBLE);
 
-        description.setText("Bottom of North Stairwell");
+        //limit on number of characters
+        instruction.setText("Walk 4 m ahead");
+        time.setText("20 min");
+        description.setText("Top of North Stairwell");
+        //nextStep.setText("Walk down staircase");
 
 
         if (path.getSteps().size() > 0) {
