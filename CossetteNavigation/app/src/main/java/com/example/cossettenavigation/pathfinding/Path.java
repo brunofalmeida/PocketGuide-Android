@@ -24,7 +24,7 @@ public class Path implements Serializable {
     @Override
     public String toString() {
         return String.format(
-                "%s { travelTime = %.1f, steps = %s, destination = \"%s\" }",
+                "%s { travelTime = %.1f s, steps = %s, destination = \"%s\" }",
                 getClass().getSimpleName(),
                 travelTime,
                 Utilities.getStepsString(steps),
