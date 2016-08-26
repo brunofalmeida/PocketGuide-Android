@@ -113,6 +113,7 @@ public class Step implements Serializable {
         switch (zone.getZoneType()) {
             case HALLWAY:
             case ROOM:
+                // TODO - fix bug - calculate distance between beacons
                 return String.format("Walk %.0f metres ahead", Map.estimateTravelTime(startBeacon, endBeacon, zone));
             case STAIRS:
             case ELEVATOR:

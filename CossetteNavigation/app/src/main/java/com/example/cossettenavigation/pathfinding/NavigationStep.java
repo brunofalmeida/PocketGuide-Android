@@ -30,6 +30,18 @@ public class NavigationStep implements Serializable {
         this.timeRemaining = 0;
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+                "%s { descriptionOne = %s, descriptionTwo = %s, arrowAngle = %.0f deg, endBeacon = \"%s\", minimumTime = %.1f s }",
+                getClass().getSimpleName(),
+                descriptionOne,
+                descriptionTwo,
+                arrowAngle,
+                (endBeacon != null)? endBeacon.getName() : null,
+                minimumTime);
+    }
+
     public String getDescriptionOne() {
         return descriptionOne;
     }

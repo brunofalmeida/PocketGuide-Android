@@ -81,11 +81,11 @@ public class Path implements Serializable {
                 if (i == 0) {
                     // Go to start beacon
                     navigationSteps.add(new NavigationStep(
-                            "Go to " + step.getStartBeacon().getDescription(),
+                            "Start at " + step.getStartBeacon().getDescription(),
                             "",
                             0,
                             step.getStartBeacon(),
-                            0
+                            5
                     ));
                 }
 
@@ -106,7 +106,7 @@ public class Path implements Serializable {
                         step.getEndBeacon().getDescription(),
                         0,
                         step.getEndBeacon(),
-                        0
+                        step.getTravelTime()
                 ));
 
                 // Add travel time to all navigation steps

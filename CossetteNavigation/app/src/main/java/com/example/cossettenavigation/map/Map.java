@@ -29,7 +29,7 @@ public class Map {
     // Average speeds, in metres/second
     private static final double WALKING_TRAVEL_SPEED = 1.0;
     private static final double STAIRS_TRAVEL_SPEED = 0.5;
-    private static final double ELEVATOR_TRAVEL_SPEED = 0.4;
+    private static final double ELEVATOR_TRAVEL_SPEED = 0.5;
 
     private static final String DEFAULT_UUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
 
