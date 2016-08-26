@@ -21,8 +21,6 @@ import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Global application state used to detect and manage beacons.
@@ -60,7 +58,7 @@ public class ApplicationBeaconManager extends Application {
 
     @Override
     public void onCreate() {
-        //Log.v(TAG, "onCreate()");
+        Log.v(TAG, "onCreate()");
 
         super.onCreate();
 
@@ -72,19 +70,17 @@ public class ApplicationBeaconManager extends Application {
         // Optional, debug logging.
         EstimoteSDK.enableDebugLogging(true);
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                //logTrackedBeacons();
-                //Log.v(TAG, getTrackedBeaconsDescription());
-
-                //getEstimatedLocation();
-            }
-        }, 1, 1000);
+//        new Timer().schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                logTrackedBeacons();
+//                Log.v(TAG, getTrackedBeaconsDescription());
+//
+//                getEstimatedLocation();
+//            }
+//        }, 1, 1000);
 
         beaconManager = new BeaconManager(this);
-        //setNormalForegroundScan();
-        setResponsiveForegroundScan();
 
         // Callback when the beacon manager has connected to the beacon service
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
@@ -98,14 +94,6 @@ public class ApplicationBeaconManager extends Application {
                 startScanning();
             }
         });
-    }
-
-    private void setNormalForegroundScan() {
-        beaconManager.setForegroundScanPeriod(1000, 0);
-    }
-
-    private void setResponsiveForegroundScan() {
-        beaconManager.setForegroundScanPeriod(250, 0);
     }
 
 
@@ -124,7 +112,7 @@ public class ApplicationBeaconManager extends Application {
                 if (list.size() > 0) {
                     updateTrackedBeacon(region, list.get(0));
                 } else {
-                    //Log.v(TAG, "setMonitoringListener(): No beacons in region");
+                    Log.v(TAG, "setMonitoringListener(): No beacons in region");
                 }
             }
 
@@ -143,17 +131,16 @@ public class ApplicationBeaconManager extends Application {
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
-                //Log.v(TAG, "BeaconManager.RangingListener.onBeaconsDiscovered()");
-
-/*                Log.v(TAG, region.toString());
+                Log.v(TAG, "BeaconManager.RangingListener.onBeaconsDiscovered()");
+                Log.v(TAG, region.toString());
                 for (Beacon beacon : list) {
                     Log.v(TAG, beacon.toString());
-                }*/
+                }
 
                 if (list.size() > 0) {
                     updateTrackedBeacon(region, list.get(0));
                 } else {
-                    //Log.v(TAG, "setRangingListener(): No beacons in region");
+                    Log.v(TAG, "setRangingListener(): No beacons in region");
                 }
             }
         });
@@ -170,6 +157,7 @@ public class ApplicationBeaconManager extends Application {
                     beacon.getUUID(),
                     beacon.getMajor(),
                     beacon.getMinor());
+
             beaconManager.startMonitoring(region);
             beaconManager.startRanging(region);
         }

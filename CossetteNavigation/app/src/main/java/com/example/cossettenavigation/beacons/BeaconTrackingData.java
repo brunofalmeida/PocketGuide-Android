@@ -19,6 +19,8 @@ public class BeaconTrackingData {
     private ArrayList<Utils.Proximity> proximityMeasurements = new ArrayList<>();
 
 
+
+
     public BeaconTrackingData(com.example.cossettenavigation.map.Beacon beacon) {
         this.beacon = beacon;
     }
@@ -60,7 +62,6 @@ public class BeaconTrackingData {
         proximityMeasurements.add(Utils.computeProximity(beacon));
     }
 
-    // TODO - require minimum number of measurements?
     public double getEstimatedAccuracy() {
         double numerator = 0;
         double denominator = 0;

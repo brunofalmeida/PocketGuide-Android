@@ -41,16 +41,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /*
+    TODO - make user move to within 1m of a beacon before going from SearchActivity to MainActivity (show toast - "move closer to a beacon")
+    TODO - show more than 1 zone in discovery mode? sort tracked beacons by accuracy - Comparator?
     TODO - show current step out of total (e.g. step 3/5)
+    TODO - hide arrow for first and last NavigationStep - set/account for arrowAngle = null
     TODO - load TextToSpeech globally (before MainActivity is launched, persistent)
 
     TODO - change enable/disable camera icon when toggled
     TODO - add enable/disable audio button
     TODO - fix camera stretch
-
-    TODO - start/stop ranging beacons only after monitoring them (enter/exit region handlers)
-    TODO - cleanup ranging intervals/beacon tracking data measurement storage (remove constants)
-    TODO - shorten background monitoring interval (5/10s?)
 
     TODO - add notifications when within range of beacons of a specific zone - tap to enter navigation?
 
