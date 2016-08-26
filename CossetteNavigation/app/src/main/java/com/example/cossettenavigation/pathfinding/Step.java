@@ -128,10 +128,14 @@ public class Step implements Serializable {
                 return String.format("Walk %.0f metres ahead", Map.estimateTravelTime(startBeacon, endBeacon, zone));
             case STAIRS:
             case ELEVATOR:
-                return "Take the " + zone.getZoneType().lowercaseDescription + " to " + endBeacon.getFloor().getName();
+                return "Take the " + zone.getZoneType().lowercaseDescription /*+ " to " + endBeacon.getFloor().getName()*/;
             default:
                 return "";
         }
+    }
+
+    public String getDestinationDescription(){
+        return "To "+endBeacon.getDescription();
     }
 
 }
