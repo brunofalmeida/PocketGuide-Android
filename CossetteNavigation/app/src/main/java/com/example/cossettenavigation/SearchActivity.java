@@ -37,6 +37,8 @@ public class SearchActivity extends AppCompatActivity {
 
     private static final String TAG = "SearchActivity";
 
+    private static final double START_BEACON_RANGE = 1.0;
+
     private DatabaseHelper dbHelper;
     public static SQLiteDatabase db;
 
@@ -92,25 +94,31 @@ public class SearchActivity extends AppCompatActivity {
                 Pair<Region, BeaconTrackingData> nearestTrackedBeacon = beaconManager.getNearestTrackedBeacon();
 
                 if (nearestTrackedBeacon != null) {
-                    Beacon startBeacon = nearestTrackedBeacon.second.getBeacon();
+                    if (nearestTrackedBeacon.second.getEstimatedAccuracy() <= START_BEACON_RANGE) {
+                        Beacon startBeacon = nearestTrackedBeacon.second.getBeacon();
 
-                    double minTravelTime = Double.POSITIVE_INFINITY;
-                    Path minPath = null;
+                        double minTravelTime = Double.POSITIVE_INFINITY;
+                        Path minPath = null;
 
-                    for (AnchorBeacon testEndBeacon : zone.getAnchorBeacons()) {
-                        Path testPath = Pathfinder.getShortestPath(startBeacon, testEndBeacon);
+                        for (AnchorBeacon testEndBeacon : zone.getAnchorBeacons()) {
+                            Path testPath = Pathfinder.getShortestPath(startBeacon, testEndBeacon);
 
-                        if (testPath != null && testPath.getTravelTime() < minTravelTime) {
-                            minTravelTime = testPath.getTravelTime();
-                            minPath = testPath;
+                            if (testPath != null && testPath.getTravelTime() < minTravelTime) {
+                                minTravelTime = testPath.getTravelTime();
+                                minPath = testPath;
+                            }
+                        }
+
+                        if (minPath != null) {
+                            minPath.setDestination(zone);
+                            startMainActivityNavigation(minPath);
+                        } else {
+                            Toast.makeText(SearchActivity.this, "Path not found", Toast.LENGTH_LONG).show();
                         }
                     }
 
-                    if (minPath != null) {
-                        minPath.setDestination(zone);
-                        startMainActivityNavigation(minPath);
-                    } else {
-                        Toast.makeText(SearchActivity.this, "Path not found", Toast.LENGTH_LONG).show();
+                    else {
+                        Toast.makeText(SearchActivity.this, "Please move closer to the nearest beacon", Toast.LENGTH_LONG).show();
                     }
                 }
 

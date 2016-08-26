@@ -43,10 +43,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /*
-    TODO - make user move to within 1m of a beacon before going from SearchActivity to MainActivity (show toast - "move closer to a beacon")
     TODO - show more than 1 zone in discovery mode? sort tracked beacons by accuracy - Comparator?
     TODO - show current step out of total (e.g. step 3/5)
     TODO - hide arrow for first and last NavigationStep - set/account for arrowAngle = null
+    TODO - grey out step switching arrows for first/last step
     TODO - load TextToSpeech globally (before MainActivity is launched, persistent)
 
     TODO - change enable/disable camera icon when toggled
