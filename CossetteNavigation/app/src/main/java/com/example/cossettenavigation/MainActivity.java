@@ -16,15 +16,19 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.estimote.sdk.SystemRequirementsChecker;
 import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
@@ -32,6 +36,8 @@ import com.example.cossettenavigation.beacons.BeaconTrackingData;
 import com.example.cossettenavigation.map.Beacon;
 import com.example.cossettenavigation.pathfinding.Path;
 import com.example.cossettenavigation.pathfinding.Step;
+
+import org.apache.commons.math3.geometry.euclidean.threed.Line;
 
 import java.util.Locale;
 import java.util.Timer;
@@ -74,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private FrameLayout m_camera_view = null;
     private CameraView mCameraView = null;
+    private LinearLayout bottomBar;
 
     //UI elements (all for navigation mode, some for discovery mode)
     private RelativeLayout toggleArrows;
@@ -163,6 +170,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         } else {
             cameraPermissionGranted();
         }
+
+        bottomBar=(LinearLayout) findViewById(R.id.bottomBar);
 
         direction=(ImageView) findViewById(R.id.arrow);
         direction.bringToFront();
@@ -287,7 +296,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
-        // TODO - refactor navigation UI code, works with discovery code
+        bottomBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                /*//bottomBar.setBackgroundColor(android.R.color.holo_red_light);
+                LinearLayout helpResize=(LinearLayout) findViewById(R.id.helpResize);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) helpResize.getLayoutParams();
+                params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());;
+                bottomBar.setLayoutParams(params);*/
+                return true;
+            }
+        });
 
         toggleArrows.setVisibility(View.VISIBLE);
         direction.setVisibility(View.VISIBLE);
