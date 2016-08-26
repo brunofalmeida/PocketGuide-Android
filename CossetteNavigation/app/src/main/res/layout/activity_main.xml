@@ -32,7 +32,8 @@
             android:id="@+id/toggleArrows"
             android:layout_width="fill_parent"
             android:layout_weight="5"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone">
             <ImageView
                 android:id="@+id/toggleUp"
                 android:layout_width="48dp"
@@ -58,12 +59,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1">
+                <TextView
+                    android:id="@+id/instruction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="24dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="36px"
+                    android:layout_marginTop="18px"
+                    android:layout_marginRight="0px"
+                    android:layout_marginBottom="0px"
+                    android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="24dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="0px"
+                    android:layout_marginTop="18px"
+                    android:layout_marginRight="36px"
+                    android:layout_marginBottom="0px"
+                    android:visibility="gone"/>
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/bottomHalf"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1">
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="12dp"
+                    android:layout_marginLeft="36px"
+                    android:layout_marginTop="-12px"
+                    android:layout_marginRight="0px"
+                    android:layout_marginBottom="0px"
+                    android:visibility="gone"/>
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

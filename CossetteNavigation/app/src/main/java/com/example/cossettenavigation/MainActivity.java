@@ -39,6 +39,8 @@ import com.example.cossettenavigation.map.Zone;
 import com.example.cossettenavigation.pathfinding.Path;
 import com.example.cossettenavigation.pathfinding.Step;
 
+import org.w3c.dom.Text;
+
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -184,52 +186,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         direction.setLayoutParams(arrowParams);
         //-------------------------
-
-        /*set up text*/
-        //-------------------------
-        instruction=new TextView(this);
-        time=new TextView(this);
-        description=new TextView(this);
-
-        instruction.setTextColor(getResources().getColor(android.R.color.white));
-        time.setTextColor(getResources().getColor(android.R.color.white));
-        description.setTextColor(getResources().getColor(android.R.color.white));
-
-        instruction.setTextSize(TypedValue.COMPLEX_UNIT_DIP,24);
-        time.setTextSize(TypedValue.COMPLEX_UNIT_DIP,24);
-        description.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
-
-        RelativeLayout.LayoutParams instructionParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        RelativeLayout.LayoutParams timeParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        RelativeLayout.LayoutParams descriptionParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        instructionParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
-        timeParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
-
-        instructionParams.setMargins(36,18,0,0);
-        timeParams.setMargins(0,18,36,0);
-        descriptionParams.setMargins(36,-12,0,0);
-
-        instruction.setLayoutParams(instructionParams);
-        time.setLayoutParams(timeParams);
-        description.setLayoutParams(descriptionParams);
-
-        //-------------------------
-
-        toggleArrows=(RelativeLayout) findViewById(R.id.toggleArrows);
-        RelativeLayout topHalf=(RelativeLayout) findViewById(R.id.topHalf);
-        RelativeLayout bottomHalf=(RelativeLayout) findViewById(R.id.bottomHalf);
-
-        toggleArrows.setVisibility(View.GONE);
+        
         direction.setVisibility(View.GONE);
-        instruction.setVisibility(View.GONE);
-        time.setVisibility(View.GONE);
-        description.setVisibility(View.GONE);
 
         m_camera_view.addView(direction);
-        topHalf.addView(instruction);
-        topHalf.addView(time);
-        bottomHalf.addView(description);
+
+        toggleArrows=(RelativeLayout) findViewById(R.id.toggleArrows);
+        instruction=(TextView) findViewById(R.id.instruction);
+        time=(TextView) findViewById(R.id.time);
+        description=(TextView) findViewById(R.id.description);
 
         //get FAB
         FAB=(FloatingActionButton) findViewById(R.id.FAB);
