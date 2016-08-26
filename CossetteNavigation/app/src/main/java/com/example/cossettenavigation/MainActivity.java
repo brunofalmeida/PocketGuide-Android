@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         direction.setLayoutParams(arrowParams);
         //-------------------------
-        
+
         direction.setVisibility(View.GONE);
 
         m_camera_view.addView(direction);
