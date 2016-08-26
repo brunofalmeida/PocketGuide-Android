@@ -25,21 +25,46 @@
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="78dp"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary">
         <RelativeLayout
-            android:id="@+id/topHalf"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1">
+            android:layout_width="fill_parent"
+            android:layout_weight="5"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/toggleUp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/toggleup" />
+            <ImageView
+                android:id="@+id/toggleDown"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/toggledown" />
         </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/bottomHalf"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1">
-        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:id="@+id/topHalf"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1">
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/bottomHalf"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1">
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton

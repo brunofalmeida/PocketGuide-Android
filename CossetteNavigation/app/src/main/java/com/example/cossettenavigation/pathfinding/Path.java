@@ -13,12 +13,19 @@ public class Path implements Serializable {
 
     private double travelTime;
     private ArrayList<Step> steps;
+    //private ArrayList<Integer> timeRemaining;
     private Zone destination = null;
 
 
     public Path(double travelTime, ArrayList<Step> steps) {
         this.travelTime = travelTime;
         this.steps = steps;
+        /*timeRemaining=new ArrayList<>(steps.size());
+        //construct prefix sum array
+        timeRemaining.set(0,(int)steps.get(0).getTravelTime());
+        for (int i=1;i<steps.size();i++){
+            timeRemaining.set(i,timeRemaining.get(i-1)+(int) steps.get(i).getTravelTime());
+        }*/
     }
 
     @Override
@@ -38,6 +45,10 @@ public class Path implements Serializable {
     public ArrayList<Step> getSteps() {
         return steps;
     }
+
+    /*public int getTimeRemaining(int i){
+        return timeRemaining.get(i);
+    }*/
 
     public Zone getDestination() {
         return destination;
