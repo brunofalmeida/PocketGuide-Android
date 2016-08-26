@@ -103,21 +103,9 @@ public class Step implements Serializable {
 
     public String getTurnDescription() {
         if (turnAngle == 0) {
-            return "";
-        }
-
-        else {
-            switch (zone.getZoneType()) {
-                case HALLWAY:
-                case ROOM:
-                    return "Turn " + getTurnAngleDescription();
-                case STAIRS:
-                case ELEVATOR:
-                    return "Turn " + getTurnAngleDescription() + " towards the " +
-                            zone.getZoneType().lowercaseDescription;
-                default:
-                    return "";
-            }
+            return "Walk forward";
+        } else {
+            return "Turn " + getTurnAngleDescription();
         }
     }
 

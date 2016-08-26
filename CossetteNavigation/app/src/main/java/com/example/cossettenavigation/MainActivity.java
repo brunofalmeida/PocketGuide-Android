@@ -475,8 +475,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                direction.setVisibility(View.VISIBLE);
-
                 // Show turn
                 direction.setRotation((float) step.getTurnAngle());
                 String text;
