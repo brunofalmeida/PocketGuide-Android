@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -18,7 +19,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.estimote.sdk.Region;
 import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
+import com.example.cossettenavigation.beacons.BeaconTrackingData;
 import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Beacon;
 import com.example.cossettenavigation.map.DatabaseHelper;
@@ -33,8 +36,6 @@ import java.util.ArrayList;
 public class SearchActivity extends AppCompatActivity {
 
     private static final String TAG = "SearchActivity";
-
-    //0);
 
     private DatabaseHelper dbHelper;
     public static SQLiteDatabase db;
@@ -88,9 +89,11 @@ public class SearchActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Zone zone = (Zone) parent.getItemAtPosition(position);
 
-                Beacon startBeacon = beaconManager.getNearestBeacon();
+                Pair<Region, BeaconTrackingData> nearestTrackedBeacon = beaconManager.getNearestTrackedBeacon();
 
-                if (startBeacon != null) {
+                if (nearestTrackedBeacon != null) {
+                    Beacon startBeacon = nearestTrackedBeacon.second.getBeacon();
+
                     double minTravelTime = Double.POSITIVE_INFINITY;
                     Path minPath = null;
 
@@ -112,7 +115,7 @@ public class SearchActivity extends AppCompatActivity {
                 }
 
                 else {
-                    Toast.makeText(SearchActivity.this, "Nearest beacon not found", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SearchActivity.this, "No beacons found", Toast.LENGTH_LONG).show();
                 }
             }
         });

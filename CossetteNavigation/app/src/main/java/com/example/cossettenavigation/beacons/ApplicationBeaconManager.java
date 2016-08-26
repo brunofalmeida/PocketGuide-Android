@@ -2,6 +2,7 @@ package com.example.cossettenavigation.beacons;
 
 import android.app.Application;
 import android.util.Log;
+import android.util.Pair;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
@@ -213,24 +214,18 @@ public class ApplicationBeaconManager extends Application {
                 beacon.getMinor()));
     }
 
-    public com.example.cossettenavigation.map.Beacon getNearestBeacon() {
-        if (trackedBeacons.size() > 0) {
-            double minAccuracy = Double.POSITIVE_INFINITY;
-            com.example.cossettenavigation.map.Beacon minBeacon = null;
+    public Pair<Region, BeaconTrackingData> getNearestTrackedBeacon() {
+        double minAccuracy = Double.POSITIVE_INFINITY;
+        Pair<Region, BeaconTrackingData> nearest = null;
 
-            for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()) {
-                if (trackedBeacon.getValue().getEstimatedAccuracy() < minAccuracy) {
-                    minAccuracy = trackedBeacon.getValue().getEstimatedAccuracy();
-                    minBeacon = trackedBeacon.getValue().getBeacon();
-                }
+        for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()) {
+            if (trackedBeacon.getValue().getEstimatedAccuracy() < minAccuracy) {
+                minAccuracy = trackedBeacon.getValue().getEstimatedAccuracy();
+                nearest = new Pair<>(trackedBeacon.getKey(), trackedBeacon.getValue());
             }
-
-            return minBeacon;
         }
 
-        else {
-            return null;
-        }
+        return nearest;
     }
 
     public ArrayList<Zone> getNearbyZones() {
@@ -316,9 +311,9 @@ public class ApplicationBeaconManager extends Application {
      * @return Estimated floor or null.
      */
     public Floor getEstimatedFloor() {
-        com.example.cossettenavigation.map.Beacon nearestBeacon = getNearestBeacon();
-        if (nearestBeacon != null) {
-            return nearestBeacon.getFloor();
+        Pair<Region, BeaconTrackingData> nearestTrackedBeacon = getNearestTrackedBeacon();
+        if (nearestTrackedBeacon != null) {
+            return nearestTrackedBeacon.second.getBeacon().getFloor();
         }
 
         return null;
