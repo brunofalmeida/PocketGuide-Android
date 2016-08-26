@@ -88,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private TextView description;
     private TextView nextStep;
 
+    private ImageView toggleUp;
+    private ImageView toggleDown;
+
     private FloatingActionButton FAB;
 
     private ApplicationBeaconManager beaconManager;
@@ -106,17 +109,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
      */
     private final boolean isTextToSpeechEnabled = true;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "onCreate()");
 
         super.onCreate(savedInstanceState);
-
-
-
 
         // Initialize text to speech
         textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
@@ -344,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
-        // TODO - set up navigation-specific UI
+        // TODO - refactor navigation UI code, works with discovery code
 
         direction.setVisibility(View.VISIBLE);
         instruction.setVisibility(View.VISIBLE);
@@ -352,10 +349,33 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         description.setVisibility(View.VISIBLE);
         nextStep.setVisibility(View.VISIBLE);
 
+        toggleUp=(ImageView) findViewById(R.id.toggleUp);
+        toggleDown=(ImageView) findViewById(R.id.toggleDown);
+
+        toggleUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (stepIndex>0) {
+                    stepIndex--;
+                    startStep();
+                }
+            }
+        });
+
+        toggleDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (stepIndex+1<path.getSteps().size()){
+                    stepIndex++;
+                    startStep();
+                }
+            }
+        });
+
         //limit on number of characters
-        instruction.setText("Walk 4 m ahead");
+        /*instruction.setText("Walk 4 m ahead");
         time.setText("20 min");
-        description.setText("Top of North Stairwell");
+        description.setText("Top of North Stairwell");*/
         //nextStep.setText("Walk down staircase");
 
 
@@ -510,6 +530,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 Log.v(TAG, "startStep(): travel timer");
                                 direction.setRotation(0);
                                 instruction.setText(step.getTravelDescription());
+                                description.setText(step.getDestinationDescription());
+                                //time.setText(String.valueOf(path.getTimeRemaining(stepIndex))+"min");
                                 speakText(step.getTravelDescription());
                             }
                         });
@@ -561,17 +583,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         navigationStepUpdateTimer = new Timer();
     }
 
-
-
-
     private void speakText(String text) {
         if (isTextToSpeechAvailable && isTextToSpeechEnabled && Build.VERSION.SDK_INT >= 21) {
             textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
         }
     }
-
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

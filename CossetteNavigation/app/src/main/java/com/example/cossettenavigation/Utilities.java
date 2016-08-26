@@ -127,4 +127,17 @@ public class Utilities {
         return string;
     }
 
+    public static String getTimeRemainingString(ArrayList<Integer> timeRemaining){
+        String string="{";
+        for (Integer integer : timeRemaining){
+            //TODO -  did i do serializing right?
+            string+=String.format("\n\t\t%s,",integer);
+        }
+        if (string.endsWith(",")){
+            string=string.substring(0,string.length()-1)+"\n";
+        }
+        string+="}";
+        return string;
+    }
+
 }
