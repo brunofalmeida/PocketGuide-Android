@@ -15,18 +15,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.util.Log;;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,12 +30,8 @@ import com.estimote.sdk.SystemRequirementsChecker;
 import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
 import com.example.cossettenavigation.beacons.BeaconTrackingData;
 import com.example.cossettenavigation.map.Beacon;
-import com.example.cossettenavigation.map.Floor;
-import com.example.cossettenavigation.map.Zone;
 import com.example.cossettenavigation.pathfinding.Path;
 import com.example.cossettenavigation.pathfinding.Step;
-
-import org.w3c.dom.Text;
 
 import java.util.Locale;
 import java.util.Timer;
@@ -610,7 +602,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void cameraOnOff() {
-
         if (cGranted) {
             if (cVisible) hideCamera();
             else showCamera();
@@ -625,6 +616,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private void showCamera(){
         mCameraView=new CameraView(this);
         m_camera_view.addView(mCameraView);
+        direction.bringToFront();
         cVisible=true;
     }
 
