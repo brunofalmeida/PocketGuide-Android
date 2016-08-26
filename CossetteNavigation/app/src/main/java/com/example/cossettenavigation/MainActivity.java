@@ -172,25 +172,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             cameraPermissionGranted();
         }
 
-        /*set up arrow*/
-        //-------------------------
-        direction=new ImageView(this);
-        direction.setImageResource(R.drawable.arrow);
-
-        //WIDTH AND HEIGHT SHOULD MATCH THOSE IN ARROW.XML VECTOR FILE, OTHERWISE DRAWABLE WILL BE PIXELATED
-        int arrowWidth=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
-        int arrowHeight=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,155, getResources().getDisplayMetrics());
-
-        FrameLayout.LayoutParams arrowParams=new FrameLayout.LayoutParams(arrowWidth,arrowHeight);
-        arrowParams.gravity=Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
-
-        direction.setLayoutParams(arrowParams);
-        //-------------------------
-
-        direction.setVisibility(View.GONE);
-
-        m_camera_view.addView(direction);
-
+        direction=(ImageView) findViewById(R.id.arrow);
+        direction.bringToFront();
         toggleArrows=(RelativeLayout) findViewById(R.id.toggleArrows);
         instruction=(TextView) findViewById(R.id.instruction);
         time=(TextView) findViewById(R.id.time);
