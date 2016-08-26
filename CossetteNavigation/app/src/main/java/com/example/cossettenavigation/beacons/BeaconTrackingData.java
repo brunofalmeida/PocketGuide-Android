@@ -10,6 +10,8 @@ import java.util.ArrayList;
  */
 public class BeaconTrackingData {
 
+    private static final String TAG = "BeaconTrackingData";
+
     private com.example.cossettenavigation.map.Beacon beacon;
 
     // Oldest measurements first, newest measurements last
@@ -43,6 +45,10 @@ public class BeaconTrackingData {
     }
 
     public void addMeasurements(Beacon beacon) {
+/*        Log.i(TAG, String.format(
+                "addMeasurements(): \"%s\", \"%s\"",
+                this.beacon.getName(), this.beacon.getDescription()));*/
+
         if (accuracyMeasurements.size() >= 5) {
             accuracyMeasurements.remove(0);
         }

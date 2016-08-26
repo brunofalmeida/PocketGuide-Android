@@ -15,8 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;;
-import android.util.TypedValue;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.estimote.sdk.SystemRequirementsChecker;
 import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
@@ -37,11 +35,11 @@ import com.example.cossettenavigation.map.Beacon;
 import com.example.cossettenavigation.pathfinding.Path;
 import com.example.cossettenavigation.pathfinding.Step;
 
-import org.apache.commons.math3.geometry.euclidean.threed.Line;
-
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
+;
 
 /*
     TODO - navigation mode - check time to help determine when to switch steps
@@ -58,7 +56,6 @@ import java.util.TimerTask;
     TODO - add enable/disable audio button
 
     TODO - modify beacons, floors, and zones to have an identifier (for code) and a description (for users)
-    TODO - add distance/time units in logs
 
     TODO - check that pathfinding only uses 1 step for an elevator/stairs over multiple floors - merge consecutive steps in the same zone?
     TODO - account for not starting at a beacon? (go to nearest exit, close/far end of hallway, etc.) - can skip and assume starting beacon
@@ -207,15 +204,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (extras != null) {
             path = (Path) extras.getSerializable(INTENT_KEY_PATH);
 
-            if (path == null) {
-                enterDiscoveryMode();
-            } else {
+            if (path != null) {
                 enterNavigationMode();
+            } else {
+                enterDiscoveryMode();
             }
         }
-        else{
-            //enterDiscoveryMode();
-            enterNavigationMode();
+        else {
+            enterDiscoveryMode();
         }
     }
 
@@ -284,9 +280,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     /* Navigation */
 
     private void enterNavigationMode() {
-        //Log.i(TAG, "enterNavigationMode(): " + path.toString());
+        Log.i(TAG, "enterNavigationMode(): " + path.toString());
 
         exitDiscoveryMode();
+
+        verifyPath();
 
         FAB.setImageResource(R.drawable.close);
         FAB.setOnClickListener(new View.OnClickListener() {
@@ -310,9 +308,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         toggleArrows.setVisibility(View.VISIBLE);
         direction.setVisibility(View.VISIBLE);
-        instruction.setVisibility(View.VISIBLE);
         time.setVisibility(View.VISIBLE);
-        description.setVisibility(View.VISIBLE);
 
         toggleUp=(ImageView) findViewById(R.id.toggleUp);
         toggleDown=(ImageView) findViewById(R.id.toggleDown);
@@ -320,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         toggleUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, "toggleUp.setOnClickListener()");
                 if (stepIndex>0) {
                     stepIndex--;
                     startStep();
@@ -330,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         toggleDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, "toggleDown.setOnClickListener()");
                 if (stepIndex+1<path.getSteps().size()){
                     stepIndex++;
                     startStep();
@@ -338,13 +336,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         });
 
         //limit on number of characters
-        /*instruction.setText("Walk 4 m ahead");
+/*        instruction.setText("Walk 4 m ahead");
         time.setText("20 min");
-        description.setText("Top of North Stairwell");*/
-        //nextStep.setText("Walk down staircase");
+        description.setText("Top of North Stairwell");
+        nextStep.setText("Walk down staircase");*/
 
 
-        /*if (path.getSteps().size() > 0) {
+        if (path.getSteps().size() > 0) {
             startNavigation();
         } else {
             stopNavigation();
@@ -352,16 +350,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             String text = "You are already there!";
             instruction.setText(text);
             speakText(text);
-        }*/
+        }
     }
 
     private void exitNavigationMode() {
         Log.i(TAG, "exitNavigationMode()");
         stopNavigation();
-        instruction.setText("");
     }
 
     private void startNavigation() {
+        verifyPath();
+
         stepIndex = -1;
 
         // Navigation UI update
@@ -460,12 +459,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             public void run() {
                 direction.setVisibility(View.GONE);
                 toggleArrows.setVisibility(View.GONE);
+                time.setVisibility(View.GONE);
             }
         });
     }
 
     private void startStep() {
         Log.v(TAG, "startStep()");
+
+        verifyPath();
 
         final Step step = path.getSteps().get(stepIndex);
         resetNavigationStepUpdateTimer();
@@ -508,16 +510,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private boolean shouldSwitchSteps(Beacon beacon) {
-/*        Point2D location = beaconManager.getEstimatedLocation();
-        if (location != null) {
-            if (Map.distanceBetweenPoints(
-                    new Point3D(location.x, location.y, 0),
-                    new Point3D(beacon.getXPosition(), beacon.getYPosition(), 0))
-                        <= BEACON_RANGE_FOR_SWITCHING_STEPS) {
-                return true;
-            }
-        }*/
-
         BeaconTrackingData beaconTrackingData = beaconManager.getBeaconTrackingData(beacon);
         if (beaconTrackingData != null) {
             if (beaconTrackingData.getEstimatedAccuracy() <= BEACON_RANGE_FOR_SWITCHING_STEPS) {
@@ -530,6 +522,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 
 
+
+    private boolean verifyPath() {
+        if (path != null) {
+            return true;
+        } else {
+            Log.e(TAG, "path = null");
+            return false;
+        }
+    }
 
     private void resetDiscoveryModeTimer() {
         discoveryModeTimer.cancel();

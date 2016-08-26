@@ -24,7 +24,7 @@
     <LinearLayout
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
-        android:layout_height="78dp"
+        android:layout_height="100dp"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary">
@@ -69,9 +69,8 @@
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="12dp"
                     android:layout_marginTop="6dp"
-                    android:layout_marginRight="0px"
-                    android:layout_marginBottom="0px"
-                    android:visibility="gone"/>
+                    android:layout_marginRight="0dp"
+                    android:layout_marginBottom="0dp" />
                 <TextView
                     android:id="@+id/time"
                     android:layout_width="wrap_content"
@@ -79,10 +78,10 @@
                     android:textColor="@android:color/white"
                     android:textSize="24dp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginLeft="0px"
+                    android:layout_marginLeft="0dp"
                     android:layout_marginTop="6dp"
                     android:layout_marginRight="12dp"
-                    android:layout_marginBottom="0px"
+                    android:layout_marginBottom="0dp"
                     android:visibility="gone"/>
             </RelativeLayout>
             <RelativeLayout
@@ -98,9 +97,8 @@
                     android:textSize="12dp"
                     android:layout_marginLeft="12dp"
                     android:layout_marginTop="-4dp"
-                    android:layout_marginRight="0px"
-                    android:layout_marginBottom="0px"
-                    android:visibility="gone"/>
+                    android:layout_marginRight="0dp"
+                    android:layout_marginBottom="0dp" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
