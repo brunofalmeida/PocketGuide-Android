@@ -22,6 +22,7 @@ public class SupportBeacon extends Beacon implements Serializable {
      * Constructor using an absolute position.
      */
     public SupportBeacon(String name,
+                         String description,
                          Floor floor,
                          double xPosition,
                          double yPosition,
@@ -29,7 +30,7 @@ public class SupportBeacon extends Beacon implements Serializable {
                          int major,
                          int minor) {
 
-        super(name, floor, xPosition, yPosition, uuid, major, minor);
+        super(name, description, floor, xPosition, yPosition, uuid, major, minor);
         floor.addSupportBeacon(this);
     }
 
@@ -37,6 +38,7 @@ public class SupportBeacon extends Beacon implements Serializable {
      * Constructor using a position relative to another beacon.
      */
     public SupportBeacon(String name,
+                         String description,
                          Floor floor,
                          Beacon referenceBeacon,
                          double xPositionOffset,
@@ -45,7 +47,7 @@ public class SupportBeacon extends Beacon implements Serializable {
                          int major,
                          int minor) {
 
-        super(name, floor, referenceBeacon, xPositionOffset, yPositionOffset, uuid, major, minor);
+        super(name, description, floor, referenceBeacon, xPositionOffset, yPositionOffset, uuid, major, minor);
         floor.addSupportBeacon(this);
     }
 

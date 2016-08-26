@@ -173,30 +173,35 @@ public class Map {
 
         AnchorBeacon white17 = addAnchorBeacon(new AnchorBeacon(
                 "white17 - F1",
+                "Front Entrance",
                 floor1,
                 5, 0,
                 DEFAULT_UUID, 46447, 25300));
 
         SupportBeacon white5 = addSupportBeacon(new SupportBeacon(
                 "white5 - F1",
+                "Trophy Case",
                 floor1,
                 white17, -5, 8,
                 DEFAULT_UUID, 33753, 28870));
 
         AnchorBeacon white10 = addAnchorBeacon(new AnchorBeacon(
                 "white10 - F1",
+                "Middle Staircase",
                 floor1,
                 white5, 2, 15,
                 DEFAULT_UUID, 65261, 60647));
 
         AnchorBeacon white3 = addAnchorBeacon(new AnchorBeacon(
                 "white3 - F1",
+                "i don't know",
                 floor1,
                 white10, -2,20,
                 DEFAULT_UUID, 9953, 12088));
 
         AnchorBeacon white11 = addAnchorBeacon(new AnchorBeacon(
                 "white11 - F1",
+                "Elevator",
                 floor1,
                 white10, -5, 0,
                 DEFAULT_UUID, 18120, 25600));
@@ -210,18 +215,21 @@ public class Map {
 
         AnchorBeacon white15 = addAnchorBeacon(new AnchorBeacon(
                 "white15 - F2",
+                "Health Lab Staircase",
                 floor2,
                 white10, 2, 0,
                 DEFAULT_UUID, 2949, 35856));
 
         AnchorBeacon white1 = addAnchorBeacon(new AnchorBeacon(
                 "white1 - F2",
+                "i don't know",
                 floor2,
                 white15, 0, -8,
                 DEFAULT_UUID, 6607, 59029));
 
         AnchorBeacon white25 = addAnchorBeacon(new AnchorBeacon(
                 "white25 - F2",
+                "i don't know",
                 floor2,
                 white1, 2, -3,
                 DEFAULT_UUID, 27415, 8243));
@@ -235,6 +243,7 @@ public class Map {
 
         AnchorBeacon white18 = addAnchorBeacon(new AnchorBeacon(
                 "white18 - F2",
+                "i don't know",
                 floor2,
                 white15,-12,0,
                 DEFAULT_UUID, 3531, 48649));
@@ -247,6 +256,7 @@ public class Map {
 
         AnchorBeacon white12 = addAnchorBeacon(new AnchorBeacon(
                 "white12 - F3",
+                "South Patio Entrance",
                 floor3,
                 white15, 5, 0,
                 DEFAULT_UUID, 64248, 32245));

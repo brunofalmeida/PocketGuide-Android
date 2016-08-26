@@ -13,13 +13,11 @@ public class AnchorBeacon extends Beacon implements Comparable, Serializable {
 
     private ArrayList<Zone> zones = new ArrayList<>();
 
-
-
-
     /**
      * Constructor using an absolute position.
      */
     public AnchorBeacon(String name,
+                        String description,
                         Floor floor,
                         double xPosition,
                         double yPosition,
@@ -27,7 +25,7 @@ public class AnchorBeacon extends Beacon implements Comparable, Serializable {
                         int major,
                         int minor) {
 
-        super(name, floor, xPosition, yPosition, uuid, major, minor);
+        super(name, description, floor, xPosition, yPosition, uuid, major, minor);
         floor.addAnchorBeacon(this);
     }
 
@@ -35,6 +33,7 @@ public class AnchorBeacon extends Beacon implements Comparable, Serializable {
      * Constructor using a position relative to another beacon.
      */
     public AnchorBeacon(String name,
+                        String description,
                         Floor floor,
                         Beacon referenceBeacon,
                         double xPositionOffset,
@@ -43,7 +42,7 @@ public class AnchorBeacon extends Beacon implements Comparable, Serializable {
                         int major,
                         int minor) {
 
-        super(name, floor, referenceBeacon, xPositionOffset, yPositionOffset, uuid, major, minor);
+        super(name, description, floor, referenceBeacon, xPositionOffset, yPositionOffset, uuid, major, minor);
         floor.addAnchorBeacon(this);
     }
 
