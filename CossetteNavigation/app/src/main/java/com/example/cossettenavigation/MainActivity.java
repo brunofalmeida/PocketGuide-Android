@@ -513,7 +513,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 direction.setRotation((float) step.getTurnAngle());
                 String text;
                 if (stepIndex == 0) {
-                    text = "Start at " + step.getStartBeacon().getName();
+                    text = "Start at " + step.getStartBeacon().getDescription();
                 } else {
                     text = step.getTurnDescription();
                 }
