@@ -74,22 +74,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private static double BEACON_RANGE_FOR_SWITCHING_STEPS = 2;
 
-    private boolean mVisible;
-    private boolean cVisible;
-    private boolean cGranted;
+    private boolean mVisible; //UI elements (status bar, toolbar, bottom bar visible)
+    private boolean cVisible; //camera visible
+    private boolean cGranted; //camera permission granted
+
     private FrameLayout m_camera_view = null;
-    private LinearLayout bottomBar;
     private CameraView mCameraView = null;
 
-    //navigation UI elements
-    private ImageView direction;
-    private TextView instruction;
-    private TextView time;
-    private TextView description;
-    private TextView nextStep;
-
+    //UI elements (all for navigation mode, some for discovery mode)
+    private RelativeLayout toggleArrows;
     private ImageView toggleUp;
     private ImageView toggleDown;
+    private ImageView direction;
+    private TextView instruction;
+    private TextView description;
+    private TextView time;
 
     private FloatingActionButton FAB;
 
@@ -147,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         setSupportActionBar(toolbar);
 
         m_camera_view = (FrameLayout) findViewById(R.id.camera_view);
-        bottomBar=(LinearLayout) findViewById(R.id.bottomBar);
 
         mVisible = true;
 
@@ -172,6 +170,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             cameraPermissionGranted();
         }
 
+        /*set up arrow*/
+        //-------------------------
         direction=new ImageView(this);
         direction.setImageResource(R.drawable.arrow);
 
@@ -183,21 +183,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         arrowParams.gravity=Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
 
         direction.setLayoutParams(arrowParams);
+        //-------------------------
 
+        /*set up text*/
+        //-------------------------
         instruction=new TextView(this);
         time=new TextView(this);
         description=new TextView(this);
-        nextStep=new TextView(this);
 
         instruction.setTextColor(getResources().getColor(android.R.color.white));
         time.setTextColor(getResources().getColor(android.R.color.white));
         description.setTextColor(getResources().getColor(android.R.color.white));
-        nextStep.setTextColor(getResources().getColor(android.R.color.darker_gray));
 
         instruction.setTextSize(TypedValue.COMPLEX_UNIT_DIP,24);
         time.setTextSize(TypedValue.COMPLEX_UNIT_DIP,24);
         description.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
-        nextStep.setTextSize(TypedValue.COMPLEX_UNIT_DIP,18);
 
         RelativeLayout.LayoutParams instructionParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         RelativeLayout.LayoutParams timeParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -210,26 +210,26 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         timeParams.setMargins(0,18,36,0);
         descriptionParams.setMargins(36,-12,0,0);
 
-
         instruction.setLayoutParams(instructionParams);
         time.setLayoutParams(timeParams);
         description.setLayoutParams(descriptionParams);
-        nextStep.setLayoutParams(descriptionParams);
 
-        direction.setVisibility(View.INVISIBLE);
-        instruction.setVisibility(View.INVISIBLE);
-        time.setVisibility(View.INVISIBLE);
-        description.setVisibility(View.INVISIBLE);
-        nextStep.setVisibility(View.INVISIBLE);
+        //-------------------------
 
+        toggleArrows=(RelativeLayout) findViewById(R.id.toggleArrows);
         RelativeLayout topHalf=(RelativeLayout) findViewById(R.id.topHalf);
         RelativeLayout bottomHalf=(RelativeLayout) findViewById(R.id.bottomHalf);
+
+        toggleArrows.setVisibility(View.GONE);
+        direction.setVisibility(View.GONE);
+        instruction.setVisibility(View.GONE);
+        time.setVisibility(View.GONE);
+        description.setVisibility(View.GONE);
 
         m_camera_view.addView(direction);
         topHalf.addView(instruction);
         topHalf.addView(time);
         bottomHalf.addView(description);
-        bottomHalf.addView(nextStep);
 
         //get FAB
         FAB=(FloatingActionButton) findViewById(R.id.FAB);
@@ -265,7 +265,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         }
         else{
-            enterDiscoveryMode();
+            //enterDiscoveryMode();
+            enterNavigationMode();
         }
     }
 
@@ -288,8 +289,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
-        // TODO - set up discovery-specific UI
-
         // Discovery UI updating
         discoveryModeTimer.schedule(new TimerTask() {
             @Override
@@ -297,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String nearbyZones = "";
+                        /*String nearbyZones = "";
 
                         Floor floor = beaconManager.getEstimatedFloor();
                         if (floor != null) {
@@ -308,9 +307,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                         for (Zone zone : beaconManager.getNearbyZones()) {
                             nearbyZones += "\n" + zone.getName();
-                        }
+                        }*/
+                        Beacon nearestBeacon=beaconManager.getNearestBeacon();
 
-                        instruction.setText(nearbyZones);
+                        if (nearestBeacon!=null) {
+                            instruction.setText("You are on "+nearestBeacon.getDescription());
+                            description.setText(nearestBeacon.getFloor().getName());
+                        } else {
+                            instruction.setText("Unknown Location");
+                            description.setText("No Beacons Found");
+                        }
                     }
                 });
             }
@@ -329,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     /* Navigation */
 
     private void enterNavigationMode() {
-        Log.i(TAG, "enterNavigationMode(): " + path.toString());
+        //Log.i(TAG, "enterNavigationMode(): " + path.toString());
 
         exitDiscoveryMode();
 
@@ -343,11 +349,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         // TODO - refactor navigation UI code, works with discovery code
 
+        toggleArrows.setVisibility(View.VISIBLE);
         direction.setVisibility(View.VISIBLE);
         instruction.setVisibility(View.VISIBLE);
         time.setVisibility(View.VISIBLE);
         description.setVisibility(View.VISIBLE);
-        nextStep.setVisibility(View.VISIBLE);
 
         toggleUp=(ImageView) findViewById(R.id.toggleUp);
         toggleDown=(ImageView) findViewById(R.id.toggleDown);
@@ -379,7 +385,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         //nextStep.setText("Walk down staircase");
 
 
-        if (path.getSteps().size() > 0) {
+        /*if (path.getSteps().size() > 0) {
             startNavigation();
         } else {
             stopNavigation();
@@ -387,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             String text = "You are already there!";
             instruction.setText(text);
             speakText(text);
-        }
+        }*/
     }
 
     private void exitNavigationMode() {
@@ -493,7 +499,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                direction.setVisibility(View.INVISIBLE);
+                direction.setVisibility(View.GONE);
+                toggleArrows.setVisibility(View.GONE);
             }
         });
     }
