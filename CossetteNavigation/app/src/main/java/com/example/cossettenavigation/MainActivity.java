@@ -44,8 +44,7 @@ import java.util.TimerTask;
 
 /*
     TODO - show more than 1 zone in discovery mode? sort tracked beacons by accuracy - Comparator?
-    TODO - show current step out of total (e.g. step 3/5)
-    TODO - hide arrow for first and last NavigationStep - set/account for arrowAngle = null
+    TODO - hide direction arrow for first and last NavigationStep - set/account for arrowAngle = null
     TODO - grey out step switching arrows for first/last step
     TODO - load TextToSpeech globally (before MainActivity is launched, persistent)
 
@@ -79,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     //UI elements (all for navigation mode, some for discovery mode)
     private RelativeLayout toggleArrows;
     private ImageView toggleUp;
+    private TextView stepNumber;
     private ImageView toggleDown;
     private ImageView direction;
     private TextView instruction;
@@ -307,6 +307,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         time.setVisibility(View.VISIBLE);
 
         toggleUp=(ImageView) findViewById(R.id.toggleUp);
+        stepNumber = (TextView) findViewById(R.id.stepNumber);
         toggleDown=(ImageView) findViewById(R.id.toggleDown);
 
         toggleUp.setOnClickListener(new View.OnClickListener() {
@@ -383,6 +384,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 @Override
                 public void run() {
                     direction.setRotation((float) navigationStep.getArrowAngle());
+                    stepNumber.setText(String.format(
+                            "%d/%d",
+                            navigationStepIndex + 1, navigationSteps.size()));
                     instruction.setText(navigationStep.getDescriptionOne());
                     description.setText(navigationStep.getDescriptionTwo());
                     time.setText(String.format("%.0fs", navigationStep.getTimeRemaining()));
@@ -419,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private boolean isInRangeOfBeacon(Beacon beacon) {
-        Log.i(TAG, "isInRangeOfBeacon()");
+        Log.v(TAG, "isInRangeOfBeacon()");
 
         BeaconTrackingData beaconTrackingData = beaconManager.getBeaconTrackingData(beacon);
         if (beaconTrackingData != null) {

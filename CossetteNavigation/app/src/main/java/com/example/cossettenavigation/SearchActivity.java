@@ -37,7 +37,8 @@ public class SearchActivity extends AppCompatActivity {
 
     private static final String TAG = "SearchActivity";
 
-    private static final double START_BEACON_RANGE = 1.0;
+    // TODO - change to 1
+    private static final double START_BEACON_RANGE = 5;
 
     private DatabaseHelper dbHelper;
     public static SQLiteDatabase db;
