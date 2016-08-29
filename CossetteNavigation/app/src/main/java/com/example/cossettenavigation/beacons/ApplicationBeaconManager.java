@@ -61,7 +61,7 @@ public class ApplicationBeaconManager extends Application {
     /**
      * True to enable, false to disable
      */
-    private final boolean isTextToSpeechEnabled = true;
+    private boolean isTextToSpeechEnabled = true;
     private TextToSpeech textToSpeech = null;
     private boolean isTextToSpeechAvailable = false;
 
@@ -74,8 +74,7 @@ public class ApplicationBeaconManager extends Application {
 
         super.onCreate();
 
-        // Initialize text to speech
-        initTextToSpeech();
+        createTextToSpeech();
 
         // Initialize Map class
         Map map = new Map();
@@ -111,9 +110,12 @@ public class ApplicationBeaconManager extends Application {
         });
     }
 
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
 
-
-
+        destroyTextToSpeech();
+    }
 
     private void setMonitoringListener() {
         beaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
@@ -261,7 +263,13 @@ public class ApplicationBeaconManager extends Application {
         return nearbyZones;
     }
 
+    public boolean getIsTextToSpeechEnabled() {
+        return isTextToSpeechEnabled;
+    }
 
+    public void setIsTextToSpeechEnabled(boolean isTextToSpeechEnabled) {
+        this.isTextToSpeechEnabled = isTextToSpeechEnabled;
+    }
 
     /**
      * @see <a href="https://github.com/lemmingapex/Trilateration">Trilateration example</a>
@@ -374,23 +382,35 @@ public class ApplicationBeaconManager extends Application {
 
 
 
-    private void initTextToSpeech() {
+    private void createTextToSpeech() {
         if (isTextToSpeechEnabled) {
             textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
                 @Override
                 public void onInit(int status) {
                     if (status == TextToSpeech.SUCCESS) {
                         isTextToSpeechAvailable = true;
+
                         textToSpeech.setLanguage(Locale.CANADA);
 
-                        Log.i(TAG, "initTextToSpeech(): success");
-                    } else {
+                        Log.i(TAG, "createTextToSpeech(): success");
+                    }
+
+                    else {
                         isTextToSpeechAvailable = false;
 
-                        Log.i(TAG, "initTextToSpeech(): error");
+                        Log.i(TAG, "createTextToSpeech(): error");
                     }
                 }
             });
+        }
+    }
+
+    private void destroyTextToSpeech() {
+        Log.i(TAG, "destroyTextToSpeech()");
+
+        if (isTextToSpeechAvailable) {
+            textToSpeech.shutdown();
+            isTextToSpeechAvailable = false;
         }
     }
 

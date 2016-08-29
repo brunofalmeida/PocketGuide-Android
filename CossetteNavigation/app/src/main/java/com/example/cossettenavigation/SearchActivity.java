@@ -38,7 +38,10 @@ public class SearchActivity extends AppCompatActivity {
 
     private static final String TAG = "SearchActivity";
 
-    // TODO - change to 1
+    // TODO - set to 1 or 2
+    /**
+     * Beacon range (in metres) that is required to start navigation.
+     */
     private static final double START_BEACON_RANGE = 5;
 
     private DatabaseHelper dbHelper;

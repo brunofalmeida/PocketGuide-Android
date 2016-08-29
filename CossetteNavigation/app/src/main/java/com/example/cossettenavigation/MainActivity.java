@@ -63,7 +63,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public static final String INTENT_KEY_PATH = "path";
 
-    private static double BEACON_RANGE_FOR_SWITCHING_STEPS = 1;
+    /**
+     * Range (in metres) for switching steps during navigation.
+     */
+    private static double BEACON_RANGE_FOR_SWITCHING_STEPS = 2;
 
     private boolean mVisible; //UI elements (status bar, toolbar, bottom bar visible)
     private boolean cVisible; //camera visible
@@ -492,6 +495,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 
 
+    private void toggleAudio() {
+        beaconManager.setIsTextToSpeechEnabled(!beaconManager.getIsTextToSpeechEnabled());
+    }
+
+
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         Log.i(TAG, "onRequestPermissionsResult()");
@@ -535,6 +545,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 return true;
             case R.id.camera_button:
                 cameraOnOff();
+                return true;
+            case R.id.audio_button:
+                toggleAudio();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
