@@ -270,7 +270,7 @@ public class Map {
         z1.addAnchorBeacons(white17, white10, white3);
         z1.addSupportBeacons(white5);
 
-        Zone z2 = addZone(new Zone("Stairs", Zone.ZoneType.STAIRS, false));
+        Zone z2 = addZone(new Zone("North Stairs", Zone.ZoneType.STAIRS, false));
         z2.addAnchorBeacons(white10, white15);
 
         Zone z3 = addZone(new Zone("Health Lab", Zone.ZoneType.HALLWAY, true));
@@ -285,7 +285,7 @@ public class Map {
         Zone z6 = addZone(new Zone("Main Intersection", Zone.ZoneType.HALLWAY, true));
         z6.addAnchorBeacons(white10, white11);
 
-        Zone z7 = addZone(new Zone("Stairs", Zone.ZoneType.STAIRS, false));
+        Zone z7 = addZone(new Zone("South Stairs", Zone.ZoneType.STAIRS, false));
         z7.addAnchorBeacons(white15, white12);
 
         Zone z8 = addZone(new Zone("Elevator", Zone.ZoneType.ELEVATOR, false));
