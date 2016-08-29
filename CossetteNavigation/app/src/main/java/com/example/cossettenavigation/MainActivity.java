@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.estimote.sdk.Region;
 import com.estimote.sdk.SystemRequirementsChecker;
 import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
 import com.example.cossettenavigation.beacons.BeaconTrackingData;
@@ -39,22 +37,6 @@ import com.example.cossettenavigation.pathfinding.Path;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-
-/*
-    TODO - add enable/disable audio button
-    TODO - change enable/disable camera icon when toggled
-
-    TODO - remove beacon from trackedBeacons when not detected for 5 seconds
-         - in updateTrackedBeacon(), set timer for 5 seconds that will call removeTrackedBeacon()
-         - put timer in HashMap<Region, Timer>
-         - when updateTrackedBeacon() is called again, check if map contains timer for Region -> cancel
-
-    TODO - fix camera stretch
-
-    TODO - show more than 1 zone in discovery mode? sort tracked beacons by accuracy - Comparator?
-    TODO - add notifications when within range of beacons of a specific zone - tap to enter navigation?
-    TODO - check that pathfinding only uses 1 step for an elevator/stairs over multiple floors - merge consecutive steps in the same zone?
-*/
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -209,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     /* Discovery */
 
     private void enterDiscoveryMode() {
-        Log.i(TAG, "enterDiscoveryMode()");
+        Log.v(TAG, "enterDiscoveryMode()");
 
         exitNavigationMode();
 
@@ -343,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void exitNavigationMode() {
-        Log.i(TAG, "exitNavigationMode()");
+        Log.v(TAG, "exitNavigationMode()");
 
         resetNavigationTimer();
         resetNavigationStepTimer();
@@ -461,7 +443,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void resetNavigationTimer() {
-        Log.i(TAG, "resetNavigationTimer()");
+        Log.v(TAG, "resetNavigationTimer()");
 
         navigationTimer.cancel();
         navigationTimer.purge();
@@ -469,7 +451,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void resetNavigationStepTimer() {
-        Log.i(TAG, "resetNavigationStepTimer()");
+        Log.v(TAG, "resetNavigationStepTimer()");
 
         navigationStepTimer.cancel();
         navigationStepTimer.purge();
@@ -529,7 +511,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void cameraPermissionGranted() {
-        Log.i(TAG, "Camera permission granted");
+        Log.v(TAG, "Camera permission granted");
         cGranted=true;
         cVisible=true;
         mCameraView = new CameraView(this); // create a SurfaceView to show camera data
@@ -551,10 +533,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_debug:
+/*            case R.id.action_debug:
                 Intent intent = new Intent(this, DebugActivity.class);
                 startActivity(intent);
-                return true;
+                return true;*/
             case R.id.camera_button:
                 cameraOnOff();
                 return true;

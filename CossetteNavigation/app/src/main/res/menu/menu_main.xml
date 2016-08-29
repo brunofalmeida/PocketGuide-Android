@@ -17,11 +17,11 @@
         app:showAsAction="always"
         />
 
-    <item
+<!--    <item
         android:id="@+id/action_debug"
         android:icon="@android:drawable/ic_menu_info_details"
         android:orderInCategory="100"
         android:title="Debug"
-        app:showAsAction="always" />
+        app:showAsAction="always" />-->
 
 </menu>
