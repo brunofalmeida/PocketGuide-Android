@@ -39,11 +39,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /*
-    TODO - remove beacon from trackedBeacons when not detected for 5 seconds
-         - in updateTrackedBeacon(), set timer for 5 seconds that will call removeTrackedBeacon()
-         - put timer in HashMap<Region, Timer>
-         - when updateTrackedBeacon() is called again, check if map contains timer for Region -> cancel
-
     TODO - fix camera stretch
 
     TODO - show more than 1 zone in discovery mode? sort tracked beacons by accuracy - Comparator?

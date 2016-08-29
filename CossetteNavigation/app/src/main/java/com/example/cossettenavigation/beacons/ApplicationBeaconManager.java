@@ -11,6 +11,7 @@ import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.EstimoteSDK;
 import com.estimote.sdk.Region;
+import com.estimote.sdk.Utils;
 import com.example.cossettenavigation.Utilities;
 import com.example.cossettenavigation.map.Floor;
 import com.example.cossettenavigation.map.Map;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Global application state used to detect and manage beacons.
@@ -57,6 +60,8 @@ public class ApplicationBeaconManager extends Application {
      * Set of beacons to be tracked over time (for location algorithms).
      */
     private HashMap<Region, BeaconTrackingData> trackedBeacons = new HashMap<>();
+
+    private HashMap<Region, TimerTask> removeTrackedBeaconTimerTasks = new HashMap<>();
 
 
     /**
@@ -118,6 +123,9 @@ public class ApplicationBeaconManager extends Application {
         destroyTextToSpeech();
     }
 
+
+
+
     private void setMonitoringListener() {
         beaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
             @Override
@@ -159,7 +167,7 @@ public class ApplicationBeaconManager extends Application {
                 if (list.size() > 0) {
                     updateTrackedBeacon(region, list.get(0));
                 } else {
-                    Log.v(TAG, "setRangingListener(): No beacons in region");
+                    Log.v(TAG, "No beacons in region");
                 }
             }
         });
@@ -185,12 +193,12 @@ public class ApplicationBeaconManager extends Application {
 
 
 
-    private void updateTrackedBeacon(Region region, Beacon beacon) {
-        //Log.v(TAG, "updateTrackedBeacon()");
+    private void updateTrackedBeacon(final Region region, Beacon beacon) {
+        Log.v(TAG, "updateTrackedBeacon()");
 
-/*        Log.v(TAG, String.format(
-        "Beacon: accuracy = %f, proximity = %s, %s",
-        Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));*/
+        Log.v(TAG, String.format(
+                "Beacon: accuracy = %f, proximity = %s, %s",
+                Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));
 
         // Add the beacon if it isn't already tracked
         if (!trackedBeacons.containsKey(region)) {
@@ -214,8 +222,36 @@ public class ApplicationBeaconManager extends Application {
             }
         }
 
+        Log.v(TAG, "updateTrackedBeacon(): " + trackedBeacons.get(region).getBeacon().toString());
+
         // The beacon must be in the tracked set, so update it with measurements
         trackedBeacons.get(region).addMeasurements(beacon);
+
+        // Cancel tracked beacon removal timer if one exists for this region
+        if (removeTrackedBeaconTimerTasks.containsKey(region)) {
+            Log.v(TAG, String.format(
+                    "updateTrackedBeacon(): Canceling timer task for \"%s\"",
+                    trackedBeacons.get(region).getBeacon().getName()));
+
+            removeTrackedBeaconTimerTasks.get(region).cancel();
+            removeTrackedBeaconTimerTasks.remove(region);
+        }
+
+        // Set timer to remove tracked beacon in 5 seconds
+        Log.v(TAG, String.format(
+                "updateTrackedBeacon(): Scheduling timer task for \"%s\"",
+                trackedBeacons.get(region).getBeacon().getName()));
+        TimerTask removeTask = new TimerTask() {
+            @Override
+            public void run() {
+                Log.i(TAG, String.format(
+                        "updateTrackedBeacon(): Removing tracking data for \"%s\"",
+                        trackedBeacons.get(region).getBeacon().getName()));
+                removeTrackedBeacon(region);
+            }
+        };
+        new Timer().schedule(removeTask, 5000);
+        removeTrackedBeaconTimerTasks.put(region, removeTask);
 
         //Log.v(TAG, trackedBeacons.get(region).toString());
     }
@@ -245,6 +281,9 @@ public class ApplicationBeaconManager extends Application {
 
         return nearest;
     }
+
+
+
 
     public ArrayList<Zone> getNearbyZones() {
         ArrayList<Zone> nearbyZones = new ArrayList<>();
