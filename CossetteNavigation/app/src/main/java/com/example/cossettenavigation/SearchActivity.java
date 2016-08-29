@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -74,6 +75,9 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // Make the volume buttons control the text to speech volume (music stream)
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         /*String[] location = getResources().getStringArray(R.array.locations);
         ArrayList<String> searchResults = new ArrayList<>();

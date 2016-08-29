@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.AudioManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -38,12 +36,10 @@ import com.example.cossettenavigation.pathfinding.NavigationStep;
 import com.example.cossettenavigation.pathfinding.Path;
 
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 /*
-    TODO - load TextToSpeech globally (before MainActivity is launched, persistent)
     TODO - add enable/disable audio button
     TODO - change enable/disable camera icon when toggled
 
@@ -108,13 +104,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
      */
     private boolean shouldChangeNavigationStep = true;
 
-    /**
-     * True to enable, false to disable
-     */
-    private final boolean isTextToSpeechEnabled = true;
-    private boolean isTextToSpeechAvailable = false;
-    private TextToSpeech textToSpeech = null;
-
 
 
 
@@ -123,9 +112,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Log.v(TAG, "onCreate()");
 
         super.onCreate(savedInstanceState);
-
-        // Initialize text to speech
-        initTextToSpeech();
 
         // Make the volume buttons control the text to speech volume (music stream)
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -413,7 +399,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     instruction.setText(navigationStep.getDescriptionOne());
                     description.setText(navigationStep.getDescriptionTwo());
                     time.setText(String.format("%.0fs", navigationStep.getTimeRemaining()));
-                    speakText(navigationStep.getDescriptionOne());
+                    beaconManager.speakText(navigationStep.getDescriptionOne());
                 }
             });
 
@@ -500,35 +486,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (navigationStepIndex < navigationSteps.size() - 1) {
             navigationStepIndex++;
             shouldChangeNavigationStep = true;
-        }
-    }
-
-
-
-
-    private void initTextToSpeech() {
-        if (isTextToSpeechEnabled) {
-            textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-                @Override
-                public void onInit(int status) {
-                    if (status == TextToSpeech.SUCCESS) {
-                        isTextToSpeechAvailable = true;
-                        textToSpeech.setLanguage(Locale.CANADA);
-
-                        Log.i(TAG, "textToSpeech: init success");
-                    } else {
-                        isTextToSpeechAvailable = false;
-
-                        Log.i(TAG, "textToSpeech: init error");
-                    }
-                }
-            });
-        }
-    }
-
-    private void speakText(String text) {
-        if (isTextToSpeechEnabled && isTextToSpeechAvailable && Build.VERSION.SDK_INT >= 21) {
-            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
         }
     }
 
@@ -677,4 +634,5 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onConfigurationChanged(newConfig);
         mCameraView.activityOnConfigurationChanged();
         }
+
 }

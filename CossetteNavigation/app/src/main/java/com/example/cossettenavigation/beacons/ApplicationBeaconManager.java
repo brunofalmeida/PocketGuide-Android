@@ -1,6 +1,8 @@
 package com.example.cossettenavigation.beacons;
 
 import android.app.Application;
+import android.os.Build;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.Pair;
 
@@ -22,6 +24,7 @@ import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Global application state used to detect and manage beacons.
@@ -55,6 +58,14 @@ public class ApplicationBeaconManager extends Application {
     private HashMap<Region, BeaconTrackingData> trackedBeacons = new HashMap<>();
 
 
+    /**
+     * True to enable, false to disable
+     */
+    private final boolean isTextToSpeechEnabled = true;
+    private TextToSpeech textToSpeech = null;
+    private boolean isTextToSpeechAvailable = false;
+
+
 
 
     @Override
@@ -62,6 +73,9 @@ public class ApplicationBeaconManager extends Application {
         Log.v(TAG, "onCreate()");
 
         super.onCreate();
+
+        // Initialize text to speech
+        initTextToSpeech();
 
         // Initialize Map class
         Map map = new Map();
@@ -96,6 +110,7 @@ public class ApplicationBeaconManager extends Application {
             }
         });
     }
+
 
 
 
@@ -356,5 +371,33 @@ public class ApplicationBeaconManager extends Application {
         return string;
     }
 
+
+
+
+    private void initTextToSpeech() {
+        if (isTextToSpeechEnabled) {
+            textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int status) {
+                    if (status == TextToSpeech.SUCCESS) {
+                        isTextToSpeechAvailable = true;
+                        textToSpeech.setLanguage(Locale.CANADA);
+
+                        Log.i(TAG, "initTextToSpeech(): success");
+                    } else {
+                        isTextToSpeechAvailable = false;
+
+                        Log.i(TAG, "initTextToSpeech(): error");
+                    }
+                }
+            });
+        }
+    }
+
+    public void speakText(String text) {
+        if (isTextToSpeechEnabled && isTextToSpeechAvailable && Build.VERSION.SDK_INT >= 21) {
+            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
+        }
+    }
 
 }
