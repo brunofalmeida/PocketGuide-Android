@@ -10,6 +10,12 @@
         app:showAsAction="always"
         />
 
+    <item
+        android:id="@+id/audio_button"
+        android:icon="@drawable/ic_volume_mute_white_48px"
+        android:title="Audio Toggle"
+        app:showAsAction="always"
+        />
 
     <item
         android:id="@+id/action_debug"
