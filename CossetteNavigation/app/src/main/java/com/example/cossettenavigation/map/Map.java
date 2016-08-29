@@ -257,19 +257,19 @@ public class Map {
 
         // Start floor 3
 
-        Floor Patio = addFloor(new Floor("Patio", floor2, 2));
+        Floor floor3 = addFloor(new Floor("Floor 3", floor2, 2));
 
         AnchorBeacon white12 = addAnchorBeacon(new AnchorBeacon(
                 "white12",
                 "West Patio Entrance",
-                Patio,
+                floor3,
                 white15, 5, 0,
                 DEFAULT_UUID, 64248, 32245));
 
         AnchorBeacon white24 = addAnchorBeacon(new AnchorBeacon(
                 "white24",
                 "East Patio Entrance",
-                Patio,
+                floor3,
                 white25, 5,0,
                 DEFAULT_UUID, 6433, 58059));
 
@@ -308,6 +308,9 @@ public class Map {
 
         Zone z10 = addZone(new Zone("East Patio Stairs", Zone.ZoneType.ELEVATOR,false));
         z10.addAnchorBeacons(white25, white24);
+
+        Zone z11 = addZone(new Zone("Patio",Zone.ZoneType.ROOM,true));
+        z11.addAnchorBeacons(white24,white12);
 
         // End Zones
 

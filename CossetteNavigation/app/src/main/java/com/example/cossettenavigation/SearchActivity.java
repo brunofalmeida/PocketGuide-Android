@@ -35,6 +35,8 @@ import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity {
 
+    //0);
+
     private static final String TAG = "SearchActivity";
 
     /**
@@ -151,7 +153,7 @@ public class SearchActivity extends AppCompatActivity {
         searchText=searchText.toLowerCase();
         for (Zone zone : Map.zones) {
             String zoneName=zone.getName().toLowerCase();
-            String zoneType=zone.getZoneType().toString().toLowerCase();
+            String zoneType=Utilities.getZoneFloorNamesString(zone).toLowerCase();
             if ((zoneName.contains(searchText)||zoneType.contains(searchText)) && zone.getIsDestination()) {
                 filteredZones.add(zone);
             }
