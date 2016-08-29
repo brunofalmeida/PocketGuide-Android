@@ -43,17 +43,21 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /*
-    TODO - show more than 1 zone in discovery mode? sort tracked beacons by accuracy - Comparator?
-    TODO - hide direction arrow for first and last NavigationStep - set/account for arrowAngle = null
     TODO - grey out step switching arrows for first/last step
+    TODO - hide direction arrow for first and last NavigationStep - set/account for arrowAngle = null
     TODO - load TextToSpeech globally (before MainActivity is launched, persistent)
-
-    TODO - change enable/disable camera icon when toggled
     TODO - add enable/disable audio button
+    TODO - change enable/disable camera icon when toggled
+
+    TODO - remove beacon from trackedBeacons when not detected for 5 seconds
+         - in updateTrackedBeacon(), set timer for 5 seconds that will call removeTrackedBeacon()
+         - put timer in HashMap<Region, Timer>
+         - when updateTrackedBeacon() is called again, check if map contains timer for Region -> cancel
+
     TODO - fix camera stretch
 
+    TODO - show more than 1 zone in discovery mode? sort tracked beacons by accuracy - Comparator?
     TODO - add notifications when within range of beacons of a specific zone - tap to enter navigation?
-
     TODO - check that pathfinding only uses 1 step for an elevator/stairs over multiple floors - merge consecutive steps in the same zone?
 */
 
