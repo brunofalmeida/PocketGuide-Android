@@ -32,6 +32,7 @@ import com.estimote.sdk.SystemRequirementsChecker;
 import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
 import com.example.cossettenavigation.beacons.BeaconTrackingData;
 import com.example.cossettenavigation.map.Beacon;
+import com.example.cossettenavigation.map.Floor;
 import com.example.cossettenavigation.pathfinding.NavigationStep;
 import com.example.cossettenavigation.pathfinding.Path;
 
@@ -228,24 +229,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        /*String nearbyZones = "";
+                        Floor floor=beaconManager.getFloor();
+                        ArrayList<BeaconTrackingData> beacons=beaconManager.getNearestBeacons();
 
-                        Floor floor = beaconManager.getEstimatedFloor();
-                        if (floor != null) {
-                            nearbyZones += floor.getName() + " - ";
+                        Double minDistance=Double.POSITIVE_INFINITY;
+                        Beacon nearestBeacon=null;
+
+                        for (BeaconTrackingData beaconData:beacons){
+                            if (beaconData.getBeacon().getFloor()==floor&&minDistance>beaconData.getEstimatedAccuracy()){
+                                minDistance=beaconData.getEstimatedAccuracy();
+                                nearestBeacon=beaconData.getBeacon();
+                            }
                         }
 
-                        nearbyZones += "Nearby:";
-
-                        for (Zone zone : beaconManager.getNearbyZones()) {
-                            nearbyZones += "\n" + zone.getName();
-                        }*/
-
-                        Pair<Region, BeaconTrackingData> nearestTrackedBeacon = beaconManager.getNearestTrackedBeacon();
-
-                        if (nearestTrackedBeacon != null) {
-                            instruction.setText("You are near " + nearestTrackedBeacon.second.getBeacon().getDescription());
-                            description.setText(nearestTrackedBeacon.second.getBeacon().getFloor().getName());
+                        if (nearestBeacon!=null) {
+                            instruction.setText(nearestBeacon.getDescription());
+                            description.setText(nearestBeacon.getFloor().getName());
                         } else {
                             instruction.setText("Unknown Location");
                             description.setText("No Beacons Found");

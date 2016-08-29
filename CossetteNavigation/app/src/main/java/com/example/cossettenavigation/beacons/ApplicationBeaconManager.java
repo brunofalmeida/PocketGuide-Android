@@ -330,19 +330,45 @@ public class ApplicationBeaconManager extends Application {
         }
     }
 
-    /**
-     * @return Estimated floor or null.
-     */
-    public Floor getEstimatedFloor() {
-        Pair<Region, BeaconTrackingData> nearestTrackedBeacon = getNearestTrackedBeacon();
-        if (nearestTrackedBeacon != null) {
-            return nearestTrackedBeacon.second.getBeacon().getFloor();
-        }
 
-        return null;
+    public ArrayList<BeaconTrackingData> getNearestBeacons(){
+        ArrayList<BeaconTrackingData> beacons=new ArrayList<>();
+        for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()){
+            beacons.add(trackedBeacon.getValue());
+        }
+        return beacons;
     }
 
-
+    public Floor getFloor() {
+        HashMap<Floor, ArrayList<Integer>> floorMatrix = new HashMap();
+        for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()) {
+            Floor floor = trackedBeacon.getValue().getBeacon().getFloor();
+            if (floorMatrix.containsKey(floor)) {
+                ArrayList<Integer> tuple = floorMatrix.get(floor);
+                tuple.set(0, tuple.get(0) + 1);
+                tuple.set(1, tuple.get(1) + (int) Math.pow(trackedBeacon.getValue().getEstimatedAccuracy(), 2));
+                floorMatrix.put(floor, tuple);
+            } else {
+                ArrayList<Integer> tuple = new ArrayList<>(2);
+                tuple.add(0, 1);
+                tuple.add(1, (int) Math.pow(trackedBeacon.getValue().getEstimatedAccuracy(), 2));
+                floorMatrix.put(floor, tuple);
+            }
+        }
+        Integer minDiff = Integer.MAX_VALUE;
+        Floor closeFloor = null;
+        for (Floor floor : Map.floors) {
+            if (floorMatrix.containsKey(floor)) {
+                Integer count = floorMatrix.get(floor).get(0);
+                Integer sum = floorMatrix.get(floor).get(1);
+                if (minDiff > sum - count) {
+                    minDiff = sum - count;
+                    closeFloor = floor;
+                }
+            }
+        }
+        return closeFloor;
+    }
 
     public void logTrackedBeacons() {
         String string = "logTrackedBeacons():\n";
