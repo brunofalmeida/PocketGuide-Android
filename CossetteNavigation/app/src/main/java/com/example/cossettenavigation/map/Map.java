@@ -278,24 +278,24 @@ public class Map {
 
         // Zones
 
+        Zone z5 = addZone(new Zone("Front Entrance",Zone.ZoneType.ENTRANCE, true));
+        z5.addAnchorBeacons(white17);
+
         Zone z1 = addZone(new Zone("Main Hallway", Zone.ZoneType.HALLWAY, true));
         z1.addAnchorBeacons(white17, white10, white3);
         z1.addSupportBeacons(white5);
 
+        Zone z6 = addZone(new Zone("Main Intersection", Zone.ZoneType.HALLWAY, true));
+        z6.addAnchorBeacons(white10, white11);
+
         Zone z2 = addZone(new Zone("Middle Stairs", Zone.ZoneType.STAIRS, false));
         z2.addAnchorBeacons(white10, white15);
 
+        Zone z4 = addZone(new Zone("Open Area", Zone.ZoneType.ROOM, true));
+        z4.addAnchorBeacons(white25, white19, white1); 
+
         Zone z3 = addZone(new Zone("Health Lab", Zone.ZoneType.HALLWAY, true));
         z3.addAnchorBeacons(white15, white1);
-
-        Zone z4 = addZone(new Zone("Open Area", Zone.ZoneType.ROOM, true));
-        z4.addAnchorBeacons(white25, white19, white1);
-
-        Zone z5 = addZone(new Zone("Front Entrance",Zone.ZoneType.ENTRANCE, true));
-        z5.addAnchorBeacons(white17);
-
-        Zone z6 = addZone(new Zone("Main Intersection", Zone.ZoneType.HALLWAY, true));
-        z6.addAnchorBeacons(white10, white11);
 
         Zone z7 = addZone(new Zone("West Patio Stairs", Zone.ZoneType.STAIRS, false));
         z7.addAnchorBeacons(white15, white12);
