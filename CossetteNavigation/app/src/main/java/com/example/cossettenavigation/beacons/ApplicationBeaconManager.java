@@ -2,6 +2,7 @@ package com.example.cossettenavigation.beacons;
 
 import android.app.Application;
 import android.os.Build;
+import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.Pair;
@@ -443,6 +444,8 @@ public class ApplicationBeaconManager extends Application {
     public void speakText(String text) {
         if (isTextToSpeechEnabled && isTextToSpeechAvailable && Build.VERSION.SDK_INT >= 21) {
             textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
+            Vibrator v=(Vibrator) getSystemService(ApplicationBeaconManager.VIBRATOR_SERVICE);
+            v.vibrate(500);
         }
     }
 
