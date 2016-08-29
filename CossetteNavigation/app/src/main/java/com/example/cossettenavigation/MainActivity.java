@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,11 +27,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.estimote.sdk.Region;
 import com.estimote.sdk.SystemRequirementsChecker;
 import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
 import com.example.cossettenavigation.beacons.BeaconTrackingData;
 import com.example.cossettenavigation.map.Beacon;
-import com.example.cossettenavigation.map.Floor;
 import com.example.cossettenavigation.pathfinding.NavigationStep;
 import com.example.cossettenavigation.pathfinding.Path;
 
@@ -211,22 +212,24 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Floor floor=beaconManager.getFloor();
-                        ArrayList<BeaconTrackingData> beacons=beaconManager.getNearestBeacons();
+//                        Floor floor=beaconManager.getFloor();
+//                        ArrayList<BeaconTrackingData> beacons=beaconManager.getNearestBeacons();
+//
+//                        Double minDistance=Double.POSITIVE_INFINITY;
+//                        Beacon nearestBeacon=null;
+//
+//                        for (BeaconTrackingData beaconData:beacons){
+//                            if (beaconData.getBeacon().getFloor()==floor&&minDistance>beaconData.getEstimatedAccuracy()){
+//                                minDistance=beaconData.getEstimatedAccuracy();
+//                                nearestBeacon=beaconData.getBeacon();
+//                            }
+//                        }
 
-                        Double minDistance=Double.POSITIVE_INFINITY;
-                        Beacon nearestBeacon=null;
+                        Pair<Region, BeaconTrackingData> nearestTrackedBeacon = beaconManager.getNearestTrackedBeacon();
 
-                        for (BeaconTrackingData beaconData:beacons){
-                            if (beaconData.getBeacon().getFloor()==floor&&minDistance>beaconData.getEstimatedAccuracy()){
-                                minDistance=beaconData.getEstimatedAccuracy();
-                                nearestBeacon=beaconData.getBeacon();
-                            }
-                        }
-
-                        if (nearestBeacon!=null) {
-                            instruction.setText(nearestBeacon.getDescription());
-                            description.setText(nearestBeacon.getFloor().getName());
+                        if (nearestTrackedBeacon != null) {
+                            instruction.setText(nearestTrackedBeacon.second.getBeacon().getDescription());
+                            description.setText(nearestTrackedBeacon.second.getBeacon().getFloor().getName());
                         } else {
                             instruction.setText("Unknown Location");
                             description.setText("No Beacons Found");
