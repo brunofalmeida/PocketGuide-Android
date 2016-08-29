@@ -395,6 +395,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     description.setText(navigationStep.getDescriptionTwo());
                     time.setText(String.format("%.0fs", navigationStep.getTimeRemaining()));
                     speakText(navigationStep.getDescriptionOne());
+
+                    if (navigationStepIndex > 0) {
+                        toggleUp.setAlpha(255);
+                    } else {
+                        toggleUp.setAlpha(50);
+                    }
+
+                    if (navigationStepIndex < navigationSteps.size() - 1) {
+                        toggleDown.setAlpha(255);
+                    } else {
+                        toggleDown.setAlpha(50);
+                    }
                 }
             });
 
