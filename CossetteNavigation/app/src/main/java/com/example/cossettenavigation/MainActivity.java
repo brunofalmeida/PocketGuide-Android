@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.estimote.sdk.Region;
 import com.estimote.sdk.SystemRequirementsChecker;
 import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
 import com.example.cossettenavigation.beacons.BeaconTrackingData;
@@ -41,9 +39,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /*
-    TODO - add enable/disable audio button
-    TODO - change enable/disable camera icon when toggled
-
     TODO - remove beacon from trackedBeacons when not detected for 5 seconds
          - in updateTrackedBeacon(), set timer for 5 seconds that will call removeTrackedBeacon()
          - put timer in HashMap<Region, Timer>

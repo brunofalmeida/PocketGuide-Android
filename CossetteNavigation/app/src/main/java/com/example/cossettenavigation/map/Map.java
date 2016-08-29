@@ -68,11 +68,26 @@ public class Map {
     }
 
 
-    public static double distanceBetweenPoints(Point3D point1, Point3D point2) {
+    public static double distanceBetweenPoints(Point3D pointOne, Point3D pointTwo) {
         return Math.sqrt(
-                Math.pow(point2.x - point1.x, 2) +
-                Math.pow(point2.y - point1.y, 2) +
-                Math.pow(point2.z - point1.z, 2));
+                Math.pow(pointTwo.x - pointOne.x, 2) +
+                Math.pow(pointTwo.y - pointOne.y, 2) +
+                Math.pow(pointTwo.z - pointOne.z, 2));
+    }
+
+    /**
+     * Calculates the straight-line distance between two beacons.
+     */
+    public static double distanceBetweenBeacons(Beacon beaconOne, Beacon beaconTwo) {
+        return distanceBetweenPoints(
+                new Point3D(
+                        beaconOne.getXPosition(),
+                        beaconOne.getYPosition(),
+                        beaconOne.getFloor().getZPosition()),
+                new Point3D(
+                        beaconTwo.getXPosition(),
+                        beaconTwo.getYPosition(),
+                        beaconTwo.getFloor().getZPosition()) );
     }
 
     /**
@@ -80,17 +95,7 @@ public class Map {
      * @return The estimated travel time (in seconds) between the two beacons.
      */
     public static double estimateTravelTime(Beacon startBeacon, Beacon endBeacon, Zone zone) {
-        // Calculate straight line distance
-        double distance = distanceBetweenPoints(
-                new Point3D(
-                        startBeacon.getXPosition(),
-                        startBeacon.getYPosition(),
-                        startBeacon.getFloor().getZPosition()),
-                new Point3D(
-                        endBeacon.getXPosition(),
-                        endBeacon.getYPosition(),
-                        endBeacon.getFloor().getZPosition()) );
-
+        double distance = distanceBetweenBeacons(startBeacon, endBeacon);
         double metres = distance * metresPerGridUnit;
 
         switch (zone.getZoneType()) {

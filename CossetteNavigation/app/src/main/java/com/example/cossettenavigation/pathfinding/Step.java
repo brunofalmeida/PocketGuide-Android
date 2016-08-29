@@ -114,7 +114,7 @@ public class Step implements Serializable {
             case HALLWAY:
             case ROOM:
                 // TODO - fix bug - calculate distance between beacons
-                return String.format("Walk %.0f metres ahead", Map.estimateTravelTime(startBeacon, endBeacon, zone));
+                return String.format("Walk %.0f metres ahead", Map.distanceBetweenBeacons(startBeacon, endBeacon));
             case STAIRS:
             case ELEVATOR:
                 return "Take the " + zone.getZoneType().lowercaseDescription /*+ " to " + endBeacon.getFloor().getName()*/;

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -20,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.estimote.sdk.Region;
 import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
 import com.example.cossettenavigation.beacons.BeaconTrackingData;
 import com.example.cossettenavigation.map.AnchorBeacon;
@@ -218,7 +216,7 @@ public class SearchActivity extends AppCompatActivity {
 
             // Populate the data into the template view using the data object
             text1.setText(zone.getName());
-            text2.setText(zone.getZoneType().lowercaseDescription);
+            text2.setText(Utilities.getZoneFloorNamesString(zone));
 
             // Return the completed view to render on screen
             return convertView;
