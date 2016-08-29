@@ -244,7 +244,7 @@ public class ApplicationBeaconManager extends Application {
         TimerTask removeTask = new TimerTask() {
             @Override
             public void run() {
-                Log.i(TAG, String.format(
+                Log.v(TAG, String.format(
                         "updateTrackedBeacon(): Removing tracking data for \"%s\"",
                         trackedBeacons.get(region).getBeacon().getName()));
                 removeTrackedBeacon(region);
@@ -458,13 +458,13 @@ public class ApplicationBeaconManager extends Application {
 
                         textToSpeech.setLanguage(Locale.CANADA);
 
-                        Log.i(TAG, "createTextToSpeech(): success");
+                        Log.v(TAG, "createTextToSpeech(): success");
                     }
 
                     else {
                         isTextToSpeechAvailable = false;
 
-                        Log.i(TAG, "createTextToSpeech(): error");
+                        Log.v(TAG, "createTextToSpeech(): error");
                     }
                 }
             });

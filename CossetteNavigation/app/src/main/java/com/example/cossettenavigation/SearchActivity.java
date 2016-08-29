@@ -35,15 +35,12 @@ import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity {
 
-    //0);
-
     private static final String TAG = "SearchActivity";
 
-    // TODO - set to 1 or 2
     /**
      * Beacon range (in metres) that is required to start navigation.
      */
-    private static final double START_BEACON_RANGE = 5;
+    private static final double START_BEACON_RANGE = Double.POSITIVE_INFINITY;
 
     private DatabaseHelper dbHelper;
     public static SQLiteDatabase db;

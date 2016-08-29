@@ -38,14 +38,6 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/*
-    TODO - fix camera stretch
-
-    TODO - show more than 1 zone in discovery mode? sort tracked beacons by accuracy - Comparator?
-    TODO - add notifications when within range of beacons of a specific zone - tap to enter navigation?
-    TODO - check that pathfinding only uses 1 step for an elevator/stairs over multiple floors - merge consecutive steps in the same zone?
-*/
-
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String TAG = "MainActivity";
@@ -199,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     /* Discovery */
 
     private void enterDiscoveryMode() {
-        Log.i(TAG, "enterDiscoveryMode()");
+        Log.v(TAG, "enterDiscoveryMode()");
 
         exitNavigationMode();
 
@@ -333,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void exitNavigationMode() {
-        Log.i(TAG, "exitNavigationMode()");
+        Log.v(TAG, "exitNavigationMode()");
 
         resetNavigationTimer();
         resetNavigationStepTimer();
@@ -451,7 +443,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void resetNavigationTimer() {
-        Log.i(TAG, "resetNavigationTimer()");
+        Log.v(TAG, "resetNavigationTimer()");
 
         navigationTimer.cancel();
         navigationTimer.purge();
@@ -459,7 +451,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void resetNavigationStepTimer() {
-        Log.i(TAG, "resetNavigationStepTimer()");
+        Log.v(TAG, "resetNavigationStepTimer()");
 
         navigationStepTimer.cancel();
         navigationStepTimer.purge();
@@ -519,7 +511,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void cameraPermissionGranted() {
-        Log.i(TAG, "Camera permission granted");
+        Log.v(TAG, "Camera permission granted");
         cGranted=true;
         cVisible=true;
         mCameraView = new CameraView(this); // create a SurfaceView to show camera data
@@ -541,10 +533,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_debug:
+/*            case R.id.action_debug:
                 Intent intent = new Intent(this, DebugActivity.class);
                 startActivity(intent);
-                return true;
+                return true;*/
             case R.id.camera_button:
                 cameraOnOff();
                 return true;
