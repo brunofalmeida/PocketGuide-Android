@@ -43,8 +43,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /*
-    TODO - grey out step switching arrows for first/last step
-    TODO - hide direction arrow for first and last NavigationStep - set/account for arrowAngle = null
     TODO - load TextToSpeech globally (before MainActivity is launched, persistent)
     TODO - add enable/disable audio button
     TODO - change enable/disable camera icon when toggled
@@ -387,7 +385,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    direction.setRotation((float) navigationStep.getArrowAngle());
+                    // Direction arrow
+                    if (navigationStep.getArrowAngle() != null) {
+                        direction.setVisibility(View.VISIBLE);
+                        direction.setRotation((float) navigationStep.getArrowAngle().doubleValue());
+                    } else {
+                        direction.setVisibility(View.INVISIBLE);
+                    }
+
+                    // Up toggle
+                    if (navigationStepIndex > 0) {
+                        toggleUp.setAlpha(255);
+                    } else {
+                        toggleUp.setAlpha(50);
+                    }
+
+                    // Down toggle
+                    if (navigationStepIndex < navigationSteps.size() - 1) {
+                        toggleDown.setAlpha(255);
+                    } else {
+                        toggleDown.setAlpha(50);
+                    }
+
                     stepNumber.setText(String.format(
                             "%d/%d",
                             navigationStepIndex + 1, navigationSteps.size()));
@@ -395,18 +414,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     description.setText(navigationStep.getDescriptionTwo());
                     time.setText(String.format("%.0fs", navigationStep.getTimeRemaining()));
                     speakText(navigationStep.getDescriptionOne());
-
-                    if (navigationStepIndex > 0) {
-                        toggleUp.setAlpha(255);
-                    } else {
-                        toggleUp.setAlpha(50);
-                    }
-
-                    if (navigationStepIndex < navigationSteps.size() - 1) {
-                        toggleDown.setAlpha(255);
-                    } else {
-                        toggleDown.setAlpha(50);
-                    }
                 }
             });
 
