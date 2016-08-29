@@ -172,35 +172,35 @@ public class Map {
         Floor floor1 = addFloor(new Floor("Floor 1", 0));
 
         AnchorBeacon white17 = addAnchorBeacon(new AnchorBeacon(
-                "white17 - F1",
+                "white17",
                 "Front Entrance",
                 floor1,
                 5, 0,
                 DEFAULT_UUID, 46447, 25300));
 
         SupportBeacon white5 = addSupportBeacon(new SupportBeacon(
-                "white5 - F1",
+                "white5",
                 "Trophy Case",
                 floor1,
                 white17, -5, 8,
                 DEFAULT_UUID, 33753, 28870));
 
         AnchorBeacon white10 = addAnchorBeacon(new AnchorBeacon(
-                "white10 - F1",
+                "white10",
                 "Middle Staircase",
                 floor1,
                 white5, 2, 15,
                 DEFAULT_UUID, 65261, 60647));
 
         AnchorBeacon white3 = addAnchorBeacon(new AnchorBeacon(
-                "white3 - F1",
+                "white3",
                 "Grenade",
                 floor1,
                 white10, -2,20,
                 DEFAULT_UUID, 9953, 12088));
 
         AnchorBeacon white11 = addAnchorBeacon(new AnchorBeacon(
-                "white11 - F1",
+                "white11",
                 "Elevator",
                 floor1,
                 white10, -5, 0,
@@ -214,21 +214,21 @@ public class Map {
         Floor floor2 = addFloor(new Floor("Floor 2", floor1, 3));
 
         AnchorBeacon white15 = addAnchorBeacon(new AnchorBeacon(
-                "white15 - F2",
+                "white15",
                 "Health Lab Staircase",
                 floor2,
                 white10, 2, 0,
                 DEFAULT_UUID, 2949, 35856));
 
         AnchorBeacon white1 = addAnchorBeacon(new AnchorBeacon(
-                "white1 - F2",
+                "white1",
                 "Health Lab Corridor",
                 floor2,
                 white15, 0, -8,
                 DEFAULT_UUID, 6607, 59029));
 
         AnchorBeacon white25 = addAnchorBeacon(new AnchorBeacon(
-                "white25 - F2",
+                "white25",
                 "East Staircase",
                 floor2,
                 white1, 2, -3,
@@ -236,13 +236,13 @@ public class Map {
 
         // TODO - fix IDs
 /*        AnchorBeacon white19 = addAnchorBeacon(new AnchorBeacon(
-                "white19 - F2",
+                "white19",
                 floor2,
                 white1, -3, -5,
                 DEFAULT_UUID, 47609, 17713));*/
 
         AnchorBeacon white18 = addAnchorBeacon(new AnchorBeacon(
-                "white18 - F2",
+                "white18",
                 "Game Room",
                 floor2,
                 white15,-12,0,
@@ -255,7 +255,7 @@ public class Map {
         Floor floor3 = addFloor(new Floor("Floor 3", floor2, 2));
 
         AnchorBeacon white12 = addAnchorBeacon(new AnchorBeacon(
-                "white12 - F3",
+                "white12",
                 "South Patio Entrance",
                 floor3,
                 white15, 5, 0,
@@ -266,32 +266,32 @@ public class Map {
 
         // Zones
 
-        Zone z1 = addZone(new Zone("Main Hallway - Floor 1", Zone.ZoneType.HALLWAY, true));
+        Zone z1 = addZone(new Zone("Main Hallway", Zone.ZoneType.HALLWAY, true));
         z1.addAnchorBeacons(white17, white10, white3);
         z1.addSupportBeacons(white5);
 
-        Zone z2 = addZone(new Zone("Stairs - Floor 1 to Floor 2", Zone.ZoneType.STAIRS, false));
+        Zone z2 = addZone(new Zone("Stairs", Zone.ZoneType.STAIRS, false));
         z2.addAnchorBeacons(white10, white15);
 
-        Zone z3 = addZone(new Zone("Health Lab - Floor 2", Zone.ZoneType.HALLWAY, true));
+        Zone z3 = addZone(new Zone("Health Lab", Zone.ZoneType.HALLWAY, true));
         z3.addAnchorBeacons(white15, white1);
 
-        Zone z4 = addZone(new Zone("Open Area - Floor 2", Zone.ZoneType.ROOM, true));
+        Zone z4 = addZone(new Zone("Open Area", Zone.ZoneType.ROOM, true));
         z4.addAnchorBeacons(white25, /*white19,*/ white1);
 
-        Zone z5 = addZone(new Zone("Front Entrance - Floor 1",Zone.ZoneType.ENTRANCE, true));
+        Zone z5 = addZone(new Zone("Front Entrance",Zone.ZoneType.ENTRANCE, true));
         z5.addAnchorBeacons(white17);
 
-        Zone z6 = addZone(new Zone("Main Intersection - Floor 1", Zone.ZoneType.HALLWAY, true));
+        Zone z6 = addZone(new Zone("Main Intersection", Zone.ZoneType.HALLWAY, true));
         z6.addAnchorBeacons(white10, white11);
 
-        Zone z7 = addZone(new Zone("Stairs - Floor 2 to Floor 3", Zone.ZoneType.STAIRS, false));
+        Zone z7 = addZone(new Zone("Stairs", Zone.ZoneType.STAIRS, false));
         z7.addAnchorBeacons(white15, white12);
 
-        Zone z8 = addZone(new Zone("Elevator - Floor 1 to Floor 2", Zone.ZoneType.ELEVATOR, false));
+        Zone z8 = addZone(new Zone("Elevator", Zone.ZoneType.ELEVATOR, false));
         z8.addAnchorBeacons(white18, white11);
 
-        Zone z9 = addZone(new Zone("Games Room - Floor 2", Zone.ZoneType.HALLWAY, true));
+        Zone z9 = addZone(new Zone("Games Room", Zone.ZoneType.HALLWAY, true));
         z9.addAnchorBeacons(white15,white18);
 
         // End Zones
