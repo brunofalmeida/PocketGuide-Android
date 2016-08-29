@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     /**
      * Range (in metres) for switching steps during navigation.
      */
-    private static double BEACON_RANGE_FOR_SWITCHING_STEPS = 2;
+    private static double BEACON_RANGE_FOR_SWITCHING_STEPS = 3;
 
     private boolean mVisible; //UI elements (status bar, toolbar, bottom bar visible)
     private boolean cVisible; //camera visible
