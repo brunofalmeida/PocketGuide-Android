@@ -72,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private boolean cVisible; //camera visible
     private boolean cGranted; //camera permission granted
 
+    private MenuItem cameraToggle;
+    private MenuItem audioToggle;
+
     private FrameLayout m_camera_view = null;
     private CameraView mCameraView = null;
     private LinearLayout bottomBar;
@@ -496,7 +499,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 
     private void toggleAudio() {
-        beaconManager.setIsTextToSpeechEnabled(!beaconManager.getIsTextToSpeechEnabled());
+        if (beaconManager.getIsTextToSpeechEnabled()) {
+            audioToggle.setIcon(R.drawable.ic_volume_off_white_48px);
+            beaconManager.setIsTextToSpeechEnabled(false);
+        } else {
+            audioToggle.setIcon(R.drawable.ic_volume_up_white_48px);
+            beaconManager.setIsTextToSpeechEnabled(true);
+        }
     }
 
 
@@ -533,6 +542,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+
+        cameraToggle = menu.findItem(R.id.camera_button);
+        audioToggle = menu.findItem(R.id.audio_button);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -572,8 +585,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private void cameraOnOff() {
         if (cGranted) {
-            if (cVisible) hideCamera();
-            else showCamera();
+            if (cVisible) {
+                cameraToggle.setIcon(R.drawable.ic_videocam_off_white_48px);
+                hideCamera();
+            } else {
+                cameraToggle.setIcon(R.drawable.ic_videocam_white_48px);
+                showCamera();
+            }
         }
     }
     

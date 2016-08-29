@@ -5,14 +5,14 @@
 
     <item
         android:id="@+id/camera_button"
-        android:icon="@drawable/ic_action_camera"
+        android:icon="@drawable/ic_videocam_white_48px"
         android:title="Camera Toggle"
         app:showAsAction="always"
         />
 
     <item
         android:id="@+id/audio_button"
-        android:icon="@drawable/ic_volume_mute_white_48px"
+        android:icon="@drawable/ic_volume_up_white_48px"
         android:title="Audio Toggle"
         app:showAsAction="always"
         />
