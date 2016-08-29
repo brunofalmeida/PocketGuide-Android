@@ -26,6 +26,7 @@ import com.example.cossettenavigation.beacons.BeaconTrackingData;
 import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Beacon;
 import com.example.cossettenavigation.map.DatabaseHelper;
+import com.example.cossettenavigation.map.Floor;
 import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.Zone;
 import com.example.cossettenavigation.pathfinding.Path;
@@ -101,11 +102,22 @@ public class SearchActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Zone zone = (Zone) parent.getItemAtPosition(position);
 
-                Pair<Region, BeaconTrackingData> nearestTrackedBeacon = beaconManager.getNearestTrackedBeacon();
+                Floor floor=beaconManager.getFloor();
+                ArrayList<BeaconTrackingData> beacons=beaconManager.getNearestBeacons();
+
+                Double minDistance=Double.POSITIVE_INFINITY;
+                BeaconTrackingData nearestTrackedBeacon=null;
+
+                for (BeaconTrackingData beaconData:beacons){
+                    if (beaconData.getBeacon().getFloor()==floor&&minDistance>beaconData.getEstimatedAccuracy()){
+                        minDistance=beaconData.getEstimatedAccuracy();
+                        nearestTrackedBeacon=beaconData;
+                    }
+                }
 
                 if (nearestTrackedBeacon != null) {
-                    if (nearestTrackedBeacon.second.getEstimatedAccuracy() <= START_BEACON_RANGE) {
-                        Beacon startBeacon = nearestTrackedBeacon.second.getBeacon();
+                    if (nearestTrackedBeacon.getEstimatedAccuracy() <= START_BEACON_RANGE) {
+                        Beacon startBeacon = nearestTrackedBeacon.getBeacon();
 
                         double minTravelTime = Double.POSITIVE_INFINITY;
                         Path minPath = null;
