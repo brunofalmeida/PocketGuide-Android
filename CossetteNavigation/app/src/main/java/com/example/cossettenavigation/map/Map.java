@@ -2,9 +2,6 @@ package com.example.cossettenavigation.map;
 
 import android.util.Log;
 
-import com.example.cossettenavigation.pathfinding.Path;
-import com.example.cossettenavigation.pathfinding.Pathfinder;
-
 import java.util.ArrayList;
 
 /**
@@ -32,16 +29,14 @@ public class Map {
     // Average speeds, in metres/second
     private static final double WALKING_TRAVEL_SPEED = 1.0;
     private static final double STAIRS_TRAVEL_SPEED = 0.5;
-    private static final double ELEVATOR_TRAVEL_SPEED = 0.4;
+    private static final double ELEVATOR_TRAVEL_SPEED = 0.5;
 
     private static final String DEFAULT_UUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
-
 
     public static ArrayList<Floor> floors = new ArrayList<>();
     public static ArrayList<AnchorBeacon> anchorBeacons = new ArrayList<>();
     public static ArrayList<SupportBeacon> supportBeacons = new ArrayList<>();
     public static ArrayList<Zone> zones = new ArrayList<>();
-
 
     /*
         Grid properties.
@@ -50,9 +45,6 @@ public class Map {
     public static double gridWidth = 1;
     public static double gridHeight = 1;
     public static double metresPerGridUnit = 1;
-
-    // For interface testing
-    public static Path testPath;
 
 
 
@@ -76,16 +68,28 @@ public class Map {
     }
 
 
+    public static double distanceBetweenPoints(Point3D point1, Point3D point2) {
+        return Math.sqrt(
+                Math.pow(point2.x - point1.x, 2) +
+                Math.pow(point2.y - point1.y, 2) +
+                Math.pow(point2.z - point1.z, 2));
+    }
+
     /**
      * Assumes that both beacons are part of the same zone and have a straight-line connection.
      * @return The estimated travel time (in seconds) between the two beacons.
      */
     public static double estimateTravelTime(Beacon startBeacon, Beacon endBeacon, Zone zone) {
         // Calculate straight line distance
-        double distance = Math.sqrt(
-                Math.pow(endBeacon.getXPosition() - startBeacon.getXPosition(), 2) +
-                Math.pow(endBeacon.getYPosition() - startBeacon.getYPosition(), 2) +
-                Math.pow(endBeacon.getFloor().getZPosition() - startBeacon.getFloor().getZPosition(), 2));
+        double distance = distanceBetweenPoints(
+                new Point3D(
+                        startBeacon.getXPosition(),
+                        startBeacon.getYPosition(),
+                        startBeacon.getFloor().getZPosition()),
+                new Point3D(
+                        endBeacon.getXPosition(),
+                        endBeacon.getYPosition(),
+                        endBeacon.getFloor().getZPosition()) );
 
         double metres = distance * metresPerGridUnit;
 
@@ -160,7 +164,7 @@ public class Map {
         3. define zones -> add beacons
      */
     static {
-        Log.v(TAG, "static {}");
+        //Log.v(TAG, "static {}");
 
 
         // Start floor 1
@@ -169,30 +173,35 @@ public class Map {
 
         AnchorBeacon white17 = addAnchorBeacon(new AnchorBeacon(
                 "white17 - F1",
+                "Front Entrance",
                 floor1,
                 5, 0,
                 DEFAULT_UUID, 46447, 25300));
 
         SupportBeacon white5 = addSupportBeacon(new SupportBeacon(
                 "white5 - F1",
+                "Trophy Case",
                 floor1,
                 white17, -5, 8,
                 DEFAULT_UUID, 33753, 28870));
 
         AnchorBeacon white10 = addAnchorBeacon(new AnchorBeacon(
                 "white10 - F1",
+                "Middle Staircase",
                 floor1,
                 white5, 2, 15,
                 DEFAULT_UUID, 65261, 60647));
 
         AnchorBeacon white3 = addAnchorBeacon(new AnchorBeacon(
                 "white3 - F1",
+                "Grenade",
                 floor1,
                 white10, -2,20,
                 DEFAULT_UUID, 9953, 12088));
 
         AnchorBeacon white11 = addAnchorBeacon(new AnchorBeacon(
                 "white11 - F1",
+                "Elevator",
                 floor1,
                 white10, -5, 0,
                 DEFAULT_UUID, 18120, 25600));
@@ -206,30 +215,35 @@ public class Map {
 
         AnchorBeacon white15 = addAnchorBeacon(new AnchorBeacon(
                 "white15 - F2",
+                "Health Lab Staircase",
                 floor2,
                 white10, 2, 0,
                 DEFAULT_UUID, 2949, 35856));
 
         AnchorBeacon white1 = addAnchorBeacon(new AnchorBeacon(
                 "white1 - F2",
+                "Health Lab Corridor",
                 floor2,
                 white15, 0, -8,
                 DEFAULT_UUID, 6607, 59029));
 
         AnchorBeacon white25 = addAnchorBeacon(new AnchorBeacon(
                 "white25 - F2",
+                "East Staircase",
                 floor2,
                 white1, 2, -3,
                 DEFAULT_UUID, 27415, 8243));
 
-        AnchorBeacon white19 = addAnchorBeacon(new AnchorBeacon(
+        // TODO - fix IDs
+/*        AnchorBeacon white19 = addAnchorBeacon(new AnchorBeacon(
                 "white19 - F2",
                 floor2,
                 white1, -3, -5,
-                DEFAULT_UUID, 47609, 17713));
+                DEFAULT_UUID, 47609, 17713));*/
 
         AnchorBeacon white18 = addAnchorBeacon(new AnchorBeacon(
                 "white18 - F2",
+                "Game Room",
                 floor2,
                 white15,-12,0,
                 DEFAULT_UUID, 3531, 48649));
@@ -242,6 +256,7 @@ public class Map {
 
         AnchorBeacon white12 = addAnchorBeacon(new AnchorBeacon(
                 "white12 - F3",
+                "South Patio Entrance",
                 floor3,
                 white15, 5, 0,
                 DEFAULT_UUID, 64248, 32245));
@@ -251,32 +266,32 @@ public class Map {
 
         // Zones
 
-        Zone z1 = addZone(new Zone("Main Hallway - Floor 1", Zone.ZoneType.HALLWAY));
+        Zone z1 = addZone(new Zone("Main Hallway - Floor 1", Zone.ZoneType.HALLWAY, true));
         z1.addAnchorBeacons(white17, white10, white3);
         z1.addSupportBeacons(white5);
 
-        Zone z2 = addZone(new Zone("Stairs - Floor 1 to Floor 2", Zone.ZoneType.STAIRS));
+        Zone z2 = addZone(new Zone("Stairs - Floor 1 to Floor 2", Zone.ZoneType.STAIRS, false));
         z2.addAnchorBeacons(white10, white15);
 
-        Zone z3 = addZone(new Zone("Health Lab - Floor 2", Zone.ZoneType.HALLWAY));
+        Zone z3 = addZone(new Zone("Health Lab - Floor 2", Zone.ZoneType.HALLWAY, true));
         z3.addAnchorBeacons(white15, white1);
 
-        Zone z4 = addZone(new Zone("Open Area - Floor 2", Zone.ZoneType.ROOM));
-        z4.addAnchorBeacons(white25, white19, white1);
+        Zone z4 = addZone(new Zone("Open Area - Floor 2", Zone.ZoneType.ROOM, true));
+        z4.addAnchorBeacons(white25, /*white19,*/ white1);
 
-        Zone z5 = addZone(new Zone("Front Entrance - Floor 1",Zone.ZoneType.ENTRANCE));
+        Zone z5 = addZone(new Zone("Front Entrance - Floor 1",Zone.ZoneType.ENTRANCE, true));
         z5.addAnchorBeacons(white17);
 
-        Zone z6 = addZone(new Zone("Main Intersection - Floor 1", Zone.ZoneType.HALLWAY));
+        Zone z6 = addZone(new Zone("Main Intersection - Floor 1", Zone.ZoneType.HALLWAY, true));
         z6.addAnchorBeacons(white10, white11);
 
-        Zone z7 = addZone(new Zone("Stairs - Floor 2 to Floor 3", Zone.ZoneType.STAIRS));
+        Zone z7 = addZone(new Zone("Stairs - Floor 2 to Floor 3", Zone.ZoneType.STAIRS, false));
         z7.addAnchorBeacons(white15, white12);
 
-        Zone z8 = addZone(new Zone("Elevator - Floor 1 to Floor 2,", Zone.ZoneType.ELEVATOR));
+        Zone z8 = addZone(new Zone("Elevator - Floor 1 to Floor 2", Zone.ZoneType.ELEVATOR, false));
         z8.addAnchorBeacons(white18, white11);
 
-        Zone z9 = addZone(new Zone("Games Room - Floor 2", Zone.ZoneType.HALLWAY));
+        Zone z9 = addZone(new Zone("Games Room - Floor 2", Zone.ZoneType.HALLWAY, true));
         z9.addAnchorBeacons(white15,white18);
 
         // End Zones
@@ -289,7 +304,7 @@ public class Map {
 
 
         // Log all mapping data
-        Log.v(TAG, String.format("Grid: %.0f x %.0f", gridWidth, gridHeight));
+/*        Log.v(TAG, String.format("Grid: %.0f x %.0f", gridWidth, gridHeight));
         for (Floor floor : floors) {
             Log.v(TAG, floor.toString());
         }
@@ -301,10 +316,7 @@ public class Map {
         }
         for (Zone zone : zones) {
             Log.v(TAG, zone.toString());
-        }
-
-        // Test path
-        testPath = Pathfinder.getShortestPath(white17, white25);
+        }*/
 
 
 

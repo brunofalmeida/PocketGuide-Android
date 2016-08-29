@@ -10,14 +10,19 @@
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="155dp"
+            android:layout_height="155dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:src="@drawable/arrow"
+            android:visibility="gone"/>
     </FrameLayout>
 
     <TextView
         android:id="@+id/debug_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="hello"
         android:translationY="75dp"
         android:translationX="16dp"
         android:textColor="@android:color/white"/>

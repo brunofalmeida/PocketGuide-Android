@@ -46,7 +46,7 @@ public class Step implements Serializable {
     @Override
     public String toString() {
         return String.format(
-                "%s { startBeacon = \"%s\", endBeacon = \"%s\", zone = \"%s\", travelTime = %.1f, travelAngle = %s, turnAngle = %.0f, getTurnDescription() = \"%s\", getTravelDescription() = \"%s\"",
+                "%s { startBeacon = \"%s\", endBeacon = \"%s\", zone = \"%s\", travelTime = %.1f s, travelAngle = %s deg, turnAngle = %.0f deg, getTurnDescription() = \"%s\", getTravelDescription() = \"%s\"",
                 getClass().getSimpleName(),
                 startBeacon.getName(),
                 endBeacon.getName(),
@@ -103,21 +103,9 @@ public class Step implements Serializable {
 
     public String getTurnDescription() {
         if (turnAngle == 0) {
-            return "";
-        }
-
-        else {
-            switch (zone.getZoneType()) {
-                case HALLWAY:
-                case ROOM:
-                    return "Turn " + getTurnAngleDescription();
-                case STAIRS:
-                case ELEVATOR:
-                    return "Turn " + getTurnAngleDescription() + " towards the " +
-                            zone.getZoneType().lowercaseDescription;
-                default:
-                    return "";
-            }
+            return "Walk forward";
+        } else {
+            return "Turn " + getTurnAngleDescription();
         }
     }
 
@@ -125,13 +113,18 @@ public class Step implements Serializable {
         switch (zone.getZoneType()) {
             case HALLWAY:
             case ROOM:
+                // TODO - fix bug - calculate distance between beacons
                 return String.format("Walk %.0f metres ahead", Map.estimateTravelTime(startBeacon, endBeacon, zone));
             case STAIRS:
             case ELEVATOR:
-                return "Take the " + zone.getZoneType().lowercaseDescription + " to " + endBeacon.getFloor().getName();
+                return "Take the " + zone.getZoneType().lowercaseDescription /*+ " to " + endBeacon.getFloor().getName()*/;
             default:
                 return "";
         }
+    }
+
+    public String getDestinationDescription(){
+        return "To "+endBeacon.getDescription();
     }
 
 }

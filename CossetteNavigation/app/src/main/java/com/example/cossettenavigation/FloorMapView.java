@@ -11,7 +11,7 @@ import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
 import com.example.cossettenavigation.map.Beacon;
 import com.example.cossettenavigation.map.Floor;
 import com.example.cossettenavigation.map.Map;
-import com.example.cossettenavigation.map.Point;
+import com.example.cossettenavigation.map.Point2D;
 
 /**
  * Created by Bruno on 2016-08-04.
@@ -117,7 +117,7 @@ public class FloorMapView extends View {
 
 
         // Draw estimated location
-        Point estimatedLocation = beaconManager.getEstimatedLocation();
+        Point2D estimatedLocation = beaconManager.getEstimatedLocation();
         if (estimatedLocation != null) {
             double x = rectangleMargin + (estimatedLocation.x / mapWidth * rectangleWidth);
             double y = canvasHeight - (rectangleMargin + (estimatedLocation.y / mapHeight * rectangleHeight));

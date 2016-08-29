@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -18,7 +19,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.estimote.sdk.Region;
 import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
+import com.example.cossettenavigation.beacons.BeaconTrackingData;
 import com.example.cossettenavigation.map.AnchorBeacon;
 import com.example.cossettenavigation.map.Beacon;
 import com.example.cossettenavigation.map.DatabaseHelper;
@@ -28,23 +31,20 @@ import com.example.cossettenavigation.pathfinding.Path;
 import com.example.cossettenavigation.pathfinding.Pathfinder;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class SearchActivity extends AppCompatActivity {
 
     private static final String TAG = "SearchActivity";
 
-    //0);
+    // TODO - change to 1
+    private static final double START_BEACON_RANGE = 5;
 
     private DatabaseHelper dbHelper;
     public static SQLiteDatabase db;
 
     private ApplicationBeaconManager beaconManager;
 
-
-    private SearchActivity activity=this;
     private SearchView searchView;
 
     private ListView searchSuggestions;
@@ -82,56 +82,65 @@ public class SearchActivity extends AppCompatActivity {
                 searchResults.add(location[i]);*/
 
 
-        // TODO - remove test navigation (automatic switch to MainActivity)
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                startMainActivityNavigation(Map.testPath);
-            }
-        }, 1000000000);
-
-
         beaconManager = (ApplicationBeaconManager) getApplication();
 
-        ArrayList<Zone> filteredZones = new ArrayList<>();
-        for (Zone zone : Map.zones) {
-            filteredZones.add(zone);
-        }
         searchSuggestions=(ListView) findViewById(R.id.search_suggestions);
-        searchSuggestions.setAdapter(new ZoneArrayAdapter(activity,filteredZones));
+        updateSearchSuggestions("");
 
         searchSuggestions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Zone zone = (Zone) parent.getItemAtPosition(position);
 
-                Beacon startBeacon = beaconManager.getNearestBeacon();
+                Pair<Region, BeaconTrackingData> nearestTrackedBeacon = beaconManager.getNearestTrackedBeacon();
 
-                if (startBeacon != null) {
-                    double minTravelTime = Double.POSITIVE_INFINITY;
-                    Path minPath = null;
+                if (nearestTrackedBeacon != null) {
+                    if (nearestTrackedBeacon.second.getEstimatedAccuracy() <= START_BEACON_RANGE) {
+                        Beacon startBeacon = nearestTrackedBeacon.second.getBeacon();
 
-                    for (AnchorBeacon testEndBeacon : zone.getAnchorBeacons()) {
-                        Path testPath = Pathfinder.getShortestPath(startBeacon, testEndBeacon);
+                        double minTravelTime = Double.POSITIVE_INFINITY;
+                        Path minPath = null;
 
-                        if (testPath != null && testPath.getTravelTime() < minTravelTime) {
-                            minTravelTime = testPath.getTravelTime();
-                            minPath = testPath;
+                        for (AnchorBeacon testEndBeacon : zone.getAnchorBeacons()) {
+                            Path testPath = Pathfinder.getShortestPath(startBeacon, testEndBeacon);
+
+                            if (testPath != null && testPath.getTravelTime() < minTravelTime) {
+                                minTravelTime = testPath.getTravelTime();
+                                minPath = testPath;
+                            }
+                        }
+
+                        if (minPath != null) {
+                            minPath.setDestination(zone);
+                            startMainActivityNavigation(minPath);
+                        } else {
+                            Toast.makeText(SearchActivity.this, "Path not found", Toast.LENGTH_LONG).show();
                         }
                     }
 
-                    if (minPath != null) {
-                        startMainActivityNavigation(minPath);
-                    } else {
-                        Toast.makeText(SearchActivity.this, "Path not found", Toast.LENGTH_LONG).show();
+                    else {
+                        Toast.makeText(SearchActivity.this, "Please move closer to the nearest beacon", Toast.LENGTH_LONG).show();
                     }
                 }
 
                 else {
-                    Toast.makeText(SearchActivity.this, "Nearest beacon not found", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SearchActivity.this, "No beacons found", Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    private void updateSearchSuggestions(String searchText) {
+        ArrayList<Zone> filteredZones = new ArrayList<>();
+        searchText=searchText.toLowerCase();
+        for (Zone zone : Map.zones) {
+            String zoneName=zone.getName().toLowerCase();
+            String zoneType=zone.getZoneType().toString().toLowerCase();
+            if ((zoneName.contains(searchText)||zoneType.contains(searchText)) && zone.getIsDestination()) {
+                filteredZones.add(zone);
+            }
+        }
+        searchSuggestions.setAdapter(new ZoneArrayAdapter(SearchActivity.this, filteredZones));
     }
 
     @Override
@@ -149,13 +158,7 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                ArrayList<Zone> filteredZones = new ArrayList<>();
-                for (Zone zone : Map.zones) {
-                    if (zone.getName().toLowerCase().contains(newText.toString().toLowerCase())) {
-                        filteredZones.add(zone);
-                    }
-                }
-                searchSuggestions.setAdapter(new ZoneArrayAdapter(activity,filteredZones));
+                updateSearchSuggestions(newText);
                 return true;
             }
         });

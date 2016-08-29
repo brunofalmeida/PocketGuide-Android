@@ -12,9 +12,10 @@ public abstract class Beacon implements Serializable {
     private static final String TAG = "Beacon";
 
     protected String name;
+    protected String description;
 
     protected Floor floor;
-    protected Point position;
+    protected Point2D position;
 
     protected UUID uuid;
     protected int major;
@@ -26,8 +27,9 @@ public abstract class Beacon implements Serializable {
     /**
      * Standard constructor.
      */
-    private Beacon(String name, Floor floor, Point position, UUID uuid, int major, int minor) {
+    private Beacon(String name, String description, Floor floor, Point2D position, UUID uuid, int major, int minor) {
         this.name = name;
+        this.description = description;
         this.floor = floor;
         this.position = position;
         this.uuid = uuid;
@@ -39,6 +41,7 @@ public abstract class Beacon implements Serializable {
      * Constructor using an absolute position.
      */
     public Beacon(String name,
+                  String description,
                   Floor floor,
                   double xPosition,
                   double yPosition,
@@ -46,13 +49,14 @@ public abstract class Beacon implements Serializable {
                   int major,
                   int minor) {
 
-        this(name, floor, new Point(xPosition, yPosition), UUID.fromString(uuid), major, minor);
+        this(name, description, floor, new Point2D(xPosition, yPosition), UUID.fromString(uuid), major, minor);
     }
 
     /**
      * Constructor using a position relative to another beacon.
      */
     public Beacon(String name,
+                  String description,
                   Floor floor,
                   Beacon referenceBeacon,
                   double xPositionOffset,
@@ -63,6 +67,7 @@ public abstract class Beacon implements Serializable {
 
         this(
                 name,
+                description,
                 floor,
                 referenceBeacon.getXPosition() + xPositionOffset,
                 referenceBeacon.getYPosition() + yPositionOffset,
@@ -94,11 +99,13 @@ public abstract class Beacon implements Serializable {
         return name;
     }
 
+    public String getDescription() {return description;}
+
     public Floor getFloor() {
         return floor;
     }
 
-    public Point getPosition() {
+    public Point2D getPosition() {
         return position;
     }
 

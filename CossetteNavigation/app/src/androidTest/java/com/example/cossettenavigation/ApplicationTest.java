@@ -20,10 +20,6 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         super(Application.class);
     }
 
-    public void test_assertEquals() {
-        assertEquals(1, 1);
-    }
-
     public void test_estimateTravelAngle() {
         Map map = new Map();
 
@@ -33,7 +29,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
                     Double travelAngle = Map.estimateTravelAngle(beacon1, beacon2);
 
                     Log.v(TAG, String.format(
-                            "test_estimateTravelAngle():\n%s\n%s\n%s degrees",
+                            "test_estimateTravelAngle():\n%s\n%s\n%s deg",
                             beacon1,
                             beacon2,
                             (travelAngle != null) ? String.format("%.0f", travelAngle) : "null"));
