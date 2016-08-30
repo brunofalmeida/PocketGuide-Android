@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         final TextView debugView = (TextView) findViewById(R.id.debug_view);
 
         // Periodic general UI update
-        new Timer().schedule(new TimerTask() {
+        /*new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 runOnUiThread(new Runnable() {
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     }
                 });
             }
-        }, 1, 100);
+        }, 1, 100);*/
 
 
         // Check intent for a Path object - discovery or navigation mode
