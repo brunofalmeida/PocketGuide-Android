@@ -25,9 +25,6 @@ public abstract class Beacon implements Serializable {
 
 
 
-    /**
-     * Standard constructor.
-     */
     private Beacon(String name, String description, Floor floor, Point2D position, UUID uuid, int major, int minor) {
         this.name = name;
         this.description = description;

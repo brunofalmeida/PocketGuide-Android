@@ -29,6 +29,7 @@ public class Utilities {
         }
     }
 
+
     /**
      * <p>
      * ArrayList to Array conversion.
@@ -66,6 +67,7 @@ public class Utilities {
 
         return array;
     }
+
 
     public static String getAnchorBeaconNamesString(ArrayList<AnchorBeacon> anchorBeacons) {
         String string = "{ ";

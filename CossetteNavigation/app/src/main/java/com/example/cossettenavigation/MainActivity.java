@@ -39,6 +39,13 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * <h1>Discovery Mode</h1>
+ * <p>Shows where the user currently is.</p>
+ *
+ * <h1>Navigation Mode</h1>
+ * <p>Navigates the user to a destination.</p>
+ */
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String TAG = "MainActivity";
@@ -48,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public static final String INTENT_KEY_PATH = "path";
 
     /**
-     * Range (in metres) for switching steps during navigation.
+     * Beacon range for switching steps during navigation.
      */
     private static double BEACON_RANGE_FOR_SWITCHING_STEPS = 3;
 
@@ -139,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         bottomBar = (LinearLayout) findViewById(R.id.bottomBar);
-
         direction = (ImageView) findViewById(R.id.arrow);
         direction.bringToFront();
         toggleArrows = (RelativeLayout) findViewById(R.id.toggleArrows);
@@ -147,8 +153,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         time = (TextView) findViewById(R.id.time);
         description = (TextView) findViewById(R.id.description);
 
-        //get FAB
         FAB = (FloatingActionButton) findViewById(R.id.FAB);
+
 
         beaconManager = (ApplicationBeaconManager) getApplication();
 
@@ -415,6 +421,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
+    /**
+     * Determines whether the device is within sufficient range of a beacon to switch to the next step defined by that beacon.
+     */
     private boolean isInRangeOfBeacon(Beacon beacon) {
         Log.v(TAG, "isInRangeOfBeacon()");
 
@@ -573,12 +582,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
     
-    private void hideCamera(){
+    private void hideCamera() {
         mCameraView.setVisibility(View.INVISIBLE);
         cVisible = false;
     }
 
-    private void showCamera(){
+    private void showCamera() {
         mCameraView = new CameraView(this);
         m_camera_view.addView(mCameraView);
         direction.bringToFront();

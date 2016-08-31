@@ -7,7 +7,7 @@ import com.example.cossettenavigation.map.Zone;
 import java.io.Serializable;
 
 /**
- * The navigation between two beacons in the same {@link Zone}.
+ * The navigation path data between two beacons in the same {@link Zone}.
  */
 public class Step implements Serializable {
 

@@ -14,8 +14,14 @@ public class BeaconTrackingData {
 
     private com.example.cossettenavigation.map.Beacon beacon;
 
-    // Oldest measurements first, newest measurements last
+    /**
+     * Oldest measurements first, newest measurements last.
+     */
     private ArrayList<Double> accuracyMeasurements = new ArrayList<>();
+
+    /**
+     * Oldest measurements first, newest measurements last.
+     */
     private ArrayList<Utils.Proximity> proximityMeasurements = new ArrayList<>();
 
 
@@ -51,6 +57,7 @@ public class BeaconTrackingData {
                 "addMeasurements(): \"%s\", \"%s\"",
                 this.beacon.getName(), this.beacon.getDescription()));*/
 
+        // Delete old measurements (keep a maximum of 5)
         if (accuracyMeasurements.size() >= 5) {
             accuracyMeasurements.remove(0);
         }
@@ -58,11 +65,18 @@ public class BeaconTrackingData {
             proximityMeasurements.remove(0);
         }
 
+        // Add new measurements
         accuracyMeasurements.add(Utils.computeAccuracy(beacon));
         proximityMeasurements.add(Utils.computeProximity(beacon));
     }
 
+    /**
+     * @return The estimated distance of the beacon from the device (in metres).
+     */
     public double getEstimatedAccuracy() {
+        // Use a weighted average to estimate the distance
+        // Newer measurements have greater weights
+
         double numerator = 0;
         double denominator = 0;
 
