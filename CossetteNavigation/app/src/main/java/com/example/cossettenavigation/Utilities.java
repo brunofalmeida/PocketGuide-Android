@@ -103,6 +103,17 @@ public class Utilities {
         return string;
     }
 
+    public static String getZoneFloorNamesString(Zone zone) {
+        String string = "";
+        for (Floor floor : zone.getFloors()) {
+            string += String.format("%s, ", floor.getName());
+        }
+        if (string.endsWith(", ")) {
+            string = string.substring(0, string.length() - 2);
+        }
+        return string;
+    }
+
     public static String getFloorNamesString(ArrayList<Floor> floors) {
         String string = "{ ";
         for (Floor floor : floors) {

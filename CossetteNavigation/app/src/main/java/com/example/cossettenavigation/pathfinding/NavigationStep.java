@@ -8,7 +8,7 @@ public class NavigationStep implements Serializable {
 
     private String descriptionOne;
     private String descriptionTwo;
-    private double arrowAngle;
+    private Double arrowAngle;
 
     private Beacon endBeacon;
     private double minimumTime;
@@ -18,7 +18,7 @@ public class NavigationStep implements Serializable {
 
     public NavigationStep(String descriptionOne,
                           String descriptionTwo,
-                          double arrowAngle,
+                          Double arrowAngle,
                           Beacon endBeacon,
                           double minimumTime) {
 
@@ -50,7 +50,7 @@ public class NavigationStep implements Serializable {
         return descriptionTwo;
     }
 
-    public double getArrowAngle() {
+    public Double getArrowAngle() {
         return arrowAngle;
     }
 

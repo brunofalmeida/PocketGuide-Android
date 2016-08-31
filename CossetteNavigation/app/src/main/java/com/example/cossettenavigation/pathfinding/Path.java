@@ -67,7 +67,7 @@ public class Path implements Serializable {
             navigationSteps.add(new NavigationStep(
                     "You are already there!",
                     "",
-                    0,
+                    null,
                     null,
                     0
             ));
@@ -83,7 +83,7 @@ public class Path implements Serializable {
                     navigationSteps.add(new NavigationStep(
                             "Start at " + step.getStartBeacon().getDescription(),
                             "",
-                            0,
+                            null,
                             step.getStartBeacon(),
                             5
                     ));
@@ -104,7 +104,7 @@ public class Path implements Serializable {
                 navigationSteps.add(new NavigationStep(
                         step.getTravelDescription(),
                         step.getEndBeacon().getDescription(),
-                        0,
+                        0.0,
                         step.getEndBeacon(),
                         step.getTravelTime()
                 ));
@@ -119,7 +119,7 @@ public class Path implements Serializable {
             navigationSteps.add(new NavigationStep(
                     "You have arrived!",
                     (destination != null) ? destination.getName() : "",
-                    0,
+                    null,
                     null,
                     0
             ));

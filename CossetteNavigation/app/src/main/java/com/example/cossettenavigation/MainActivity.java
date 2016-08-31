@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.AudioManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -38,28 +36,8 @@ import com.example.cossettenavigation.pathfinding.NavigationStep;
 import com.example.cossettenavigation.pathfinding.Path;
 
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-
-/*
-    TODO - grey out step switching arrows for first/last step
-    TODO - hide direction arrow for first and last NavigationStep - set/account for arrowAngle = null
-    TODO - load TextToSpeech globally (before MainActivity is launched, persistent)
-    TODO - add enable/disable audio button
-    TODO - change enable/disable camera icon when toggled
-
-    TODO - remove beacon from trackedBeacons when not detected for 5 seconds
-         - in updateTrackedBeacon(), set timer for 5 seconds that will call removeTrackedBeacon()
-         - put timer in HashMap<Region, Timer>
-         - when updateTrackedBeacon() is called again, check if map contains timer for Region -> cancel
-
-    TODO - fix camera stretch
-
-    TODO - show more than 1 zone in discovery mode? sort tracked beacons by accuracy - Comparator?
-    TODO - add notifications when within range of beacons of a specific zone - tap to enter navigation?
-    TODO - check that pathfinding only uses 1 step for an elevator/stairs over multiple floors - merge consecutive steps in the same zone?
-*/
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -69,11 +47,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public static final String INTENT_KEY_PATH = "path";
 
-    private static double BEACON_RANGE_FOR_SWITCHING_STEPS = 1;
+    /**
+     * Range (in metres) for switching steps during navigation.
+     */
+    private static double BEACON_RANGE_FOR_SWITCHING_STEPS = 3;
 
     private boolean mVisible; //UI elements (status bar, toolbar, bottom bar visible)
     private boolean cVisible; //camera visible
     private boolean cGranted; //camera permission granted
+
+    private MenuItem cameraToggle;
+    private MenuItem audioToggle;
 
     private FrameLayout m_camera_view = null;
     private CameraView mCameraView = null;
@@ -110,13 +94,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
      */
     private boolean shouldChangeNavigationStep = true;
 
-    /**
-     * True to enable, false to disable
-     */
-    private final boolean isTextToSpeechEnabled = true;
-    private boolean isTextToSpeechAvailable = false;
-    private TextToSpeech textToSpeech = null;
-
 
 
 
@@ -125,9 +102,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Log.v(TAG, "onCreate()");
 
         super.onCreate(savedInstanceState);
-
-        // Initialize text to speech
-        initTextToSpeech();
 
         // Make the volume buttons control the text to speech volume (music stream)
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -181,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         final TextView debugView = (TextView) findViewById(R.id.debug_view);
 
         // Periodic general UI update
-        new Timer().schedule(new TimerTask() {
+        /*new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 runOnUiThread(new Runnable() {
@@ -192,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     }
                 });
             }
-        }, 1, 100);
+        }, 1, 100);*/
 
 
         // Check intent for a Path object - discovery or navigation mode
@@ -218,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     /* Discovery */
 
     private void enterDiscoveryMode() {
-        Log.i(TAG, "enterDiscoveryMode()");
+        Log.v(TAG, "enterDiscoveryMode()");
 
         exitNavigationMode();
 
@@ -238,23 +212,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        /*String nearbyZones = "";
-
-                        Floor floor = beaconManager.getEstimatedFloor();
-                        if (floor != null) {
-                            nearbyZones += floor.getName() + " - ";
-                        }
-
-                        nearbyZones += "Nearby:";
-
-                        for (Zone zone : beaconManager.getNearbyZones()) {
-                            nearbyZones += "\n" + zone.getName();
-                        }*/
+//                        Floor floor=beaconManager.getFloor();
+//                        ArrayList<BeaconTrackingData> beacons=beaconManager.getNearestBeacons();
+//
+//                        Double minDistance=Double.POSITIVE_INFINITY;
+//                        Beacon nearestBeacon=null;
+//
+//                        for (BeaconTrackingData beaconData:beacons){
+//                            if (beaconData.getBeacon().getFloor()==floor&&minDistance>beaconData.getEstimatedAccuracy()){
+//                                minDistance=beaconData.getEstimatedAccuracy();
+//                                nearestBeacon=beaconData.getBeacon();
+//                            }
+//                        }
 
                         Pair<Region, BeaconTrackingData> nearestTrackedBeacon = beaconManager.getNearestTrackedBeacon();
 
                         if (nearestTrackedBeacon != null) {
-                            instruction.setText("You are near " + nearestTrackedBeacon.second.getBeacon().getDescription());
+                            instruction.setText(nearestTrackedBeacon.second.getBeacon().getDescription());
                             description.setText(nearestTrackedBeacon.second.getBeacon().getFloor().getName());
                         } else {
                             instruction.setText("Unknown Location");
@@ -354,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void exitNavigationMode() {
-        Log.i(TAG, "exitNavigationMode()");
+        Log.v(TAG, "exitNavigationMode()");
 
         resetNavigationTimer();
         resetNavigationStepTimer();
@@ -387,14 +361,35 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    direction.setRotation((float) navigationStep.getArrowAngle());
+                    // Direction arrow
+                    if (navigationStep.getArrowAngle() != null) {
+                        direction.setVisibility(View.VISIBLE);
+                        direction.setRotation((float) navigationStep.getArrowAngle().doubleValue());
+                    } else {
+                        direction.setVisibility(View.INVISIBLE);
+                    }
+
+                    // Up toggle
+                    if (navigationStepIndex > 0) {
+                        toggleUp.setAlpha(255);
+                    } else {
+                        toggleUp.setAlpha(50);
+                    }
+
+                    // Down toggle
+                    if (navigationStepIndex < navigationSteps.size() - 1) {
+                        toggleDown.setAlpha(255);
+                    } else {
+                        toggleDown.setAlpha(50);
+                    }
+
                     stepNumber.setText(String.format(
                             "%d/%d",
                             navigationStepIndex + 1, navigationSteps.size()));
                     instruction.setText(navigationStep.getDescriptionOne());
                     description.setText(navigationStep.getDescriptionTwo());
                     time.setText(String.format("%.0fs", navigationStep.getTimeRemaining()));
-                    speakText(navigationStep.getDescriptionOne());
+                    beaconManager.speakText(navigationStep.getDescriptionOne());
                 }
             });
 
@@ -451,7 +446,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void resetNavigationTimer() {
-        Log.i(TAG, "resetNavigationTimer()");
+        Log.v(TAG, "resetNavigationTimer()");
 
         navigationTimer.cancel();
         navigationTimer.purge();
@@ -459,7 +454,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void resetNavigationStepTimer() {
-        Log.i(TAG, "resetNavigationStepTimer()");
+        Log.v(TAG, "resetNavigationStepTimer()");
 
         navigationStepTimer.cancel();
         navigationStepTimer.purge();
@@ -487,29 +482,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 
 
-    private void initTextToSpeech() {
-        if (isTextToSpeechEnabled) {
-            textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-                @Override
-                public void onInit(int status) {
-                    if (status == TextToSpeech.SUCCESS) {
-                        isTextToSpeechAvailable = true;
-                        textToSpeech.setLanguage(Locale.CANADA);
-
-                        Log.i(TAG, "textToSpeech: init success");
-                    } else {
-                        isTextToSpeechAvailable = false;
-
-                        Log.i(TAG, "textToSpeech: init error");
-                    }
-                }
-            });
-        }
-    }
-
-    private void speakText(String text) {
-        if (isTextToSpeechEnabled && isTextToSpeechAvailable && Build.VERSION.SDK_INT >= 21) {
-            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
+    private void toggleAudio() {
+        if (beaconManager.getIsTextToSpeechEnabled()) {
+            audioToggle.setIcon(R.drawable.ic_volume_off_white_48px);
+            beaconManager.setIsTextToSpeechEnabled(false);
+        } else {
+            audioToggle.setIcon(R.drawable.ic_volume_up_white_48px);
+            beaconManager.setIsTextToSpeechEnabled(true);
         }
     }
 
@@ -535,7 +514,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void cameraPermissionGranted() {
-        Log.i(TAG, "Camera permission granted");
+        Log.v(TAG, "Camera permission granted");
         cGranted=true;
         cVisible=true;
         mCameraView = new CameraView(this); // create a SurfaceView to show camera data
@@ -547,18 +526,25 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+
+        cameraToggle = menu.findItem(R.id.camera_button);
+        audioToggle = menu.findItem(R.id.audio_button);
+
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_debug:
+/*            case R.id.action_debug:
                 Intent intent = new Intent(this, DebugActivity.class);
                 startActivity(intent);
-                return true;
+                return true;*/
             case R.id.camera_button:
                 cameraOnOff();
+                return true;
+            case R.id.audio_button:
+                toggleAudio();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -583,8 +569,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private void cameraOnOff() {
         if (cGranted) {
-            if (cVisible) hideCamera();
-            else showCamera();
+            if (cVisible) {
+                cameraToggle.setIcon(R.drawable.ic_videocam_off_white_48px);
+                hideCamera();
+            } else {
+                cameraToggle.setIcon(R.drawable.ic_videocam_white_48px);
+                showCamera();
+            }
         }
     }
     
@@ -658,4 +649,5 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onConfigurationChanged(newConfig);
         mCameraView.activityOnConfigurationChanged();
         }
+
 }

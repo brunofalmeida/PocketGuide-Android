@@ -1,6 +1,9 @@
 package com.example.cossettenavigation.beacons;
 
 import android.app.Application;
+import android.os.Build;
+import android.os.Vibrator;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.Pair;
 
@@ -8,6 +11,7 @@ import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.EstimoteSDK;
 import com.estimote.sdk.Region;
+import com.estimote.sdk.Utils;
 import com.example.cossettenavigation.Utilities;
 import com.example.cossettenavigation.map.Floor;
 import com.example.cossettenavigation.map.Map;
@@ -22,6 +26,9 @@ import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Global application state used to detect and manage beacons.
@@ -54,6 +61,16 @@ public class ApplicationBeaconManager extends Application {
      */
     private HashMap<Region, BeaconTrackingData> trackedBeacons = new HashMap<>();
 
+    private HashMap<Region, TimerTask> removeTrackedBeaconTimerTasks = new HashMap<>();
+
+
+    /**
+     * True to enable, false to disable
+     */
+    private boolean isTextToSpeechEnabled = true;
+    private TextToSpeech textToSpeech = null;
+    private boolean isTextToSpeechAvailable = false;
+
 
 
 
@@ -62,6 +79,8 @@ public class ApplicationBeaconManager extends Application {
         Log.v(TAG, "onCreate()");
 
         super.onCreate();
+
+        createTextToSpeech();
 
         // Initialize Map class
         Map map = new Map();
@@ -95,6 +114,13 @@ public class ApplicationBeaconManager extends Application {
                 startScanning();
             }
         });
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+
+        destroyTextToSpeech();
     }
 
 
@@ -141,7 +167,7 @@ public class ApplicationBeaconManager extends Application {
                 if (list.size() > 0) {
                     updateTrackedBeacon(region, list.get(0));
                 } else {
-                    Log.v(TAG, "setRangingListener(): No beacons in region");
+                    Log.v(TAG, "No beacons in region");
                 }
             }
         });
@@ -167,12 +193,12 @@ public class ApplicationBeaconManager extends Application {
 
 
 
-    private void updateTrackedBeacon(Region region, Beacon beacon) {
-        //Log.v(TAG, "updateTrackedBeacon()");
+    private void updateTrackedBeacon(final Region region, Beacon beacon) {
+        Log.v(TAG, "updateTrackedBeacon()");
 
-/*        Log.v(TAG, String.format(
-        "Beacon: accuracy = %f, proximity = %s, %s",
-        Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));*/
+        Log.v(TAG, String.format(
+                "Beacon: accuracy = %f, proximity = %s, %s",
+                Utils.computeAccuracy(beacon), Utils.computeProximity(beacon), beacon));
 
         // Add the beacon if it isn't already tracked
         if (!trackedBeacons.containsKey(region)) {
@@ -196,8 +222,36 @@ public class ApplicationBeaconManager extends Application {
             }
         }
 
+        Log.v(TAG, "updateTrackedBeacon(): " + trackedBeacons.get(region).getBeacon().toString());
+
         // The beacon must be in the tracked set, so update it with measurements
         trackedBeacons.get(region).addMeasurements(beacon);
+
+        // Cancel tracked beacon removal timer if one exists for this region
+        if (removeTrackedBeaconTimerTasks.containsKey(region)) {
+            Log.v(TAG, String.format(
+                    "updateTrackedBeacon(): Canceling timer task for \"%s\"",
+                    trackedBeacons.get(region).getBeacon().getName()));
+
+            removeTrackedBeaconTimerTasks.get(region).cancel();
+            removeTrackedBeaconTimerTasks.remove(region);
+        }
+
+        // Set timer to remove tracked beacon in 5 seconds
+        Log.v(TAG, String.format(
+                "updateTrackedBeacon(): Scheduling timer task for \"%s\"",
+                trackedBeacons.get(region).getBeacon().getName()));
+        TimerTask removeTask = new TimerTask() {
+            @Override
+            public void run() {
+                Log.v(TAG, String.format(
+                        "updateTrackedBeacon(): Removing tracking data for \"%s\"",
+                        trackedBeacons.get(region).getBeacon().getName()));
+                removeTrackedBeacon(region);
+            }
+        };
+        new Timer().schedule(removeTask, 5000);
+        removeTrackedBeaconTimerTasks.put(region, removeTask);
 
         //Log.v(TAG, trackedBeacons.get(region).toString());
     }
@@ -228,6 +282,9 @@ public class ApplicationBeaconManager extends Application {
         return nearest;
     }
 
+
+
+
     public ArrayList<Zone> getNearbyZones() {
         ArrayList<Zone> nearbyZones = new ArrayList<>();
 
@@ -246,7 +303,13 @@ public class ApplicationBeaconManager extends Application {
         return nearbyZones;
     }
 
+    public boolean getIsTextToSpeechEnabled() {
+        return isTextToSpeechEnabled;
+    }
 
+    public void setIsTextToSpeechEnabled(boolean isTextToSpeechEnabled) {
+        this.isTextToSpeechEnabled = isTextToSpeechEnabled;
+    }
 
     /**
      * @see <a href="https://github.com/lemmingapex/Trilateration">Trilateration example</a>
@@ -307,19 +370,45 @@ public class ApplicationBeaconManager extends Application {
         }
     }
 
-    /**
-     * @return Estimated floor or null.
-     */
-    public Floor getEstimatedFloor() {
-        Pair<Region, BeaconTrackingData> nearestTrackedBeacon = getNearestTrackedBeacon();
-        if (nearestTrackedBeacon != null) {
-            return nearestTrackedBeacon.second.getBeacon().getFloor();
-        }
 
-        return null;
+    public ArrayList<BeaconTrackingData> getNearestBeacons(){
+        ArrayList<BeaconTrackingData> beacons=new ArrayList<>();
+        for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()){
+            beacons.add(trackedBeacon.getValue());
+        }
+        return beacons;
     }
 
-
+    public Floor getFloor() {
+        HashMap<Floor, ArrayList<Integer>> floorMatrix = new HashMap();
+        for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()) {
+            Floor floor = trackedBeacon.getValue().getBeacon().getFloor();
+            if (floorMatrix.containsKey(floor)) {
+                ArrayList<Integer> tuple = floorMatrix.get(floor);
+                tuple.set(0, tuple.get(0) + 1);
+                tuple.set(1, tuple.get(1) + (int) Math.pow(trackedBeacon.getValue().getEstimatedAccuracy(), 2));
+                floorMatrix.put(floor, tuple);
+            } else {
+                ArrayList<Integer> tuple = new ArrayList<>(2);
+                tuple.add(0, 1);
+                tuple.add(1, (int) Math.pow(trackedBeacon.getValue().getEstimatedAccuracy(), 2));
+                floorMatrix.put(floor, tuple);
+            }
+        }
+        Integer minDiff = Integer.MAX_VALUE;
+        Floor closeFloor = null;
+        for (Floor floor : Map.floors) {
+            if (floorMatrix.containsKey(floor)) {
+                Integer count = floorMatrix.get(floor).get(0);
+                Integer sum = floorMatrix.get(floor).get(1);
+                if (minDiff > sum - count) {
+                    minDiff = sum - count;
+                    closeFloor = floor;
+                }
+            }
+        }
+        return closeFloor;
+    }
 
     public void logTrackedBeacons() {
         String string = "logTrackedBeacons():\n";
@@ -356,5 +445,47 @@ public class ApplicationBeaconManager extends Application {
         return string;
     }
 
+
+
+
+    private void createTextToSpeech() {
+        if (isTextToSpeechEnabled) {
+            textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int status) {
+                    if (status == TextToSpeech.SUCCESS) {
+                        isTextToSpeechAvailable = true;
+
+                        textToSpeech.setLanguage(Locale.CANADA);
+
+                        Log.v(TAG, "createTextToSpeech(): success");
+                    }
+
+                    else {
+                        isTextToSpeechAvailable = false;
+
+                        Log.v(TAG, "createTextToSpeech(): error");
+                    }
+                }
+            });
+        }
+    }
+
+    private void destroyTextToSpeech() {
+        Log.i(TAG, "destroyTextToSpeech()");
+
+        if (isTextToSpeechAvailable) {
+            textToSpeech.shutdown();
+            isTextToSpeechAvailable = false;
+        }
+    }
+
+    public void speakText(String text) {
+        if (isTextToSpeechEnabled && isTextToSpeechAvailable && Build.VERSION.SDK_INT >= 21) {
+            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
+            Vibrator v=(Vibrator) getSystemService(ApplicationBeaconManager.VIBRATOR_SERVICE);
+            v.vibrate(500);
+        }
+    }
 
 }

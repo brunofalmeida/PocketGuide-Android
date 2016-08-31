@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -35,10 +36,14 @@ import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity {
 
+    //0);
+
     private static final String TAG = "SearchActivity";
 
-    // TODO - change to 1
-    private static final double START_BEACON_RANGE = 5;
+    /**
+     * Beacon range (in metres) that is required to start navigation.
+     */
+    private static final double START_BEACON_RANGE = Double.POSITIVE_INFINITY;
 
     private DatabaseHelper dbHelper;
     public static SQLiteDatabase db;
@@ -75,6 +80,9 @@ public class SearchActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Make the volume buttons control the text to speech volume (music stream)
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
         /*String[] location = getResources().getStringArray(R.array.locations);
         ArrayList<String> searchResults = new ArrayList<>();
         for (int i=0; i<location.length; i++)
@@ -91,6 +99,19 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Zone zone = (Zone) parent.getItemAtPosition(position);
+
+//                Floor floor=beaconManager.getFloor();
+//                ArrayList<BeaconTrackingData> beacons=beaconManager.getNearestBeacons();
+//
+//                Double minDistance=Double.POSITIVE_INFINITY;
+//                BeaconTrackingData nearestTrackedBeacon=null;
+//
+//                for (BeaconTrackingData beaconData:beacons){
+//                    if (beaconData.getBeacon().getFloor()==floor&&minDistance>beaconData.getEstimatedAccuracy()){
+//                        minDistance=beaconData.getEstimatedAccuracy();
+//                        nearestTrackedBeacon=beaconData;
+//                    }
+//                }
 
                 Pair<Region, BeaconTrackingData> nearestTrackedBeacon = beaconManager.getNearestTrackedBeacon();
 
@@ -135,7 +156,7 @@ public class SearchActivity extends AppCompatActivity {
         searchText=searchText.toLowerCase();
         for (Zone zone : Map.zones) {
             String zoneName=zone.getName().toLowerCase();
-            String zoneType=zone.getZoneType().toString().toLowerCase();
+            String zoneType=Utilities.getZoneFloorNamesString(zone).toLowerCase();
             if ((zoneName.contains(searchText)||zoneType.contains(searchText)) && zone.getIsDestination()) {
                 filteredZones.add(zone);
             }
@@ -197,7 +218,7 @@ public class SearchActivity extends AppCompatActivity {
 
             // Populate the data into the template view using the data object
             text1.setText(zone.getName());
-            text2.setText(zone.getZoneType().lowercaseDescription);
+            text2.setText(Utilities.getZoneFloorNamesString(zone));
 
             // Return the completed view to render on screen
             return convertView;
