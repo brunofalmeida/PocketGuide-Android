@@ -139,7 +139,7 @@ public class ApplicationBeaconManager extends Application {
                 if (list.size() > 0) {
                     updateTrackedBeacon(region, list.get(0));
                 } else {
-                    Log.v(TAG, "setMonitoringListener(): No beacons in region");
+                    Log.v(TAG, "No beacons in region");
                 }
             }
 
@@ -177,7 +177,7 @@ public class ApplicationBeaconManager extends Application {
 
 
     private void startScanning() {
-        // Monitor all beacons
+        // Monitor and range all beacons
         for (com.example.cossettenavigation.map.Beacon beacon : Map.getAllBeacons()) {
             Region region = new Region(
                     beacon.getName(),
@@ -338,9 +338,6 @@ public class ApplicationBeaconManager extends Application {
 
         // If there are 3 or more beacons (required for 2D triangulation)
         if (positions.size() >= 3) {
-/*            double[][] positions = new double[][] { { 5.0, -6.0 }, { 13.0, -15.0 }, { 21.0, -3.0 }, { 12.4, -21.2 } };
-            double[] distances = new double[] { 8.06, 13.97, 23.32, 15.31 };*/
-
             NonLinearLeastSquaresSolver solver = new NonLinearLeastSquaresSolver(
                     new TrilaterationFunction(
                             Utilities.getDoubleDoubleArray(positions), Utilities.getDoubleArray(distances)),
@@ -357,12 +354,12 @@ public class ApplicationBeaconManager extends Application {
             Point2D estimatedLocation = new Point2D(centroid[0] / Map.metresPerGridUnit,
                                                     centroid[1] / Map.metresPerGridUnit);
 
-            //Log.i(TAG, "getEstimatedLocation(): " + estimatedLocation);
+            //Log.v(TAG, "getEstimatedLocation(): " + estimatedLocation);
 
             return estimatedLocation;
 
         } else {
-/*            Log.i(TAG, String.format(
+/*            Log.v(TAG, String.format(
                     "getEstimatedLocation(): Not enough beacons within %.1fm to trilaterate location",
                     MAX_BEACON_DISTANCE_FOR_TRILATERATION));*/
 
@@ -372,7 +369,7 @@ public class ApplicationBeaconManager extends Application {
 
 
     public ArrayList<BeaconTrackingData> getNearestBeacons(){
-        ArrayList<BeaconTrackingData> beacons=new ArrayList<>();
+        ArrayList<BeaconTrackingData> beacons = new ArrayList<>();
         for (HashMap.Entry<Region, BeaconTrackingData> trackedBeacon : trackedBeacons.entrySet()){
             beacons.add(trackedBeacon.getValue());
         }
@@ -472,7 +469,7 @@ public class ApplicationBeaconManager extends Application {
     }
 
     private void destroyTextToSpeech() {
-        Log.i(TAG, "destroyTextToSpeech()");
+        Log.v(TAG, "destroyTextToSpeech()");
 
         if (isTextToSpeechAvailable) {
             textToSpeech.shutdown();

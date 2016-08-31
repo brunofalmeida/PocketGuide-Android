@@ -99,7 +99,9 @@ public abstract class Beacon implements Serializable {
         return name;
     }
 
-    public String getDescription() {return description;}
+    public String getDescription() {
+        return description;
+    }
 
     public Floor getFloor() {
         return floor;

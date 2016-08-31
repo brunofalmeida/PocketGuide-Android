@@ -48,7 +48,6 @@ public class Pathfinder {
 
 
         if (result == null) {
-            // TODO what will UI show if path is null
             return null;
 
         } else {
@@ -170,6 +169,5 @@ public class Pathfinder {
     private static Pair<Double, ArrayList<Beacon>> getShortestPath(AnchorBeacon startBeacon, AnchorBeacon endBeacon) {
         return new SPFA(startBeacon, endBeacon).getShortestPath();
     }
-
 
 }

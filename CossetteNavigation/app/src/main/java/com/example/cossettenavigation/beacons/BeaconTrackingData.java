@@ -47,7 +47,7 @@ public class BeaconTrackingData {
     }
 
     public void addMeasurements(Beacon beacon) {
-/*        Log.i(TAG, String.format(
+/*        Log.v(TAG, String.format(
                 "addMeasurements(): \"%s\", \"%s\"",
                 this.beacon.getName(), this.beacon.getDescription()));*/
 

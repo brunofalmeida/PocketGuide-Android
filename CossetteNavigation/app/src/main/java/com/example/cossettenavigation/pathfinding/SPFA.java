@@ -147,7 +147,7 @@ class SPFA {
 
         // Result found
         } else {
-            Log.i(TAG, "getResult(): Path found");
+            Log.v(TAG, "getResult(): Path found");
 
             return new Pair<>(shortestTravelTimes.get(endBeacon).first, constructPath(endBeacon));
         }

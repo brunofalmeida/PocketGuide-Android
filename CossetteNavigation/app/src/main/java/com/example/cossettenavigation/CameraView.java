@@ -106,7 +106,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
         try {
             mCamera.stopPreview();
         } catch (Exception e) {
-            Log.i(TAG, "surfaceChanged(): stopping camera error - " + e);
+            Log.v(TAG, "surfaceChanged(): stopping camera error - " + e);
             // this will happen when you are trying the camera if it's not running
         }
 

@@ -138,17 +138,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             cameraPermissionGranted();
         }
 
-        bottomBar=(LinearLayout) findViewById(R.id.bottomBar);
+        bottomBar = (LinearLayout) findViewById(R.id.bottomBar);
 
-        direction=(ImageView) findViewById(R.id.arrow);
+        direction = (ImageView) findViewById(R.id.arrow);
         direction.bringToFront();
-        toggleArrows=(RelativeLayout) findViewById(R.id.toggleArrows);
-        instruction=(TextView) findViewById(R.id.instruction);
-        time=(TextView) findViewById(R.id.time);
-        description=(TextView) findViewById(R.id.description);
+        toggleArrows = (RelativeLayout) findViewById(R.id.toggleArrows);
+        instruction = (TextView) findViewById(R.id.instruction);
+        time = (TextView) findViewById(R.id.time);
+        description = (TextView) findViewById(R.id.description);
 
         //get FAB
-        FAB=(FloatingActionButton) findViewById(R.id.FAB);
+        FAB = (FloatingActionButton) findViewById(R.id.FAB);
 
         beaconManager = (ApplicationBeaconManager) getApplication();
 
@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void exitDiscoveryMode() {
-        Log.i(TAG, "exitDiscoveryMode()");
+        Log.v(TAG, "exitDiscoveryMode()");
 
         resetDiscoveryTimer();
     }
@@ -252,10 +252,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     /* Navigation */
 
     private void enterNavigationMode() {
-        Log.i(TAG, "enterNavigationMode():");
-        Log.i(TAG, path.toString());
+        Log.v(TAG, "enterNavigationMode():");
+        Log.v(TAG, path.toString());
         for (NavigationStep navigationStep : navigationSteps) {
-            Log.i(TAG, navigationStep.toString());
+            Log.v(TAG, navigationStep.toString());
         }
 
         exitDiscoveryMode();
@@ -284,14 +284,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         toggleArrows.setVisibility(View.VISIBLE);
         time.setVisibility(View.VISIBLE);
 
-        toggleUp=(ImageView) findViewById(R.id.toggleUp);
+        toggleUp = (ImageView) findViewById(R.id.toggleUp);
         stepNumber = (TextView) findViewById(R.id.stepNumber);
-        toggleDown=(ImageView) findViewById(R.id.toggleDown);
+        toggleDown = (ImageView) findViewById(R.id.toggleDown);
 
         toggleUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "enterNavigationMode(): toggleUp.setOnClickListener()");
+                Log.v(TAG, "enterNavigationMode(): toggleUp.setOnClickListener()");
 
                 canChangeNavigationStep = true;
                 shouldChangeNavigationStep = true;
@@ -302,19 +302,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         toggleDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "enterNavigationMode(): toggleDown.setOnClickListener()");
+                Log.v(TAG, "enterNavigationMode(): toggleDown.setOnClickListener()");
 
                 canChangeNavigationStep = true;
                 shouldChangeNavigationStep = true;
                 increaseNavigationStepIndex();
             }
         });
-
-        //limit on number of characters
-/*        instruction.setText("Walk 4 m ahead");
-        time.setText("20 min");
-        description.setText("Top of North Stairwell");
-        nextStep.setText("Walk down staircase");*/
 
         // Navigation loop
         navigationTimer.schedule(new TimerTask() {
@@ -398,7 +392,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 navigationStepTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        Log.i(TAG, "updateStep(): navigationStepTimer.schedule() - minimum time");
+                        Log.v(TAG, "updateStep(): navigationStepTimer.schedule() - minimum time");
                         canChangeNavigationStep = true;
                     }
                 }, (long) (navigationStep.getMinimumTime() * 1000));
@@ -438,7 +432,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 
     private void resetDiscoveryTimer() {
-        Log.i(TAG, "resetDiscoveryTimer()");
+        Log.v(TAG, "resetDiscoveryTimer()");
 
         discoveryTimer.cancel();
         discoveryTimer.purge();
@@ -462,7 +456,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void decreaseNavigationStepIndex() {
-        Log.i(TAG, "decreaseNavigationStepIndex()");
+        Log.v(TAG, "decreaseNavigationStepIndex()");
 
         if (navigationStepIndex > 0) {
             navigationStepIndex--;
@@ -471,7 +465,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void increaseNavigationStepIndex() {
-        Log.i(TAG, "increaseNavigationStepIndex");
+        Log.v(TAG, "increaseNavigationStepIndex");
 
         if (navigationStepIndex < navigationSteps.size() - 1) {
             navigationStepIndex++;
@@ -497,7 +491,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        Log.i(TAG, "onRequestPermissionsResult()");
+        Log.v(TAG, "onRequestPermissionsResult()");
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -508,15 +502,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                 cameraPermissionGranted();
             } else {
-                cGranted=false;
+                cGranted = false;
             }
         }
     }
 
     private void cameraPermissionGranted() {
         Log.v(TAG, "Camera permission granted");
-        cGranted=true;
-        cVisible=true;
+        cGranted = true;
+        cVisible = true;
         mCameraView = new CameraView(this); // create a SurfaceView to show camera data
         FrameLayout camera_view = (FrameLayout) findViewById(R.id.camera_view);
         camera_view.addView(mCameraView);   // add the SurfaceView to the layout
@@ -581,14 +575,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     
     private void hideCamera(){
         mCameraView.setVisibility(View.INVISIBLE);
-        cVisible=false;
+        cVisible = false;
     }
 
     private void showCamera(){
-        mCameraView=new CameraView(this);
+        mCameraView = new CameraView(this);
         m_camera_view.addView(mCameraView);
         direction.bringToFront();
-        cVisible=true;
+        cVisible = true;
     }
 
     private void toggle() {
@@ -620,7 +614,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 /*| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION*/
                 /*| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION*/);
 
-        mVisible=false;
+        mVisible = false;
     }
 
     @SuppressLint("InlinedApi")
@@ -640,7 +634,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         //m_camera_view.setSystemUiVisibility(0);
 
-        mVisible=true;
+        mVisible = true;
     }
 
     @Override
@@ -648,6 +642,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Log.v(TAG, "onConfigurationChanged()");
         super.onConfigurationChanged(newConfig);
         mCameraView.activityOnConfigurationChanged();
-        }
+    }
 
 }

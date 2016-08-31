@@ -36,8 +36,6 @@ import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity {
 
-    //0);
-
     private static final String TAG = "SearchActivity";
 
     /**
@@ -62,8 +60,8 @@ public class SearchActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        dbHelper=new DatabaseHelper(this);
-        db=dbHelper.getReadableDatabase();
+        dbHelper = new DatabaseHelper(this);
+        db = dbHelper.getReadableDatabase();
 
         String query;
         Intent searchIntent = getIntent();
@@ -92,7 +90,7 @@ public class SearchActivity extends AppCompatActivity {
 
         beaconManager = (ApplicationBeaconManager) getApplication();
 
-        searchSuggestions=(ListView) findViewById(R.id.search_suggestions);
+        searchSuggestions = (ListView) findViewById(R.id.search_suggestions);
         updateSearchSuggestions("");
 
         searchSuggestions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -153,11 +151,11 @@ public class SearchActivity extends AppCompatActivity {
 
     private void updateSearchSuggestions(String searchText) {
         ArrayList<Zone> filteredZones = new ArrayList<>();
-        searchText=searchText.toLowerCase();
+        searchText = searchText.toLowerCase();
         for (Zone zone : Map.zones) {
-            String zoneName=zone.getName().toLowerCase();
-            String zoneType=Utilities.getZoneFloorNamesString(zone).toLowerCase();
-            if ((zoneName.contains(searchText)||zoneType.contains(searchText)) && zone.getIsDestination()) {
+            String zoneName = zone.getName().toLowerCase();
+            String zoneType = Utilities.getZoneFloorNamesString(zone).toLowerCase();
+            if ((zoneName.contains(searchText) || zoneType.contains(searchText)) && zone.getIsDestination()) {
                 filteredZones.add(zone);
             }
         }

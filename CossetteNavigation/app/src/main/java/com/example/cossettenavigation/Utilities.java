@@ -139,15 +139,14 @@ public class Utilities {
     }
 
     public static String getTimeRemainingString(ArrayList<Integer> timeRemaining){
-        String string="{";
+        String string = "{";
         for (Integer integer : timeRemaining){
-            //TODO -  did i do serializing right?
-            string+=String.format("\n\t\t%s,",integer);
+            string += String.format("\n\t\t%s,", integer);
         }
         if (string.endsWith(",")){
-            string=string.substring(0,string.length()-1)+"\n";
+            string = string.substring(0, string.length() - 1) + "\n";
         }
-        string+="}";
+        string += "}";
         return string;
     }
 
