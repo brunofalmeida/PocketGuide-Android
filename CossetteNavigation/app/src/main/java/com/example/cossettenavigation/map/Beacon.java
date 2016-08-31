@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 /**
- * A beacon on the map, defined with a name, grid position, and identifiers.
+ * An Estimote beacon on the map.
+ * @see Map
  */
 public abstract class Beacon implements Serializable {
 

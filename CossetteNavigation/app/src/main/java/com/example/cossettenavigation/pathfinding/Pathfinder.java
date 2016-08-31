@@ -12,7 +12,7 @@ import com.example.cossettenavigation.map.Zone;
 import java.util.ArrayList;
 
 /**
- * Interface for the pathfinding algorithm.
+ * Interface for the shortest path algorithm.
  */
 public class Pathfinder {
 

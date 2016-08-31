@@ -11,7 +11,7 @@ import com.example.cossettenavigation.pathfinding.Step;
 import java.util.ArrayList;
 
 /**
- * Helper methods for comparison, conversion, etc.
+ * Utility methods for comparison, conversion, string generation, etc.
  */
 public class Utilities {
 

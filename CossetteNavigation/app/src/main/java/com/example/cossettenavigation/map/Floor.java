@@ -6,7 +6,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- *
+ * A floor of the building.
+ * @see Map
  */
 public class Floor implements Serializable {
 

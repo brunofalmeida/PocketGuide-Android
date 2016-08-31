@@ -14,13 +14,16 @@ import java.util.PriorityQueue;
 
 /**
  * <h1>
- *     Shortest Path Faster Algorithm (SPFA)
+ *     Shortest Path Faster Algorithm
  * </h1>
  *
  * <p>
  *     Each use of the algorithm requires its own SPFA object.
- *     Should not be used directly by client code; use the Pathfinding class instead.
  * </p>
+ *
+ * <p><b>
+ *     Should not be used directly by client code; use {@link Pathfinder} instead.
+ * </b></p>
  *
  * @see Pathfinder
  * @see <a href="https://en.wikipedia.org/wiki/Shortest_Path_Faster_Algorithm">SPFA</a>
@@ -31,7 +34,7 @@ class SPFA {
 
     /**
      * <h1>Graph (adjacency list)</h1>
-     * <p>each AnchorBeacon -> { (connected beacon, travel time), ... }</p>
+     * <p>AnchorBeacon -> { (connected beacon, travel time), ... }</p>
      * <p>
      *     The graph is the same for all algorithm uses, so it belongs to the class
      *     and should only be constructed once.
@@ -43,7 +46,7 @@ class SPFA {
     private AnchorBeacon endBeacon;
 
     /**
-     * each AnchorBeacon -> (shortest travel time from root, previous beacon in shortest path)
+     * AnchorBeacon -> (shortest travel time from root, previous beacon in shortest path)
      */
     private HashMap<AnchorBeacon, Pair<Double, AnchorBeacon>> shortestTravelTimes;
 

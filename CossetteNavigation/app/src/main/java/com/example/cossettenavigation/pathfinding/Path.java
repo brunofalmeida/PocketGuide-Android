@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- *
+ * A path between beacons.
  */
 public class Path implements Serializable {
 

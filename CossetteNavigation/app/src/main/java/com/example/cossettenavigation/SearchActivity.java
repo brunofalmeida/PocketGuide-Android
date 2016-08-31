@@ -33,7 +33,9 @@ import com.example.cossettenavigation.pathfinding.Pathfinder;
 
 import java.util.ArrayList;
 
-
+/**
+ * Allows the user to search for and select {@link Zone}s that have been marked as destinations.
+ */
 public class SearchActivity extends AppCompatActivity {
 
     private static final String TAG = "SearchActivity";

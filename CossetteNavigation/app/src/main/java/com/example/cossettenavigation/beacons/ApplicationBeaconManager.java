@@ -31,13 +31,24 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Global application state used to detect and manage beacons.
+ * <h1>Global application state</h1>
+ * <p>
+ *     Primarily used to detect and manage beacons, but also manages text-to-speech and vibrations.
+ * </p>
  *
- * Monitoring is coarse, sending enter and exit events (30 second intervals).
- * Ranging is fine, providing power and approximate distance readings (1 second intervals).
+ * <h2>Monitoring (background scanning)</h1>
+ * <p>
+ *     Monitoring is coarse, sending enter and exit events
+ *     (takes a maximum of 30 seconds to detect beacons).
+ * </p>
  *
- * Created by Bruno on 2016-07-22.
+ * <h2>Ranging (foreground scanning)</h2>
+ * <p>
+ *     Ranging is fine, providing power and approximate distance measurements
+ *     (in 1 second intervals).
+ * </p>
  *
+ * @see <a href="http://developer.estimote.com/android/tutorial/part-1-setting-up/">Setup instructions</a>
  * @see <a href="http://developer.estimote.com/android/tutorial/part-2-background-monitoring/">Monitoring tutorial</a>
  * @see <a href="http://developer.estimote.com/android/tutorial/part-3-ranging-beacons/">Ranging tutorial</a>
  */
@@ -480,7 +491,7 @@ public class ApplicationBeaconManager extends Application {
     public void speakText(String text) {
         if (isTextToSpeechEnabled && isTextToSpeechAvailable && Build.VERSION.SDK_INT >= 21) {
             textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
-            Vibrator v=(Vibrator) getSystemService(ApplicationBeaconManager.VIBRATOR_SERVICE);
+            Vibrator v = (Vibrator) getSystemService(ApplicationBeaconManager.VIBRATOR_SERVICE);
             v.vibrate(500);
         }
     }

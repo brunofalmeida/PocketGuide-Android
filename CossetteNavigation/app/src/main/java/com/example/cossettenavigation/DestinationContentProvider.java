@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 
 /**
- * Created by Jacob on 2016-08-10.
+ * <h1>[Unused]</h1>
  */
 public class DestinationContentProvider extends ContentProvider {
 

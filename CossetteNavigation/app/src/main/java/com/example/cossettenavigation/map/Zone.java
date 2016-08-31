@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 /**
  * A key area within a floor or building.
+ * Any two beacons in a Zone can be walked between in a straight line.
  * @see Map
  */
 public class Zone implements Serializable {

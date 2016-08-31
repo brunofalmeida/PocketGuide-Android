@@ -6,7 +6,7 @@ import com.estimote.sdk.Utils;
 import java.util.ArrayList;
 
 /**
- * A collection of data for tracking a beacon, to be stored and updated over time.
+ * A collection of data for tracking a specific beacon, to be stored, updated, and queried over time.
  */
 public class BeaconTrackingData {
 

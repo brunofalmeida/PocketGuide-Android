@@ -5,7 +5,7 @@ import android.content.Context;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 /**
- * Created by Jacob on 2016-08-16.
+ * <h1>[Unused]</h1>
  */
 public class DatabaseHelper extends SQLiteAssetHelper {
 

@@ -12,6 +12,9 @@ import com.example.cossettenavigation.beacons.ApplicationBeaconManager;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Displays information for debugging purposes (detected beacons, map, location, etc.).
+ */
 public class DebugActivity extends AppCompatActivity {
 
     private static final String TAG = "DebugActivity";

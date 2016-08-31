@@ -14,7 +14,7 @@ import com.example.cossettenavigation.map.Map;
 import com.example.cossettenavigation.map.Point2D;
 
 /**
- * Created by Bruno on 2016-08-04.
+ * A view showing the beacons in {@link Map} and the estimated location on a grid.
  */
 public class FloorMapView extends View {
 
