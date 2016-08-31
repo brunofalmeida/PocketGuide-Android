@@ -18,7 +18,7 @@ Provides turn-by-turn instructions to guide the user to their destination; uses 
 
 ## Mapping Data
 
-The mapping data is based on a 3D grid (with x, y, and z axes).
+The mapping data is based on a 3D grid (x, y, z axes).
 
 ### Floors
 
@@ -41,8 +41,8 @@ Support Beacons - Placed at other points.
 - Define areas of the building
 - Have a type (e.g. room, hallway, stairs, elevator)
 - Can span floors
-- May be a destination the user can navigate to
 - Must be defined so that the user can walk between any two beacons in a straight line
+- May be a destination the user can navigate to
 
 ### Units
 
@@ -50,10 +50,17 @@ All units are in metres and seconds.
 
 ### Pathfinding
 
-Uses SPFA (https://en.wikipedia.org/wiki/Shortest_Path_Faster_Algorithm) and the known mapping data/obstacles to calculate the shortest path to the destination by time.
+Uses SPFA (https://en.wikipedia.org/wiki/Shortest_Path_Faster_Algorithm) and the mapping data to calculate the shortest path to the destination by time.
+
+The map's graph is constructed using relationships between beacons and zones. Two beacons are connected in the graph if they share a common zone (can be moved between in a straight line). The connection weight is the travel time between the two beacons, calculated using the straight-line Euclidean distance and average walking speed.
 
 
 ## Beacons and Tracking
+
+The `ApplicationBeaconManager` class manages and tracks beacons over time.
+
+Each beacon broadcasts a Bluetooth signal at 950ms intervals according the iBeacon standard (https://developer.apple.com/ibeacon/, http://developer.estimote.com/ibeacon/).
+The application receives these signals and decides what to do using the IDs and strength of the signal received.
 
 Estimote: http://estimote.com
 
@@ -67,16 +74,11 @@ Beacon Physics: http://blog.estimote.com/post/106913675010/how-do-beacons-work-t
 
 Beacon Signal Properties: https://community.estimote.com/hc/en-us/articles/201636913-What-are-Broadcasting-Power-RSSI-and-other-characteristics-of-beacon-s-signal-
 
-Each beacon broadcasts a Bluetooth signal at 950ms intervals according the iBeacon standard (https://developer.apple.com/ibeacon/, http://developer.estimote.com/ibeacon/).
-The application receives these signals and decides what to do using the IDs and strength of the signal received.
+### Beacon Distance/Proximity
 
-The `ApplicationBeaconManager` class manages and tracks beacons over time.
+Given the signal strength received from a beacon, the Estimote SDK estimates the distance to that beacon. The application uses a weighted average to estimate the current distance to a beacon (the most recent measurement has the greatest weight).
 
-### Distance Estimates
-
-Given the strength of the signal received from a beacon, the Estimote SDK estimates the distance to that beacon. Uses a weighted average to estimate the current distance to a beacon (most recent measurement has the greatest weight).
-
-### Location/Proximity to Beacons
+### User Location/Proximity
 
 In discovery mode, the nearest estimated beacon is determined to be the user's current location.
 
@@ -84,13 +86,13 @@ In navigation mode, the step switches when the device is estimated to be within 
 
 ### Trilateration
 
-https://en.wikipedia.org/wiki/Trilateration
-
 Trilateration can be attempted, but is not accurate/reliable due to weak signal strength, fluctuating measurements, and interference from floors, objects, and people.
+
+Wiki: https://en.wikipedia.org/wiki/Trilateration
 
 Algorithm: https://github.com/lemmingapex/Trilateration
 
-Apache Commons Math: http://commons.apache.org/proper/commons-math/
+Apache Commons Math Library: http://commons.apache.org/proper/commons-math/
 
 
 ## Team
