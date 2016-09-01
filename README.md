@@ -7,9 +7,18 @@ Developed at Cossette (http://www.cossette.com) in July-August 2016 and demonstr
 
 ## Interface
 
+Discovery                       | Search                       | Navigation
+------------------------------- | ---------------------------- | --------------------------------
+![](Screenshots/Discovery1.png) | ![](Screenshots/Search1.png) | ![](Screenshots/Navigation3.png) 
+![](Screenshots/Discovery2.png) | ![](Screenshots/Search2.png) | ![](Screenshots/Navigation2.png)
+
 ### Discovery Mode
 
 Shows the user their current floor and location.
+
+### Search
+
+Allows the user to search for a place to navigate to.
 
 ### Navigation Mode
 
