@@ -2,7 +2,7 @@
 
 An Android application that uses Estimote beacons to help the user navigate an indoor environment.
 
-Developed at Cossette (http://www.cossette.com) in July-August 2016 and demonstrated to representatives from SickKids (http://www.sickkids.ca).
+Developed at [Cossette](http://www.cossette.com) in July-August 2016 and demonstrated to representatives from [SickKids](http://www.sickkids.ca).
 
 
 ## Interface
@@ -29,20 +29,20 @@ Provides turn-by-turn instructions to guide the user to their destination; uses 
 
 See the `beacons` package; the `ApplicationBeaconManager` class manages and tracks beacons over time.
 
-Each beacon broadcasts Bluetooth signals at 950ms intervals according the iBeacon standard (https://developer.apple.com/ibeacon/, http://developer.estimote.com/ibeacon/).
+Each beacon broadcasts Bluetooth signals at 950ms intervals according to the iBeacon standard (https://developer.apple.com/ibeacon/, http://developer.estimote.com/ibeacon/).
 The application receives these signals and decides what to do based on the IDs and signal strength received.
 
-Estimote: http://estimote.com
+[Estimote](http://estimote.com)
 
-Estimote Developer (overview/tutorials): http://developer.estimote.com
+[Estimote Developer](http://developer.estimote.com)
 
-Estimote Android SDK: https://github.com/Estimote/Android-SDK
+[Estimote Android SDK](https://github.com/Estimote/Android-SDK)
 
-Estimote Android SDK Documentation: http://estimote.github.io/Android-SDK/JavaDocs/
+[Estimote Android SDK Documentation](http://estimote.github.io/Android-SDK/JavaDocs/)
 
-Beacon Physics: http://blog.estimote.com/post/106913675010/how-do-beacons-work-the-physics-of-beacon-tech
+[Beacon Physics](http://blog.estimote.com/post/106913675010/how-do-beacons-work-the-physics-of-beacon-tech)
 
-Beacon Signal Properties: https://community.estimote.com/hc/en-us/articles/201636913-What-are-Broadcasting-Power-RSSI-and-other-characteristics-of-beacon-s-signal-
+[Beacon Signal Properties](https://community.estimote.com/hc/en-us/articles/201636913-What-are-Broadcasting-Power-RSSI-and-other-characteristics-of-beacon-s-signal-)
 
 ### Beacon Distance/Proximity
 
@@ -58,11 +58,11 @@ In navigation mode, the instructions change when the device is estimated to be w
 
 Trilateration can be attempted, but is not accurate or reliable due to the beacons' weak signal strength, fluctuating measurements, and interference from floors, objects, and people.
 
-Wiki: https://en.wikipedia.org/wiki/Trilateration
+[Wiki](https://en.wikipedia.org/wiki/Trilateration)
 
-Algorithm: https://github.com/lemmingapex/Trilateration
+[Algorithm](https://github.com/lemmingapex/Trilateration)
 
-Apache Commons Math Library: http://commons.apache.org/proper/commons-math/
+[Apache Commons Math Library](http://commons.apache.org/proper/commons-math/)
 
 
 ## Mapping Data
@@ -99,7 +99,7 @@ All units are in metres and seconds.
 
 ### Pathfinding
 
-Uses SPFA (https://en.wikipedia.org/wiki/Shortest_Path_Faster_Algorithm) and the mapping data (notably beacons and zones) to calculate the shortest path to the destination by time.
+Uses [SPFA](https://en.wikipedia.org/wiki/Shortest_Path_Faster_Algorithm) and the mapping data to calculate the shortest path to the destination by time.
 
 The map's graph is constructed using relationships between beacons and zones. Two beacons are connected in the graph if they share a common zone (can be moved between in a straight line). The connection weight is the travel time between the two beacons, calculated using the straight-line distance and average walking speed.
 
