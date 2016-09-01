@@ -27,9 +27,9 @@ Provides turn-by-turn instructions to guide the user to their destination; uses 
 
 ## Beacons and Tracking
 
-The `ApplicationBeaconManager` class manages and tracks beacons over time.
+See the `beacons` package; the `ApplicationBeaconManager` class manages and tracks beacons over time.
 
-Each beacon broadcasts a Bluetooth signal at 950ms intervals according the iBeacon standard (https://developer.apple.com/ibeacon/, http://developer.estimote.com/ibeacon/).
+Each beacon broadcasts Bluetooth signals at 950ms intervals according the iBeacon standard (https://developer.apple.com/ibeacon/, http://developer.estimote.com/ibeacon/).
 The application receives these signals and decides what to do based on the IDs and signal strength received.
 
 Estimote: http://estimote.com
@@ -67,7 +67,7 @@ Apache Commons Math Library: http://commons.apache.org/proper/commons-math/
 
 ## Mapping Data
 
-The mapping data is based on a 3D grid system (x, y, z axes).
+See the `map` package; the `Map` class defines and manages the mapping data, which is based on a 3D grid system (x, y, z axes).
 
 ### Floors
 
@@ -102,6 +102,17 @@ All units are in metres and seconds.
 Uses SPFA (https://en.wikipedia.org/wiki/Shortest_Path_Faster_Algorithm) and the mapping data (notably beacons and zones) to calculate the shortest path to the destination by time.
 
 The map's graph is constructed using relationships between beacons and zones. Two beacons are connected in the graph if they share a common zone (can be moved between in a straight line). The connection weight is the travel time between the two beacons, calculated using the straight-line distance and average walking speed.
+
+See the `pathfinding` package; the `Pathfinder` and `SPFA` classes perform the shortest-path algorithm, while the `NavigationStep`, `Path`, and `Step` classes manage the navigation information.
+
+
+## Debugging
+
+While not visible in the final application, debugging tools were used in development of this application.
+
+See `@+id/debug_view` in `content_main.xml` and `onCreate()` in `MainActivity.java` to enable the debugging view for displaying information on the main screen.
+
+See `@+id/action_debug` in `menu_main.xml` to enable the information button on the main screen, which switches to a dedicated debugging screen.
 
 
 ## Team
