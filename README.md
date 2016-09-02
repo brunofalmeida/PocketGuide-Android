@@ -117,7 +117,7 @@ See `@+id/action_debug` in `menu_main.xml` to enable the information button on t
 
 ## Team
 
-Bruno Almeida: https://github.com/b-almeida
+Bruno Almeida: https://github.com/brunofalmeida
 
 Gabriel Yeung: https://github.com/gabrielcyeung
 
